@@ -1,0 +1,36 @@
+@charset "utf-8";
+
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+
+body, html { height:100%; padding:7px; margin:0; }
+body,td,th,input,select,textarea { font:normal 16px 'Source Sans Pro', sans-serif; color:#252525; }
+
+table,th,td,h1,h2,p,form,ol,ul,li { padding:0; margin:0; }
+body { background-color:#fff; }
+table { border-collapse:collapse; }
+
+img { border:none; }
+
+h1 { font:normal 36px 'Source Sans Pro', sans-serif; margin:0 0 20px 0; color:#313132; text-align:left;}
+h2 { font:normal 28px 'Source Sans Pro', sans-serif; margin:10px 0 20px 0; color:#313132; text-align:left; color:#006cb0; }
+h3, h4, h5, h6 { font-size:20px; margin:10px 0 20px 0; color:#006cb0; }
+
+input[type="text"]:focus, input[type="password"]:focus, textarea:focus { outline:none; }
+input { outline:none; }
+input.button { display:none; }
+
+a, a:visited, a:hover { outline:none !important; cursor:pointer; color:#01a6ff; }
+a, a:visited { color:#01a6ff; text-decoration:none; }
+a:hover { color:#296ca9; text-decoration:none; }
+b, strong { color:#006cb0;}
+
+.row { margin:0;}
+.sep { padding-top:2px; font-size:0; background-color:#42a4ff;}
+.pd10 { padding:0 10px;}
+
+.content { text-align:justify; }
+p { padding-bottom:20px; }
+ul { margin:0 0 20px 0; padding:0; list-style:none;}
+ul li { margin:0; padding-left:40px;}
+ul li:last-child { margin:0;}
+ul li:before { content:'■'; position:absolute; margin-left:-20px; font-size:14px; line-height:18px;}

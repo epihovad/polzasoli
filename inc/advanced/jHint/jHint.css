@@ -1,0 +1,32 @@
+.jHint_text
+{
+	position:absolute;
+	z-index:100;
+	max-width:320px;
+	width:auto;
+	height:auto;
+	padding:5px 8px;
+	font:normal 12px Arial;
+	color:#FFFCFA;
+	background-color:#D74C2F;
+	display:none;
+	-moz-box-shadow: 0 0 5px #2c2b29;
+	-webkit-box-shadow: 0 0 5px #2c2b29;
+	-khtml-box-shadow: 0 0 5px #2c2b29;
+	box-shadow: 0 0 5px #2c2b29;
+		-moz-border-radius:3px;
+		-webkit-border-radius:3px;
+		-khtml-border-radius:3px;
+		border-radius:3px;
+}
+.jHint_corn
+{
+	position:absolute;
+	background-image:url(/inc/advanced/jHint/jHint.png);
+	background-repeat:no-repeat;
+	font-size:0;
+}
+.jHint_corn.l { width:4px; height:6px; background-position:-4px 0; }
+.jHint_corn.r { width:4px; height:6px; background-position:0 0; }
+.jHint_corn.u { width:4px; height:6px; background-position:-1px -10px; }
+.jHint_corn.b { width:4px; height:6px; background-position:-1px -6px; }

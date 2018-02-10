@@ -1,0 +1,63 @@
+#jAlert
+{
+	position:absolute;
+	min-width:250px;
+	width:auto;
+	min-height:110px;
+	height:auto;
+	display:none;
+	background-color:#fff;
+	-moz-box-shadow: 0 0 5px #2c2b29;
+	-webkit-box-shadow: 0 0 5px #2c2b29;
+	-khtml-box-shadow: 0 0 5px #2c2b29;
+	box-shadow: 0 0 5px #2c2b29;
+		-moz-border-radius:5px;
+		-webkit-border-radius:5px;
+		-khtml-border-radius:5px;
+		border-radius:5px;
+}
+#jAlert .info_place
+{
+	padding:28px 30px 0 30px;
+	font-size:16px;
+	font-family:'Source Sans Pro', sans-serif;
+	color:#252525;
+	text-align:center;
+	line-height:1.5em;
+}
+#jAlert .btn_place
+{
+	height:30px;
+	padding:20px 30px 38px 30px;
+	margin-bottom:21px;
+}
+#jAlert a.ok, #jAlert a.yes, #jAlert a.no
+{
+	overflow:hidden;
+	font:bold 16px/1.5 'Source Sans Pro', sans-serif;;
+	text-transform:uppercase;
+	color:#01a6ff;
+	text-decoration:none;
+	border: 2px solid #01a6ff;
+	border-radius: 30px;
+	padding:0 16px;
+	background-color:#fff;
+	/*-moz-box-shadow:2px 2px 3px #CCC;
+	-webkit-box-shadow:2px 2px 3px #CCC;
+	-khtml-box-shadow:2px 2px 3px #CCC;
+	box-shadow:2px 2px 3px #CCC;*/
+		/*-moz-border-radius:3px; /* Firefox */
+		/*-webkit-border-radius:3px; /* Safari and Chrome */
+		/*-khtml-border-radius:3px; /* Linux browsers */	
+		/*border-radius:3px; /* Opera 10.50, IE and CSS3 */
+}
+#jAlert a.ok:hover, #jAlert a.yes:hover, #jAlert a.no:hover { color:#3093ef; border:2px solid #3093ef; background-color:#fff; }
+#jAlert a.yes { margin-right:20px; }
+
+#jAlert_shadow
+{
+	position:absolute;
+	background-color:#2c2b29;
+	filter:progid:DXImageTransform.Microsoft.Blur(pixelradius=4, enabled="true");
+	display:none;
+}

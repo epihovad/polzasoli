@@ -1,0 +1,56 @@
+#jPop
+{
+	position:absolute;
+	width:auto;
+	height:auto;
+	/*background:url(/inc/advanced/jPop/img/back.png) #d6d6d6 repeat-x;*/
+	background:url(/img/rb-list.png) #FFF;
+	display:none;
+	overflow:hidden;
+	
+	-moz-box-shadow: 0 0 5px #2c2b29;
+	-webkit-box-shadow: 0 0 5px #2c2b29;
+	-khtml-box-shadow: 0 0 5px #2c2b29;
+	box-shadow: 0 0 5px #2c2b29;
+	
+	/*-moz-border-radius:5px; /* Firefox */ /* прописано в коде */
+	-webkit-border-radius:10px; /* Safari and Chrome */
+	-khtml-border-radius:10px; /* Linux browsers */	
+	border-radius:10px; /* Opera 10.50, IE and CSS3 */
+}
+
+#jPop_close { position:absolute; width:18px; height:16px; text-decoration:none; background:url(/inc/advanced/jPop/img/close.png) no-repeat 0 0; }
+#jPop_close:hover { background-position: 0 -16px; }
+
+#jPop_ind { position:absolute; width:31px; height:31px; }
+
+#jPop_head { height:48px; overflow:hidden; }
+	#jPop_head div { float:left; white-space:nowrap; margin:11px 0 0 15px; font-family:'MyriadPro-Regular'; font-size:18px; color:#28357e; text-shadow:0 1px 0 #fff; }
+		#jPop_head div a { font-family:'MyriadPro-Regular'; color:#439200; }
+		#jPop_head div a:hover { color:#80BB0A; }
+
+#jPop_footer { height:0; overflow:hidden; font-size:0; }
+#jPop_footer.act
+{
+	height:48px;
+	background:url(/img/fix3.png) repeat-x;
+	margin-top:10px;
+	-moz-border-radius:0 0 10px 10px;
+	-webkit-border-radius:0 0 10px 10px;
+	-khtml-border-radius:0 0 10px 10px;
+	border-radius:0 0 10px 10px;
+}
+	#jPop_footer.act div { float:left; white-space:nowrap; margin:15px 0 0 15px; font-size:12px; font-family:'MyriadPro-Regular'; color:#28357e; }
+		#jPop_footer.act div b { color:#604E4E; }
+		#jPop_footer.act div a { font-family:'MyriadPro-Regular'; color:#439200; }
+		#jPop_footer.act div a:hover { color:#80BB0A; }
+
+#jPop_cont { text-align:left; padding:10px; overflow:hidden; overflow-y:auto; margin:5px 5px 0 5px; }
+
+#jPop_shadow
+{
+	position:absolute;
+	background-color:#2c2b29;
+	filter:progid:DXImageTransform.Microsoft.Blur(pixelradius=4, enabled="true");
+	display:none;
+}

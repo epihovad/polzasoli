@@ -1,0 +1,4 @@
+Подгонка дизайна:
+Заменить #efefde на #E8EBF1
+и в этом ".cke_skin_v2 .cke_rcombo .cke_label" стиле поставить "background-color:transparent"
+тут ".cke_skin_v2 .cke_rcombo .cke_openbutton .cke_icon" поставить "height:18px"

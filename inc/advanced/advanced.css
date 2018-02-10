@@ -1,0 +1,29 @@
+/* ---------------------- arrnum ---------------------------- */
+.arrnum { width:30px; height:20px; border-collapse:collapse; border:none; background:none; }
+.arrnum input
+{
+	width:30px;
+	height:20px;
+	text-align:center;
+	border:1px solid #b3b3b3;
+	color:#4D4D4D;
+	background-color:#fff;
+	font: normal 13px Arial;
+	//padding-top:1px;
+}
+.more, .less { position:absolute; width:7px; height:4px; cursor:pointer; font-size:1px; }
+.more
+{
+	background:url(/inc/advanced/img/more.gif) no-repeat;
+	margin-left:35px;
+	margin-top:3px;
+	//margin:4px 0 0 35px;	
+}
+.less
+{
+	background:url(/inc/advanced/img/less.gif) no-repeat;
+	margin-left:35px;
+	margin-top:13px;
+	//margin-top:14px;
+}
+/* -------------------------- / arrnum ---------------------------- */

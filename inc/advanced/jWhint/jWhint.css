@@ -1,0 +1,28 @@
+div.whint
+{
+	position:absolute;
+	z-index:10;
+	max-width:350px;
+	background-color:#FEFFD6;
+	font-size:13px;
+	font:Arial, Helvetica, sans-serif;
+	color:#545151;
+	padding:10px;
+	box-shadow:0 0 10px #3c3c3c;
+	border-radius:10px;
+	display:none;
+}
+
+div.whint-close
+{
+	position:absolute;
+	z-index:1;
+	width:8px;
+	height:8px;
+	background:url(/inc/advanced/jWhint/jWhint.png) no-repeat;
+	font-size:0;
+	cursor:pointer;
+}
+div.whint-close:hover { background-position:0 -8px;}
+
+span.whint { color:#C91B1B; border-bottom:1px dashed #C91B1B; cursor:pointer;}

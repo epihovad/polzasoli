@@ -1,0 +1,25 @@
+@charset "utf-8";
+
+#reviews .rvw { margin-bottom:10px; }
+#reviews .rvw-name { color:#28357E; font-family:'MyriadPro-Regular'; font-size:14px;}
+#reviews .rvw-date { font-weight:normal; margin:1px 0 0 10px; font-size:11px; }
+#reviews .rvw-ans { margin-left:15px; display:none; }
+	#reviews .rvw-ans a { color:#B40101; }
+#reviews .sep { height:1px; overflow:hidden; font-size:0; border-top:1px dashed #bebecd; margin-bottom:10px; }
+#reviews .who { display:none; color:#B40101; font-weight:bold; }
+#reviews .who .clear { padding-bottom:5px; }
+#reviews .who span { color:#28357E; font-size:14px; line-height:14px; font-family:'MyriadPro-Regular'; font-weight:normal; padding:0 10px 0 5px; }
+	#reviews .who span b { font-weight:normal; color:#3C3C3C; font-family:Arial, Helvetica, sans-serif; padding-left:5px; font-size:11px; }
+#reviews .who a.remove { width:16px; height:16px; margin:-1px 0 0 0; background:url(/inc/advanced/reviews/remove.png) no-repeat; font-size:0; }
+#reviews table, #reviews th, #reviews td { border:none;}
+#reviews th { font-size:14px; font-family:'MyriadPro-Regular'; color:#28357e; padding:7px 10px 5px 0; text-align:left; vertical-align:top;}
+#reviews input[name="name"] { width:250px;}
+#reviews input[name="mail"] { width:250px;}
+#reviews input[name="kod"] { width:40px;}
+#reviews textarea { height:60px;}
+
+#reviews input[name="name"].error,
+#reviews input[name="mail"].error,
+#reviews input[name="kod"].error,
+#reviews .textarea.error
+ { border:1px solid #FB0040; }

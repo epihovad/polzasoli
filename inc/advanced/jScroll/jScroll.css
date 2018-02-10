@@ -1,0 +1,12 @@
+div.jScroll { position:relative; z-index:1; }
+div.jScroll_ar div.pad { padding-bottom:16px !important; }
+div.jScroll_top, div.jScroll_bot { position:absolute; z-index:2; height:16px; padding:0; font-size:0; background-repeat:repeat-x; }
+div.jScroll_top { margin:0; background-image:url(/inc/advanced/jScroll/img/top.png); }
+div.jScroll_top.v1 { background-image:url(/inc/advanced/jScroll/img/top1.png); }
+div.jScroll_bot { margin:-16px 0 0 0; background-image:url(/inc/advanced/jScroll/img/bot.png); }
+div.jScroll_bot.v1 { background-image:url(/inc/advanced/jScroll/img/bot1.png); }
+div.jScroll_rp { position:absolute; z-index:2; width:6px; padding:0; font-size:0; } 
+div.jScroll_roller { position:absolute; width:6px; padding:0; top:0; font-size:0; cursor:pointer; }
+	div.jScroll_roller .ru { position:relative; width:6px; height:2px; font-size:0; background:url(/inc/advanced/jScroll/img/ru.png) no-repeat; }
+	div.jScroll_roller .rm { position:relative; width:6px; font-size:0; background:url(/inc/advanced/jScroll/img/rm.png); }
+	div.jScroll_roller .rb { position:relative; width:6px; height:2px; font-size:0; background:url(/inc/advanced/jScroll/img/rb.png) no-repeat; }

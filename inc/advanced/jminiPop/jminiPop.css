@@ -1,0 +1,20 @@
+#jminiPop
+{
+	position:absolute;
+	background-color:#e3deda;
+	border:2px solid #c5bdb8;
+	display:none;
+	/*-moz-box-shadow: 2px 2px 5px #777777;
+	-webkit-box-shadow: 2px 2px 5px #777777;
+	-khtml-box-shadow: 2px 2px 5px #777777;
+	box-shadow: 2px 2px 5px #777777;*/
+		-moz-border-radius:5px;
+		-webkit-border-radius:5px;
+		-khtml-border-radius:5px;
+		border-radius:5px;
+}
+#jminiPop_corn { position:absolute; font-size:0; background-image:url(/img/imcol.png); background-repeat:no-repeat; }
+#jminiPop_corn.onright { width:8px; height:12px; background-position:-44px -18px; }
+#jminiPop_ind { position:absolute; font-size:0; }
+#jminiPop_cont { padding:10px; font:normal 12px "Courier New", Courier, monospace; font-weight:bold; }
+#jminiPop_cont a { text-decoration:none; border-bottom:1px dashed #000; }

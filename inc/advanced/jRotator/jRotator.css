@@ -1,0 +1,46 @@
+.jR { overflow:hidden;}
+.jR-images { position:relative; z-index:0; }
+	.jR-images div { position:absolute; display:none; background-repeat:no-repeat; background-position:center; }
+
+.jR-prev, .jR-next
+{
+	position:absolute;
+	width:35px;
+	height:35px;
+	z-index:1;
+	font-size:1;
+	background-image:url(/inc/advanced/jRotator/jRotator.png); background-repeat:no-repeat;
+	cursor:pointer;
+	display:none;
+}
+.jR-prev { background-position:-35px 0;}
+.jR-prev:hover { background-position:-35px -35px;}
+.jR-next { background-position:0 0;}
+.jR-next:hover { background-position:0 -35px;}
+
+.jR-points { position:absolute; z-index:1; text-align:left; }
+.jR-points div
+{
+	position:absolute;
+	width:18px;
+	height:18px;
+	font-size:0;
+	background:url(/inc/advanced/jRotator/jRotator.png) no-repeat -70px -18px;
+	cursor:pointer;
+}
+.jR-points div.cur { background-position:-70px 0; cursor:default; }
+
+.jR-thumbs { position:absolute; z-index:2; }
+.jR-thumbs img
+{
+	position:absolute;
+	display:none;
+	font-size:0;
+	background-color:#e3deda; background-repeat:no-repeat; background-position:center;
+	border:3px solid #FFF;
+	-moz-box-shadow: 0 0 5px #2c2b29;
+	-webkit-box-shadow: 0 0 5px #2c2b29;
+	-khtml-box-shadow: 0 0 5px #2c2b29;
+	box-shadow: 0 0 5px #2c2b29;
+}
+.jR-timeline { position:absolute; z-index:5; width:0; height:2px; font-size:0; background-color:#ed1c24;}
