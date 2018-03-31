@@ -112,14 +112,14 @@ function getIdChilds($sql,$id=0,$arr=true) // $sql = "SELECT * FROM {$prx}{$tbl}
 	return $arr	? $childs : implode(',',$childs);
 }
 //
-function getCatUrl($rubric,$echo=false,$prfx='catalog')
+function getCatUrl($rubric, $echo=false, $tbl = 'catalog', $prfx = 'catalog')
 {
 	global $prx;
 	
 	$href = $prfx ? "/{$prfx}/" : '';
 	$str = $href;
 	
-	$ids = getArrParents("SELECT id,id_parent FROM {$prx}catalog WHERE id='%s'",$rubric['id']);
+	$ids = getArrParents("SELECT id,id_parent FROM {$prx}{$tbl} WHERE id='%s'",$rubric['id']);
 	foreach($ids as $id_catalog)
 	{
 		if($id_catalog==$rubric['id'])
@@ -129,7 +129,7 @@ function getCatUrl($rubric,$echo=false,$prfx='catalog')
 		}
 		else
 		{
-			$link = gtv('catalog','link',$id_catalog);
+			$link = gtv($tbl,'link',$id_catalog);
 			$href .= $link.'/';
 			$str .= $link.'/';
 		}

@@ -6,7 +6,7 @@ $(function(){
 	{
 		var id = $($this).attr('id');
 		var $child_block = $('#cat_'+id);
-		if($child_block.size())
+		if($child_block.length)
 		{
 			$child_block.find('input[type="checkbox"]').attr('checked',checked);
 			if(checked)
@@ -37,7 +37,7 @@ $(function(){
 		
 		var block = $('#cat_'+id);
 		
-		if(!block.size())
+		if(!block.length)
 			block = $('#goods_'+id);
 		
 		if(!block.is(':visible'))

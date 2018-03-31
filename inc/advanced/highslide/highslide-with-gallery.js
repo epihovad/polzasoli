@@ -2659,7 +2659,7 @@ hs.registerOverlay({
 });
 
 $(function(){
-	/*if($('a.highslide').size()>1)
+	/*if($('a.highslide').length>1)
 	{
 		hs.numberPosition = 'caption';
 		hs.addSlideshow({

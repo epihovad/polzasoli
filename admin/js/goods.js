@@ -1,7 +1,7 @@
 $(function(){
 	//
 	$('table.mods thead .mod-add img').click(function () {
-		var n = $('table.mods tbody tr').size()+1;
+		var n = $('table.mods tbody tr').length+1;
     var tr  = '	<tr>';
 				tr += '		<th class="mod-number"><span>'+n+'</span><input type="hidden" name="mods[id][]" value=""></th>';
 				tr += '		<td class="mod-price"><input type="text" value="" name="mods[name][]"></td>';
@@ -12,7 +12,7 @@ $(function(){
 				tr += '		<td class="mod-price"><input type="text" value="" name="mods[price_shelf_opt][]"></td>';
 				tr += '		<td class="mod-sort"><input type="text" value="" name="mods[sort][]"></td>';
 				tr += '		<td class="mod-status"><input type="checkbox" value="1" name="mods[status][]"></td>';
-				tr += '		<td class="mod-del"><img src="img/del.png" title="удалить модель"></td>';
+				tr += '		<td class="mod-del"><img src="img/del.png" title="пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ"></td>';
 				tr += '	</tr>';
 		$('table.mods tbody').append(tr);
 	});

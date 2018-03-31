@@ -5,7 +5,7 @@ jQuery.fn.jTip = function(){
 		var $obj = $(this);
 		var $jTip = $obj.find('span');
 		
-		if(!$jTip.size())
+		if(!$jTip.length)
 		{
 			var txt = $obj.attr('title');
 			if(!txt) return true;

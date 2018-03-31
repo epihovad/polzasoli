@@ -1,3 +1,12 @@
+var zmax = 1001; // стартовая переменная величина
+
+jQuery.browser = {};
+jQuery.browser.mozilla = /mozilla/.test(navigator.userAgent.toLowerCase()) && !/webkit/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
+jQuery.browser.iDevice = /ip(hone|od|ad)/i.test(navigator.userAgent || navigator.vendor || window.opera);
+
 jQuery.fn.zebra = function(options){
 
 	var tab = $(this);
@@ -38,7 +47,7 @@ function mark_change_tr()
 function saveall($frm)
 {
 	if($frm==undefined) $frm = $('form[name="red_frm"]');
-	if(!$frm.size()) return false;
+	if(!$frm.length) return false;
 	$frm.attr('action','?action=saveall').submit();
 }
 
@@ -185,7 +194,7 @@ function show_popup_window(title,href)
 	$(document).mousewheel(function(event){
 		if($popup_window.is(':visible'))
 		{
-			if(!$(event.currentTarget).parents($popup_window).size())
+			if(!$(event.currentTarget).parents($popup_window).length)
 				event.preventDefault();
 		}
 	});

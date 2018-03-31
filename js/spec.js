@@ -63,7 +63,7 @@ jQuery(document).ready(function( $ ) {
       $(this).val($(this).data('oldValue'));
     }
     //
-    if($('#frm-order').size()){
+    if($('#frm-order').length){
       $('#frm-order').attr('action','/cart.php?action=change').submit();
     }
   });

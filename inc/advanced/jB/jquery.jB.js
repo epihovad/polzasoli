@@ -11,7 +11,7 @@ var jB_num = 1;
 		/* ---------------- ИНИЦИАЛИЗАЦИЯ + SHOW -------------------- */
 		show : function(prm,callback){
 			
-			if($('#jB'+jB_num).size())
+			if($('#jB'+jB_num).length)
 				jB_methods.destroy.call($('#jB'+jB_num));
 			
 			// Settings

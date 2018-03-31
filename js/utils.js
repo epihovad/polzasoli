@@ -15,7 +15,7 @@ function inajax(script,url)
 function loader(show)
 {
 	var $loader = $('#loader');
-	if($loader.size())
+	if($loader.length)
 	{
 		if(show)
 		{
@@ -446,7 +446,7 @@ jQuery.fn.PopWin = function(prm){
 	function showPopWin()
 	{
 		$block = $popwin.find('.type_'+prm.type);
-		if($block.size())
+		if($block.length)
 		{
 			$content = $block.find('.content');
 			// добавляем в окно контент

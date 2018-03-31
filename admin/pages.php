@@ -15,7 +15,7 @@ if(isset($_GET['action']))
 		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
-			
+
 			if(!$name) errorAlert('необходимо указать название !');
 				
 			if($locked)
@@ -51,6 +51,7 @@ if(isset($_GET['action']))
 			$set = "id_parent='{$id_parent}',
 							name='{$name}',
 							text=".($text?"'{$text}'":"NULL").",
+							ids_disease=".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
 							type='{$type}',
 							is_main='{$is_main}',
 							is_slider='{$is_slider}',
@@ -101,14 +102,14 @@ if(isset($_GET['action']))
 			if(gtv($tbl,'locked',$id))
 				errorAlert("данная страница защищена от удаления!");
 			else
-				remove_page($id);
+				remove_object($id);
 			?><script>top.location.href = '<?=$script?>'</script><?
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
 			foreach($_POST['check_del_'] as $id=>$v)
 				if(!gtv($tbl,'locked',$id))
-					remove_page($id);
+					remove_object($id);
 			?><script>top.location.href = '<?=$script?>'</script><?
 			break;
 		// ----------------- удаление изображения
@@ -132,18 +133,27 @@ elseif(isset($_GET['red']))
 	
 	ob_start();
 	?>
+  <link rel="stylesheet" href="/js/jquery/chosen/chosen.min.css">
   <style>
     .for-page { display:<?=$row['type']=='link'?'none':'table-row'?>;}
+    .chosen-search-input { width:auto !important;}
   </style>
+  <script src="/js/jquery/chosen/chosen.jquery.min.js" type="text/javascript"></script>
   <script>
     $(function () {
+      //
       $('select[name="type"]').change(function () {
         var val = $(this).find('option:selected').val();
         if(val=='link'){ $('.for-page').hide(); }
         else { $('.for-page').show(); }
       });
+      //
+      $('select[name="ids_disease\[\]"]').chosen({
+        no_results_text: "Нет данных по запросу",
+      });
     })
   </script>
+
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
   <input type="hidden" name="locked" value="<?=$locked?>" />
   <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
@@ -172,6 +182,11 @@ elseif(isset($_GET['red']))
       <th class="tab_red_th"></th>
       <th>Текст</th>
       <td><?=showFck('text',$row['text'])?></td>
+    </tr>
+    <tr class="for-page">
+      <th class="tab_red_th"><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
+      <th>Спр-к болезней</th>
+      <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']))?></td>
     </tr>
     <?
     if(!$locked)

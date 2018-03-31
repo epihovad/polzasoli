@@ -11,7 +11,7 @@ jQuery.fn.jRotator = function(prm){
 	
 	var $obj = $(this);
 	var $images = $obj.find('img');
-	var count = $images.size();
+	var count = $images.length;
 	if(!count) return false;
 	var move = true;
 	var t1;

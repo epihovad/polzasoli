@@ -51,7 +51,7 @@ jPop - собственный плагин (v1.0).
 			$(document).mousewheel(function(event){
 				if($jPop.is(':visible'))
 				{
-					if(!$(event.currentTarget).parents($jPop).size())
+					if(!$(event.currentTarget).parents($jPop).length)
 						event.preventDefault();
 				}
 			});
@@ -69,7 +69,7 @@ jPop - собственный плагин (v1.0).
 				callback : function(){}
 			}, prm);
 			
-			if(!$jPop.size()) jPop_methods.init.call();
+			if(!$jPop.length) jPop_methods.init.call();
 			if(!prm.url && !prm.data) return false;
 			
 			if(prm.callback)

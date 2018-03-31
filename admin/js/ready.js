@@ -18,7 +18,7 @@ $(function(){
 
 		$table.find('tr').slice(tr_index+1).each(function(){
 			$check = jQuery(this).find('td').eq(th_index).find('input');
-			if($check.size())
+			if($check.length)
 				$check.attr('checked',checked);
 		});
 	});
@@ -26,11 +26,8 @@ $(function(){
 	Search();
 	//
 	CKEditor();
-	// тень
-	$(document).jB();
-	
 	// календарь
-	if($('.datepicker').size())
+	if($('.datepicker').length)
 	{
 		$.datepicker.setDefaults($.datepicker.regional['ru']);
 		$('.datepicker').css({'width':'80px','text-align':'center'});
@@ -85,7 +82,7 @@ $(function(){
 	// обновление значения в списке
 	$('span.lval').dblclick(function(){
 		var $input = $(this).next('input');
-		if(!$input.size()) return false;
+		if(!$input.length) return false;
 		$(this).hide();
 		$input.show().focus().select();
 	});
@@ -106,13 +103,13 @@ $(function(){
 			});
 	});
 	// загрузка изображений
-	$('.gimg').find('.add .i2 a').live('click',function(){
+	$('.gimg').find('.add .i2 a').on('click',function(){
 		var $block = $(this).parents('div.gimg:first');
 		var count = $block.attr('count')-1;
 		var name = $block.attr('name');
 		
 		var $glist = $block.find('.glist');
-		var n = $glist.find('.add').size();
+		var n = $glist.find('.add').length;
 
 		// убираем у предыдущего поля "ещё"
 		var $last = $glist.find('.add').eq(n-1);
@@ -133,7 +130,7 @@ function Search()
 {
 	var $field = $('#searchTxt');
 	var $btn = $('#searchBtn');
-	if(!$field.size() || !$btn.size()) return false;
+	if(!$field.length || !$btn.length) return false;
 
 	$field.keydown(function(e){
 		var code = e.keyCode || e.which;

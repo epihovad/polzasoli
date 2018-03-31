@@ -6,7 +6,7 @@
 			$(this).each(function(){
 		
 				var $jScroll = $(this);
-				if($jScroll.parents('.jScroll_ar:first').size())
+				if($jScroll.parents('.jScroll_ar:first').length)
 					jScroll_methods.destroy.call($jScroll);
 				
 				var h = $jScroll.attr('h');
@@ -121,7 +121,7 @@
 			$jScroll = $(this); // <div class="jScroll" h="">
 			
 			var $jScroll_ar = $jScroll.parents('.jScroll_ar:first'); // обёртка объекта
-			if(!$jScroll_ar.size())
+			if(!$jScroll_ar.length)
 			{
 				jScroll_methods.init.call($jScroll);
 				return false;
@@ -139,7 +139,7 @@
 			$jScroll = $(this); // <div class="jScroll" h="">
 			
 			var $jScroll_ar = $jScroll.parents('.jScroll_ar:first'); // обёртка объекта	
-			if(!$jScroll_ar.size()) return false;
+			if(!$jScroll_ar.length) return false;
 			
 			var $jScroll_top = 		$jScroll_ar.find('.jScroll_top'); // затухание сверху
 			var $jScroll_bot = 		$jScroll_ar.find('.jScroll_bot'); // затухание снизу

@@ -1,44 +1,27 @@
 <?
-function remove_page($id)
+/*
+ * $childs = array(
+ * 		array('catalog' => 'id_catalog'),
+ * 		array('pages' => 'id_parent'),
+ * 		array('goods' => 'id_catalog'),
+ * )
+ */
+function remove_object($id, $childs = array())
 {
-	global $prx,$tbl;
+	global $prx, $tbl;
 
-	// обновляем подчинённые рубрики
-	sql("UPDATE {$prx}{$tbl} SET id_parent=0 WHERE id_parent='{$id}'");
+	// обнуляем связки с текущей записью
+	if(sizeof($childs)){
+		foreach ($childs as $child) {
+			foreach ($child as $ch_tbl => $ch_filed) {
+				sql("UPDATE {$prx}{$ch_tbl} SET {$ch_filed} = 0 WHERE {$ch_filed} = '{$id}'");
+			}
+		}
+	}
 	// чистим sitemap
-	sql("DELETE FROM {$prx}sitemap WHERE id_obj='{$id}' AND `type`='{$tbl}'");
+	sql("DELETE FROM {$prx}sitemap WHERE id_obj = '{$id}' AND `type` = '{$tbl}'");
 	// мочим картинки
-	remove_img($id);
-	// удаляем текущую страницу
-	update($tbl,'',$id);
-}
-
-function remove_catalog($id)
-{
-	global $prx,$tbl;
-	
-	// обновляем подчинённые рубрики
-	sql("UPDATE {$prx}{$tbl} SET id_parent=0 WHERE id_parent='{$id}'");
-	// удаляем связь рубрики с товаром
-	sql("UPDATE {$prx}goods SET id_catalog=0 WHERE id_catalog='{$id}'");
-	// чистим sitemap
-	sql("DELETE FROM {$prx}sitemap WHERE id_obj='{$id}' AND `type`='{$tbl}'");
-	// мочим картинки
-	remove_img($id,$tbl);
-	// удаляем текущую рубрику
-	update($tbl,'',$id);
-}
-
-function remove_good($id)
-{
-	global $prx,$tbl;
-	
-	// мочим картинки
-	remove_img($id);
-	// отзывы
-	//sql("DELETE FROM {$prx}reviews WHERE id_goods='{$id}'");
-	// чистим sitemap
-	sql("DELETE FROM {$prx}sitemap WHERE id_obj='{$id}' AND `type`='{$tbl}'");
+	remove_img($id, $tbl);
 	// удаляем текущую рубрику
 	update($tbl,'',$id);
 }

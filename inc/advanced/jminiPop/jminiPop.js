@@ -44,8 +44,8 @@
 			
 			var $obj = $(this);
 		
-			if(!$obj.size()) return false;
-			if(!$jminiPop.size()) jminiPop_methods.init.call();
+			if(!$obj.length) return false;
+			if(!$jminiPop.length) jminiPop_methods.init.call();
 			
 			var windW, windH, windL, windT;
 			var indL, indT;

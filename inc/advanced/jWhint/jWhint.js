@@ -7,7 +7,7 @@ jQuery.fn.jWhint = function(){
 	$(this).click(function(){
 		var $h = $(this);
 		var $p = $('div.whint[hnum="'+$h.attr('hnum')+'"]');
-		if(!$p.size())
+		if(!$p.length)
 		{
 			$p = $('<div class="whint" hnum="'+$h.attr('hnum')+'"></div>');
 			$('body').prepend($p);
@@ -46,7 +46,7 @@ jQuery.fn.jWhint = function(){
       var $p = $(this);
 			if(!$p.is(':visible')) return true;
 			if($o.hasClass('whint')) return true;
-			if(!$o.parents('.whint').size()) whint_sh($p);
+			if(!$o.parents('.whint').length) whint_sh($p);
     });
 	});
 };

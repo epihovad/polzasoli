@@ -6,7 +6,7 @@ $(function(){
 function reviews()
 {
 	var $reviews = $('#reviews');
-	if(!$reviews.size()) return false;
+	if(!$reviews.length) return false;
 	
 	var $frm = $reviews.find('form');
 	var $who = $frm.find('.who');

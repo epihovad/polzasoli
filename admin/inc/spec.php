@@ -297,7 +297,7 @@ function show_tr_img($input_name,$path,$fname='',$href,$name='Изображен
 	return ob_get_clean();
 }
 
-function show_tr_images($mask,$title='Изображения',$help='',$count=3,$name='gimg',$dir='',$size_mini='45x45',$dopfield=false)
+function show_tr_images($mask,$title='Изображения',$help='',$count=3,$name='gimg',$dir='',$size_mini='45x45')
 {
 	global $prx, $tbl, $row;
 	$dir = $dir ? $dir : $tbl;
@@ -306,14 +306,11 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 		<th class="tab_red_th"><?=$help?help($help):''?></th>
 		<th><?=$title?></th>
 		<td>
-			<div class="gimg" count="<?=$count?>" name="<?=$name?>"<?=$dopfield?' dopfield="true"':''?>>
+			<div class="gimg" count="<?=$count?>" name="<?=$name?>">
 				<div class="glist" style="padding-left:0">
 					<div class="add">
 						<div class="i1"><input type="file" name="<?=$name?>[]"></div>
 						<? if($count>1){ ?><div class="i2"><a href="" title="добавить">ещё</a></div><? }?>
-            <? if($dopfield){ ?>
-            <div class="i3"><input type="text" name="fval_<?=$name?>[]" /></div>
-            <? } ?>
 					</div>
           <div class="clear" style="padding-top:5px;"></div>
 					<?
@@ -347,9 +344,6 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 								<div class="i0"><?=$i++?>.</div>
 								<div class="i1"><a href="/uploads/<?=$dir?>/<?=$fname?>" class="highslide" onclick="return hs.expand(this)"><img src="/uploads/<?=$dir?>/<?=$size_mini?>/<?=$fname?>" width="16"></a></div>
 								<div class="i2"><a href="?action=img_del&id=<?=$mask?>&dir=<?=$dir?>&fname=<?=$fname?>" target="ajax" title="удалить текущее изображение"><img src="img/del.png"></a></div>
-                <? if($dopfield){ ?>
-                <div class="i3"><input type="text" name="fval[<?=$fname?>]" value="<?=getField("SELECT `val` FROM {$prx}materials_img WHERE `fname`='{$fname}'")?>" /></div>
-                <? } ?>
 							</div>
 							<?
 						}
@@ -735,6 +729,7 @@ $filters = array(	'page'=>'постраничный вывод объектов'
 									'context'=>'выбор объектов по контекстному поиску',
 									'sitemap'=>'отображать sitemap поля',
 									'catalog'=>'выбор объектов по рубрике каталога',
+									'gallery_catalog'=>'выбор объектов по рубрике каталога',
 									'order_status'=>'выбор заказов по статусу',
 									'msg'=>'выбор сообщений по типу',
 									'reviews'=>'выбор отзывов по объекту');

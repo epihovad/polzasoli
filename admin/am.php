@@ -126,9 +126,9 @@ else
 			<tr id="row<?=$row['id']?>">
 			<th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
 			<th><?=$i++?></th>
-      <th><img src="img/navigate/<?=$row['pic']?>.png" width="25" height="22" /></th>
+      <th><img src="img/navigate/<?=$row['link']?>.png" width="25" height="22" /></th>
 			<td><?=$prfx?><a href="?red=<?=$row['id']?>" class="link1"><?=$row['name']?></a></td>
-			<td><a href="" onclick="RegSessionSort('<?=$row['link']?>','filter=remove');return false;" style="color:#090"><?=$row['link']?></a></td>
+			<td><a href="" onclick="RegSessionSort('<?=$row['link']?>.php','filter=remove');return false;" style="color:#090"><?=$row['link']?>.php</a></td>
 			<td nowrap align="center"><?=btn_sort($row['id'])?></td>
 			<td nowrap align="center"><?=btn_edit($row['id'])?></td>
 			</tr>

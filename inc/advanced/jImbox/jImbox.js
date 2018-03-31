@@ -71,7 +71,7 @@
 			$jImbox['objs'].each(function(){
 				$(this).attr('num',$jImboxVars.num++);
 			});
-			$jImboxVars['imkol'] = $jImbox['objs'].size();
+			$jImboxVars['imkol'] = $jImbox['objs'].length;
 
 			$jImbox['box'] = $('<div id="jImbox" align="center"></div>');
 			$jImbox['im'] = $('<img id="jImbox_im" alt="">');
@@ -108,7 +108,7 @@
 			$(document).click(function(event){
 				if($jImbox['box'].is(':visible'))
 				{
-					if(!$(event.target).parents('#jImbox').size())
+					if(!$(event.target).parents('#jImbox').length)
 						jImboxMethods.hide.call();
 				}
 			});
@@ -283,7 +283,7 @@
 		
 		repos : function(){
 			
-			if(!$jImbox['box'].size() || !$jImbox['box'].is(':visible')) return false;
+			if(!$jImbox['box'].length || !$jImbox['box'].is(':visible')) return false;
 			
 			var Left = Math.round( ($('body').width()/2) - ($jImbox['box'].width()/2) + $(window).scrollLeft() );
 			var Top = Math.round( ($('body').height()/2) - ($jImbox['box'].height()/2) + $(window).scrollTop() );
