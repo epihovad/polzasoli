@@ -1,8 +1,11 @@
 <?
+/*
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Z_m0Ip7XmNg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+ */
 require('inc/common.php');
 
-$rubric = 'Отзывы на главной';
-$tbl = 'reviews_index';
+$rubric = 'Отзывы';
+$tbl = 'reviews';
 
 // -------------------СОХРАНЕНИЕ----------------------
 if(isset($_GET['action']))
@@ -17,12 +20,11 @@ if(isset($_GET['action']))
 				$$key = clean($val);
 
 			if(!$name) errorAlert('Введите имя');
-			if(!$prof) errorAlert('Введите профессию');
-			if(!$text) errorAlert('Введите текст отзыва');
+			if(!$text && !$youtube) errorAlert('Введите текст отзыва или добавьте код видео');
 
 			$set = "name='{$name}',
-			        prof='{$prof}',
-			        text='{$text}',
+			        text=".($text ? "'{$text}'" : 'NULL').",
+			        youtube=".($youtube ? "'{$youtube}'" : 'NULL').",
 			        status='{$status}'";
 
 			if(!$id = update($tbl,$set,$id))
@@ -43,7 +45,6 @@ if(isset($_GET['action']))
 						$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$dir}/{$new_name}";
 						@move_uploaded_file($_FILES['img']['tmp_name'][$num],$path);
 						@chmod($path,0644);
-						resizeIm($_SERVER['DOCUMENT_ROOT']."/uploads/{$dir}/{$new_name}",array('47','47'),$_SERVER['DOCUMENT_ROOT']."/uploads/{$dir}/47x47/{$new_name}",1,'');
 					}
 				}
 			}
@@ -56,13 +57,13 @@ if(isset($_GET['action']))
 		break;
 		// ----------------- удаление банера
 		case 'del':
-			update($tbl,'',$id);
+			remove_object($id);
 			?><script>top.location.href = '<?=$script?>'</script><?
 		break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
 			foreach($_POST['check_del_'] as $id=>$v)
-				update($tbl,'',$id);
+				remove_object($id);
 			?><script>top.location.href = '<?=$script?>'</script><?
 		break;
 	}
@@ -90,13 +91,13 @@ if(isset($_GET['red']))
 		<?=show_tr_images($id,'Фото','Для корректного отображения фото,<br>рекомендуется загружать квадратное небольшое изображение',1,'img','reviews','47x47')?>
     <tr>
       <th class="tab_red_th"></th>
-      <th>Профессия</th>
-      <td><?=show_pole('text','prof',htmlspecialchars($row['prof']))?></td>
+      <th>Текст отзыва</th>
+      <td><?=show_pole('textarea','text',$row['text'])?></td>
     </tr>
     <tr>
-      <th class="tab_red_th"></th>
-      <th>Отзыв</th>
-      <td><?=show_pole('textarea','text',$row['text'])?></td>
+      <th class="tab_red_th"><?=help('Для корректного отображения плеера,<br>рекомендуется использовать размер видео 560x315 (ширина x высота)')?></th>
+      <th>Код видео</th>
+      <td><?=show_pole('textarea','youtube',$row['youtube'])?></td>
     </tr>
     <tr>
       <th class="tab_red_th"></th>
@@ -136,13 +137,13 @@ else
       <th>№</th>
       <th><img src="img/image.png" title="изображение" /></th>
       <th>Имя</th>
-      <th>Профессия</th>
-      <th width="100%">Отзыв</th>
+      <th width="50%">Текст отзыва</th>
+      <th width="50%">Код видео</th>
       <th nowrap>Статус</th>
       <th style="padding:0 30px;"></th>
     </tr>
   <?
-	$res = sql("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id");
+	$res = sql("SELECT * FROM {$prx}{$tbl} ORDER BY id");
 	if(mysql_num_rows($res))
 	{
 		$i=1;
@@ -157,18 +158,18 @@ else
 					<?
 					$src = '/uploads/no_photo.jpg';
 					$big_src = '/uploads/no_photo.jpg';
-					if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/reviews/{$id}.jpg")){
-						$src = "/uploads/reviews/47x47/{$id}.jpg";
-						$big_src = "/uploads/reviews/{$id}.jpg";
+					if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
+						$src = "/uploads/{$tbl}/50x-/{$id}.jpg";
+						$big_src = "/uploads/{$tbl}/{$id}.jpg";
 					}
 					?>
-          <a href="<?=$big_src?>" class="highslide" onclick="return hs.expand(this)">
-            <img src="<?=$src?>" align="absmiddle" height="45" />
+          <a href="<?=$big_src?>" class="highslide" onclick="return hs.expand(this)" style="display:block;">
+            <img src="<?=$src?>" align="absmiddle" style="max-height:50px; border-radius:100px;" />
           </a>
         </th>
         <td nowrap><?=$row['name']?></td>
-        <td nowrap><?=$row['prof']?></td>
         <td><?=$row['text']?></td>
+        <td align="center"><?=$row['youtube']?></td>
         <td nowrap align="center"><?=btn_flag($row['status'],$row['id'],'action=status&id=')?></td>
 			  <td nowrap align="center"><?=btn_edit($row['id'])?></td>
 			</tr>
