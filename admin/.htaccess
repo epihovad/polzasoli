@@ -3,4 +3,4 @@
 #Allow from 127.0.0.1
 
 #php_flag register_globals off
-#php_flag display_errors off
+php_flag display_errors on

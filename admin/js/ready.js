@@ -139,50 +139,34 @@ function Search()
 	$btn.click(function(){ RegSessionSort($('#script').val(),'context='+$field.val()); return false; });
 }
 
-function CKEditor()
-{
-	// CKEditor
-	try {
-		$('textarea[toolbar]').each(function() { // ПРИМЕР: <textarea name="text" toolbar="basic" rows="10"><?=$row['text']?></textarea>
-			this.id = this.name;
-			var toolbar = $(this).attr('toolbar');
-			var CKEditor = CKEDITOR.replace(this.id,
-			{
-				toolbar: toolbar,
-				width: $(this).width(),
-				height: $(this).height(),
-				removePlugins: toolbar == 'Full' ? '' : 'elementspath',
-				resize_enabled: toolbar == 'Full',
-				contentsCss: '/css/CK.css?v=20171223',
-				coreStyles_bold: { element : 'b' },
-				coreStyles_italic: { element : 'i' },
-				skin: 'v2',
-				uiColor: '#d4dff2',
-				toolbar_full:[
-					['Source','-','Maximize',/*'Save',*/'Preview','-','Templates'],
-					['Cut','Copy','Paste','PasteText','PasteFromWord'],
-					['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],
-					['Form','Checkbox','Radio','TextField','Textarea','Select','Button','ImageButton','HiddenField'],'/',
-					['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
-					['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv'],
-					['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-					['BidiLtr','BidiRtl'],['Link','Unlink','Anchor'],
-					['Image','Flash','Table','HorizontalRule','SpecialChar'],'/',
-					[/*'Styles',*/'Format',/*'Font',*/'FontSize'],['TextColor','BGColor'],['ShowBlocks'] 
-				],
-				toolbar_medium:[
-					['Source','-',/*'Save',*/'Preview','-','Templates'],['Cut','Copy','Paste','PasteText','PasteFromWord'],
-					['Undo','Redo','-','Find','Replace','-','SelectAll','RemoveFormat'],'/',
-					['Bold','Italic','Underline','Strike','-','Subscript','Superscript'],
-					['NumberedList','BulletedList'],['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
-					['Link','Unlink'],['Image','Flash','Table','HorizontalRule','SpecialChar'],'/',
-					['Format',/*'Font',*/'FontSize'],['TextColor','BGColor'],['ShowBlocks'] 
-				],
-				toolbar_basic:[
-					['Source','-','Bold','Italic','Underline','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','NumberedList','BulletedList','-','TextColor','-','Link','Unlink','-','Image']
-				]
-			});
-			CKFinder.setupCKEditor(CKEditor, '/inc/advanced/ckfinder/');			
-		});
-	} catch(e) {}
+function CKEditor() {
+  // CKEditor
+  $('textarea[toolbar]').each(function () { // ПРИМЕР: <textarea name="text" toolbar="basic" rows="10"><?=$row['text']?></textarea>
+    this.id = this.name;
+    var toolbar = $(this).attr('toolbar');
+    var CKEditor = CKEDITOR.replace(
+    	this.id,
+      {
+        toolbarGroups : [
+          {name: 'document', groups: ['mode', 'document', 'doctools']},
+          {name: 'clipboard', groups: ['clipboard', 'undo']},
+          {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+          {name: 'forms', groups: ['forms']},
+          '/',
+          {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+          {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+          {name: 'links', groups: ['links']},
+          {name: 'insert', groups: ['insert']},
+          '/',
+          {name: 'styles', groups: ['styles']},
+          {name: 'colors', groups: ['colors']},
+          {name: 'tools', groups: ['tools']},
+          {name: 'others', groups: ['others']},
+          {name: 'about', groups: ['about']}
+        ],
+        removeButtons : 'Save,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Language,About',
+      }
+    );
+    CKFinder.setupCKEditor(CKEditor, '/js/ckfinder/');
+  });
 }

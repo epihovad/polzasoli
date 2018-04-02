@@ -13,7 +13,6 @@
 	require($_SERVER['DOCUMENT_ROOT'].'/inc/db.php'); // коннектимся к базе
 	require($_SERVER['DOCUMENT_ROOT'].'/inc/utils.php'); // разные полезные функции
 	require($_SERVER['DOCUMENT_ROOT'].'/inc/tree.php'); // функции для дерева
-	require($_SERVER['DOCUMENT_ROOT'].'/inc/advanced/advanced.php'); // "навороты" к сайту
 	// ------------------------------
 	
 	// функции, константы, переменные

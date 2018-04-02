@@ -30,23 +30,13 @@ if(isset($_GET['action']))
 			if(!$id = update($tbl,$set,$id))
 				errorAlert('Во время сохранения данных произошла ошибка.');
 
-			$dir = 'reviews';
-			if(sizeof((array)$_FILES['img']['name']))
+			// загружаем картинку
+			if($_FILES['img']['name'])
 			{
-				foreach($_FILES['img']['name'] as $num=>$null)
-				{
-					if(!$_FILES['img']['name'][$num]) continue;
-
-					// формируем имя картинки
-					if($new_name = get_pic_name($id, $dir))
-					{
-						remove_img($new_name, $dir);
-
-						$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$dir}/{$new_name}";
-						@move_uploaded_file($_FILES['img']['tmp_name'][$num],$path);
-						@chmod($path,0644);
-					}
-				}
+				remove_img($id);
+				$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
+				@move_uploaded_file($_FILES['img']['tmp_name'],$path);
+				@chmod($path,0644);
 			}
 
 			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
@@ -66,6 +56,11 @@ if(isset($_GET['action']))
 				remove_object($id);
 			?><script>top.location.href = '<?=$script?>'</script><?
 		break;
+		// ----------------- удаление изображения
+		case 'pic_del':
+			remove_img($id);
+			?><script>top.location.href = '<?=$script?>?red=<?=$id?>'</script><?
+			break;
 	}
 	exit;
 }
@@ -88,8 +83,8 @@ if(isset($_GET['red']))
       <th>Имя</th>
       <td><?=show_pole('text','name',htmlspecialchars($row['name']))?></td>
     </tr>
-		<?=show_tr_images($id,'Фото','Для корректного отображения фото,<br>рекомендуется загружать квадратное небольшое изображение',1,'img','reviews','47x47')?>
-    <tr>
+		<?=show_tr_img('img',"/uploads/{$tbl}/","{$id}.jpg",$script."?action=pic_del&id={$id}",'Фото','Для корректного отображения фото,<br>рекомендуется загружать квадратное изображение размером 100x100 пикселей')?>
+		<tr>
       <th class="tab_red_th"></th>
       <th>Текст отзыва</th>
       <td><?=show_pole('textarea','text',$row['text'])?></td>
@@ -190,7 +185,7 @@ else
   </table>
   </form>
   <?
-	$content = $subcontent.ob_get_clean();
+	$content = panel($navigate, $subcontent.ob_get_clean());
 }
 
-require('tpl/tpl.php');
+require('tpl/template.php');

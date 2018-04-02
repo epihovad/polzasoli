@@ -1,7 +1,7 @@
 <?
 require('inc/common.php');
 
-$rubric = 'Страницы';
+$h1 = 'Страницы';
 $tbl = 'pages';
 
 // ------------------- СОХРАНЕНИЕ ------------------------
@@ -124,8 +124,8 @@ if(isset($_GET['action']))
 elseif(isset($_GET['red']))
 {
 	$id = (int)$_GET['red'];
-	
-	$rubric .= ' &raquo; '.($id ? 'Редактирование' : 'Добавление');
+
+	$navigate .= $id ? 'Редактирование' : 'Добавление';
 	$page_title .= ' :: '.$rubric;
 	
 	$row = gtv($tbl,'*',$id);
@@ -133,12 +133,12 @@ elseif(isset($_GET['red']))
 	
 	ob_start();
 	?>
-  <link rel="stylesheet" href="/js/jquery/chosen/chosen.min.css">
+  <link rel="stylesheet" href="/js/chosen/chosen.min.css">
   <style>
     .for-page { display:<?=$row['type']=='link'?'none':'table-row'?>;}
     .chosen-search-input { width:auto !important;}
   </style>
-  <script src="/js/jquery/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+  <script src="/js/chosen/chosen.jquery.min.js" type="text/javascript"></script>
   <script>
     $(function () {
       //
@@ -176,12 +176,12 @@ elseif(isset($_GET['red']))
     <tr>
       <th class="tab_red_th"></th>
       <th>Краткое<br />описание</th>
-      <td><?=showFck('preview',$row['preview'],'medium','100%',20)?></td>
+      <td><?=showCK('preview',$row['preview'],'medium','100%',20)?></td>
     </tr>
     <tr class="for-page">
       <th class="tab_red_th"></th>
       <th>Текст</th>
-      <td><?=showFck('text',$row['text'])?></td>
+      <td><?=showCK('text',$row['text'])?></td>
     </tr>
     <tr class="for-page">
       <th class="tab_red_th"><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
@@ -246,7 +246,7 @@ elseif(isset($_GET['red']))
   </table>
   </form>
   <?
-	$content = ob_get_clean();
+	$content = panel($navigate, ob_get_clean());
 }
 // -----------------ПРОСМОТР-------------------
 else
@@ -255,7 +255,7 @@ else
 	$sitemap = isset($_SESSION['ss']['sitemap']);
 
 	$page_title .= ' :: '.$rubric;
-	$rubric .= ' &raquo; Общий список';
+	$navigate .= 'Общий список';
 
 	if($sitemap) $razdel['Сохранить'] = "javascript:saveall();";
 	$razdel['Добавить'] = '?red=0';
@@ -284,7 +284,7 @@ else
 		$query .= ' ORDER BY sort,id';
 	//-----------------------------
 	//echo $query;
-	
+
 	show_filters($script);
 
 	if(!$sitemap){ ?>
@@ -294,30 +294,33 @@ else
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
   <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
-  <table width="100%" cellspacing="0" cellpadding="0" class="tab1">
-    <tr>
-      <th><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th>№</th>
-      <th><img src="img/image.png" title="изображение" /></th>
-      <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
-      <? if($sitemap){?>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
-			<? }?>
-      <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Тип','type')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Глав. меню','is_main')?> <?=help('отображать объект в главном меню')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'В слайдер','is_slider')?> <?=help('отображать объект в слайдере<br>на главной странице')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
-      <? if(!$_SESSION['ss']['sort']) { ?><th nowrap>Порядок <?=help('параметр с помощью которого можно изменить порядок вывода элемента в клиентской части сайта')?></th><? }?>
-      <th style="padding:0 30px;"></th>
-    </tr>
+  <table class="table-list">
+    <thead>
+      <tr>
+        <th><input type="checkbox" name="check_del" id="check_del" /></th>
+        <th>№</th>
+        <th><img src="img/image.png" title="изображение" /></th>
+        <th width="50%">Название<?//=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
+        <? if($sitemap){?>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
+        <? }?>
+        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Тип','type')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Глав. меню','is_main')?> <?=help('отображать объект в главном меню')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'В слайдер','is_slider')?> <?=help('отображать объект в слайдере<br>на главной странице')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
+        <? if(!$_SESSION['ss']['sort']) { ?><th nowrap>Порядок <?=help('параметр с помощью которого можно изменить порядок вывода элемента в клиентской части сайта')?></th><? }?>
+        <th style="padding:0 30px;"></th>
+      </tr>
+    </thead>
   <?
 	$mas = getTree($query);
 	if(sizeof($mas))
 	{
 		$i=1;
+		?><tbody><?
 		foreach($mas as $vetka)
 		{
 			$row = $vetka['row'];
@@ -352,12 +355,12 @@ else
           <th class="sitemap"><input type="text" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" style="text-align:center; width:30px;" /></th>
 				<? }?>
 				<td><?=$row['type']=='page'?'/':''?><a href="<?=$link?>" style="color:#090" target="_blank"><?=$row['link']?></a><?=$row['type']=='page'?'.htm':''?></td>
-				<td align="center"><?=$row['type']=='page'?'страница':'ссылка'?></td>
-				<td align="center"><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></td>
-        <td align="center"><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></td>
-				<td align="center"><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></td>
+				<th><?=$row['type']=='page'?'страница':'ссылка'?></th>
+				<th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
+        <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
+				<th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
 				<? if(!$_SESSION['ss']['sort']){ ?><td nowrap align="center"><?=btn_sort($id)?></td><? }?>
-				<td nowrap align="center"><?=btn_edit($id,$locked)?></td>
+				<th nowrap><?=btn_edit($id,$locked)?></th>
 			</tr>
 			<?
 		}
@@ -373,10 +376,11 @@ else
     <?
 	}
 	?>
+  </tbody>
   </table>
   </form>
   <?
-	$content = $subcontent.ob_get_clean();
+	$content = panel($navigate, $subcontent.ob_get_clean(), 'Date - <small class="text-success">20:08:2014</small>');
 }
 
-require('tpl/tpl.php');
+require('tpl/template.php');

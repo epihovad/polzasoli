@@ -29,19 +29,12 @@ if(isset($_GET['action']))
 				errorAlert('Во время сохранения данных произошла ошибка.');
 
 			// загружаем картинку
-			if(sizeof((array)$_FILES[$tbl]['name']))
+			if($_FILES['img']['name'])
 			{
-				foreach($_FILES[$tbl]['name'] as $num=>$null)
-				{
-					if(!$_FILES[$tbl]['name'][$num]) continue;
-
-					remove_img($id, $tbl);
-					$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
-					@move_uploaded_file($_FILES[$tbl]['tmp_name'][$num],$path);
-					@chmod($path,0644);
-
-					break;
-				}
+				remove_img($id);
+				$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
+				@move_uploaded_file($_FILES['img']['tmp_name'],$path);
+				@chmod($path,0644);
 			}
 
 			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
@@ -64,8 +57,8 @@ if(isset($_GET['action']))
 			?><script>top.location.href = '<?=$script?>'</script><?
 			break;
 		// ----------------- удаление изображения
-		case 'img_del':
-			remove_img($id,$tbl);
+		case 'pic_del':
+			remove_img($id);
 			?><script>top.location.href = '<?=$script?>?red=<?=$id?>'</script><?
 			break;
 	}
@@ -100,7 +93,7 @@ elseif(isset($_GET['red']))
         <th>Ссылка</th>
         <td><?=show_pole('text','link',htmlspecialchars($row['link']))?></td>
       </tr>
-			<?=show_tr_images($id,'Изображение','рекомендуется загружать изображение не более 125 пикселей',1,$tbl,$tbl)?>
+			<?=show_tr_img('img',"/uploads/{$tbl}/","{$id}.jpg",$script."?action=pic_del&id={$id}",'Изображение','рекомендуется загружать изображение не более 125 пикселей')?>
       <tr>
         <th class="tab_red_th"></th>
         <th>Сквозной</th>

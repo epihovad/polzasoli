@@ -1,4 +1,19 @@
 <?
+function panel($head, $body, $custom = null)
+{
+  ob_start();
+  ?>
+  <div class="panel">
+    <div class="panel-head">
+      <h4><?=$head?></h4>
+      <i><?=$custom?></i>
+    </div>
+    <div class="panel-body"><?=$body?></div>
+  </div>
+  <?
+  return ob_get_clean();
+}
+
 function updateSitemap()
 {
 	global $prx, $tbl;
@@ -571,14 +586,14 @@ function show_pole($type,$name,$value='',$locked=0,$rows=3)
 	switch($type)
 	{
 		case 'text':
-			?><input type="<?=$type?>" name="<?=$name?>" value="<?=$value?>" style="width:100%;"<?=($locked?" readonly":"")?>><?
+			?><input type="<?=$type?>" class="form-control" name="<?=$name?>" value="<?=$value?>" style="width:100%;"<?=($locked?" readonly":"")?>><?
 			break;
 		
 		case 'textarea':
-			?><textarea name="<?=$name?>" style="width:100%;" rows="<?=$rows?>"<?=($locked?" readonly":"")?>><?=$value?></textarea><?
+			?><textarea name="<?=$name?>" class="form-control" style="width:100%;" rows="<?=$rows?>"<?=($locked?" readonly":"")?>><?=$value?></textarea><?
 			break;
 		
-		case "checkbox":	
+		case "checkbox":
 			?>
 			<input type="hidden" name="<?=$name?>" id="ch_<?=$name?>"  value="<?=$value?>">
 			<input type="checkbox" <?=($value=="true" ? "checked" : "")?> onClick="$('#ch_<?=$name?>').val(this.checked);" style="width:auto;"<?=($locked?" readonly":"")?>>
@@ -1084,4 +1099,8 @@ function show_stat_count()
 	<?
 	return ob_get_clean();
 }
-?>
+
+function showCK($name,$text,$toolBar='full',$width="100%",$rows=20)
+{
+	?><textarea name="<?=$name?>" toolbar="<?=$toolBar?>" rows="<?=$rows?>" style="width:<?=$width?>"><?=$text?></textarea><?
+}
