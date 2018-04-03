@@ -3,6 +3,7 @@ require('inc/common.php');
 
 $h1 = 'Страницы';
 $tbl = 'pages';
+$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // ------------------- СОХРАНЕНИЕ ------------------------
 if(isset($_GET['action']))
@@ -246,7 +247,7 @@ elseif(isset($_GET['red']))
   </table>
   </form>
   <?
-	$content = panel($navigate, ob_get_clean());
+	$content = arr($navigate, ob_get_clean());
 }
 // -----------------ПРОСМОТР-------------------
 else
@@ -380,7 +381,7 @@ else
   </table>
   </form>
   <?
-	$content = panel($navigate, $subcontent.ob_get_clean(), 'Date - <small class="text-success">20:08:2014</small>');
+	$content = arr($navigate, $subcontent.ob_get_clean(), 'Date - <small class="text-success">20:08:2014</small>');
 }
 
 require('tpl/template.php');

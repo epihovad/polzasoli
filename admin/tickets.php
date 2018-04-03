@@ -3,6 +3,7 @@ require('inc/common.php');
 
 $h1 = 'Абонементы';
 $tbl = 'tickets';
+$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // -------------------СОХРАНЕНИЕ----------------------
 if(isset($_GET['action']))

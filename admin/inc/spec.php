@@ -1,14 +1,14 @@
 <?
-function panel($head, $body, $custom = null)
+function arr($head, $body, $custom = null)
 {
   ob_start();
   ?>
-  <div class="panel">
-    <div class="panel-head">
+  <div class="arr">
+    <div class="arr-head">
       <h4><?=$head?></h4>
       <i><?=$custom?></i>
     </div>
-    <div class="panel-body"><?=$body?></div>
+    <div class="arr-body"><?=$body?></div>
   </div>
   <?
   return ob_get_clean();
@@ -642,7 +642,8 @@ function show_pole($type,$name,$value='',$locked=0,$rows=3)
 function help($text)
 {
 	ob_start();
-	?><a class="help" title="<?=htmlspecialchars($text)?>" href="" onClick="return false"><img src="img/help.png" width="16" height="16" align="absmiddle" /></a><?
+	?><a class="help" title="<?=htmlspecialchars($text)?>" href="" onClick="return false"><span class="glyphicon glyphicon-info-sign"></span></a><?
+	/*?><a class="help" title="<?=htmlspecialchars($text)?>" href="" onClick="return false"><img src="img/help.png" width="16" height="16" align="absmiddle" /></a><?*/
 	return ob_get_clean();
 }
 //

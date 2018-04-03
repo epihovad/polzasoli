@@ -11,11 +11,12 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-  <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"/>
   <link rel="stylesheet" href="css/style.css" type="text/css" />
 
   <script src="/js/jquery-3.1.1.min.js"></script>
-  <script src="/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
   <script src="/js/ui/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="css/ui/jquery-ui-1.8.1.custom.css" type="text/css">
@@ -59,7 +60,7 @@
 
     <div class="Lcol">
       <div class="lfix">
-        <div id="logo"><a href="/"><img src="/img/logo-mini.png" alt="">IRIDA</a></div>
+        <div id="logo"><a href="/"><img src="/img/logo-mini.png" alt=""></a></div>
         <?
         $tree = getTree("SELECT * FROM {$prx}am ORDER BY sort,id");
 				if (sizeof($tree)) {
@@ -69,16 +70,37 @@
 					foreach ($tree as $vetka) {
 						$item = $vetka['row'];
 						$level = $vetka['level'];
-						$id = $row['id'];
+						$id = $item['id'];
 
-            $active = $item['id'] == 55 || $item['id_parent'] == 55 ? 1 : 0;
-						if(!$i || $level > $old_level) { ?><ul><? }
+            $parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
+            $childs = getIdChilds("SELECT * FROM {$prx}am", $id);
+            $has_childs = sizeof($childs) > 1;
 
-						if($old_level !== null && $level < $old_level){
-              ?></li></ul><?
+						if(!$i || $level > $old_level) {
+						  if(!$level){
+						    $display = 'block';
+							} else {
+						    $display = in_array($menu['id'], $parents) !== false ? 'block' : 'none';
+              }
+						  ?><ul style="display:<?=$display?>"><?
+						}
+						if($old_level !== null && $level < $old_level){ ?></li></ul><? }
+
+						if(!$level){
+
+						  $class = '';
+              if($has_childs) $class .= ' has-sub';
+              //if(in_array($menu['id'], $parents) !== false) $class .= ' highlight';
+              if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
+
+							?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="fa fa-<?=$item['link']?>"></i><span><?=$item['name']?></span></a><?
+            } else {
+
+				      $class = '';
+				      if($id == $menu['id']) $class .= ' select';
+
+				      ?><li><a class="<?=$class?>" href="<?=$item['link']?>.php"><span><?=$item['name']?></span></a><?
             }
-
-            ?><li class="<?=$active?'has-sub highlight active':''?>"><a href="<?=$item['link']?>.php"><i></i><span><?=$item['name']?></span></a><?
 
             $old_level = $level;
             $i++;
@@ -98,7 +120,6 @@
       <? if($h1){ ?>
         <div class="Middle-Head">
           <h1><?=$h1?></h1>
-          <div class="nav"><a href="/">Главная</a><span></span><?=$navigate?></div>
         </div>
       <?}?>
       <div class="Middle"><?=$content?></div>
