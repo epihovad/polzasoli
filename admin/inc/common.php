@@ -2,7 +2,7 @@
 @session_start();
 
 // доступ
-if(!$_SESSION['admin']) { ?><script>top.location.href='login.php?action=vhodc&urlback=<?=$_SERVER['REQUEST_URI']?>';</script><? exit; }
+/*if(!$_SESSION['admin']) { ?><script>top.location.href='login.php?action=loginc&urlback=<?=$_SERVER['REQUEST_URI']?>';</script><? exit; }*/
 
 // модули специально для админки
 require('spec.php'); // постоянные

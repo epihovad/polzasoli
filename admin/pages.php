@@ -282,6 +282,8 @@ else
 	//-----------------------------
 	//echo $query;
 
+  show_listview_btns();
+
 	show_filters($script);
 
 	if(!$sitemap){ ?>
@@ -377,7 +379,7 @@ else
   </table>
   </form>
   <?
-	$content = arr($navigate, $subcontent.ob_get_clean(), 'Date - <small class="text-success">20:08:2014</small>');
+	$content = arr($navigate, ob_get_clean(), 'Date - <small class="text-success">20:08:2014</small>');
 }
 
 require('tpl/template.php');

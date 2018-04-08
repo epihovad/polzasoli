@@ -220,6 +220,9 @@ aside#sidebar {
 	border: 1px solid #d9d9d9;
 }
 
+#listview_btns { float:right; }
+#listview_btns button { margin:0 0 15px 5px;}
+
 footer {
 	border-top: 1px solid #e0e0e0;
 	background: #ededed;

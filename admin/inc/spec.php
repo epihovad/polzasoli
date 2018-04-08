@@ -647,6 +647,24 @@ function help($text)
 	return ob_get_clean();
 }
 //
+function show_listview_btns($btns = array()){
+
+  global $script;
+
+  if(!sizeof($btns)){
+    $btns = array(
+      'Добавить' => array('link' => '?red=0'),
+      'Удалить' => array('js' => "multidel(document.red_frm,'check_del_','')"),
+    );
+  }
+  ?><div id="listview_btns"><?
+  foreach ($btns as $name => $event){
+    $onclick = $event['link'] ? "location.href = '".$event['link']."'" : $event['js'];
+    ?><button type="button" class="btn btn-default btn-sm" onclick="<?=$onclick?>"><?=$name?></button><?
+  }
+  ?></div><?
+}
+//
 function show_letter_navigate($link,$tab,$pole,$where='')
 {
 	global $prx;
