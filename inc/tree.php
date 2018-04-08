@@ -34,7 +34,7 @@ function getPrefix($level = 0, $prefix = "&raquo;&nbsp;") {
 function dllTree($sql, $properties, $value = "", $default = NULL, $hidevalue = "", $id_parent = 0, $depth = 0, $prefix = NULL) {
 	ob_start();
 	?>
-  <select <?=$properties?>>
+  <select class="form-control input-sm" <?=$properties?>>
 		<?
 		if (!is_null($default)) {
 			if (is_array($default)) {

@@ -157,14 +157,14 @@ elseif(isset($_GET['red']))
 
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
   <input type="hidden" name="locked" value="<?=$locked?>" />
-  <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
+  <table class="table-edit">
     <tr>
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>Подчинение</th>
-      <td><?=dllTree("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id",'name="id_parent" style="width:100%"',$row['id_parent'],array('0'=>'без подчинения'),$id)?></td>
+      <td><?=dllTree("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id",'name="id_parent"',$row['id_parent'],array('0'=>'без подчинения'),$id)?></td>
     </tr>
     <tr>
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>Название</th>
       <td><?=show_pole('text','name',htmlspecialchars($row['name']),$locked)?></td>
     </tr>
@@ -175,12 +175,12 @@ elseif(isset($_GET['red']))
     </tr>
 		<?=show_tr_img('img',"/uploads/{$tbl}/","{$id}.jpg",$script."?action=pic_del&id={$id}")?>
     <tr>
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>Краткое<br />описание</th>
       <td><?=showCK('preview',$row['preview'],'medium','100%',20)?></td>
     </tr>
     <tr class="for-page">
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>Текст</th>
       <td><?=showCK('text',$row['text'])?></td>
     </tr>
@@ -194,7 +194,7 @@ elseif(isset($_GET['red']))
     {
       ?>
       <tr>
-        <th class="tab_red_th"></th>
+        <th></th>
         <th>Тип</th>
         <td><?=dll(array('page'=>'страница','link'=>'ссылка'),' name="type"',$row['type'])?></td>
       </tr>
@@ -204,7 +204,7 @@ elseif(isset($_GET['red']))
         <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_main"',$row['is_main'])?></td>
       </tr>
       <tr>
-        <th class="tab_red_th"></th>
+        <th></th>
         <th>Статус</th>
         <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
       </tr>
@@ -222,29 +222,25 @@ elseif(isset($_GET['red']))
       <td><?=show_pole('text','h1',htmlspecialchars($row['h1']))?></td>
     </tr>
     <tr class="for-page">
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>title</th>
       <td><?=show_pole('text','title',htmlspecialchars($row['title']))?></td>
     </tr>
     <tr class="for-page">
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>keywords</th>
       <td><?=show_pole('text','keywords',htmlspecialchars($row['keywords']))?></td>
     </tr>
     <tr class="for-page">
-      <th class="tab_red_th"></th>
+      <th></th>
       <th>description</th>
       <td><?=show_pole('textarea','description',$row['description'])?></td>
     </tr>
-    <tr>
-      <th class="tab_red_th"></th>
-      <th></th>
-      <td align="center">
-        <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="but1" onclick="loader(true)" />&nbsp;
-        <input type="button" value="Отмена" class="but1" onclick="location.href='<?=$script?>'" />
-      </td>
-    </tr>
   </table>
+  <div class="frm-btns">
+    <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
+    <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
+  </div>
   </form>
   <?
 	$content = arr($navigate, ob_get_clean());
@@ -360,7 +356,7 @@ else
 				<th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
         <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
 				<th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
-				<? if(!$_SESSION['ss']['sort']){ ?><td nowrap align="center"><?=btn_sort($id)?></td><? }?>
+				<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><?=btn_sort($id)?></th><? }?>
 				<th nowrap><?=btn_edit($id,$locked)?></th>
 			</tr>
 			<?

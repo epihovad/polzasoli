@@ -586,7 +586,7 @@ function show_pole($type,$name,$value='',$locked=0,$rows=3)
 	switch($type)
 	{
 		case 'text':
-			?><input type="<?=$type?>" class="form-control" name="<?=$name?>" value="<?=$value?>" style="width:100%;"<?=($locked?" readonly":"")?>><?
+			?><input type="<?=$type?>" class="form-control input-sm" name="<?=$name?>" value="<?=$value?>" style="width:100%;"<?=($locked?" readonly":"")?>><?
 			break;
 		
 		case 'textarea':

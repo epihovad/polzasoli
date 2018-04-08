@@ -75,7 +75,7 @@ function dll($obj, $properties, $value='', $default=NULL) // запрос/мас
 { 
 	ob_start();
 	
-	?><select <?=$properties?>><?	
+	?><select class="form-control input-sm" <?=$properties?>><?
 	if($default !== NULL)
 	{
 		if(is_array($default)) 
@@ -96,7 +96,7 @@ function dll($obj, $properties, $value='', $default=NULL) // запрос/мас
 		$selected = is_array($value) ? in_array($key, $value) : $key==$value;
 		?><option value="<?=htmlspecialchars($key)?>"<?=($selected?' selected':'')?>><?=$val?></option><? 
 	}
-	?></select><? 
+	?></select><?
 	
 	return ob_get_clean();
 }

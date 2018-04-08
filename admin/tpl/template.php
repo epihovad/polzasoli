@@ -11,18 +11,18 @@
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" />
-
   <script src="/js/jquery-3.1.1.min.js"></script>
 
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <script src="/js/ui/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="css/ui/jquery-ui-1.8.1.custom.css" type="text/css">
   <script src="/js/ui/jquery.ui.datepicker-ru.js" type="text/javascript"></script>
   <script src="/js/ckeditor/ckeditor.js" type="text/javascript"></script>
   <script src="/js/ckfinder/ckfinder.js" type="text/javascript"></script>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
 
   <script src="/js/arcticmodal/jquery.arcticmodal-0.3.min.js"></script>
   <link rel="stylesheet" href="/js/arcticmodal/jquery.arcticmodal-0.3.css">
@@ -55,83 +55,78 @@
 </head>
 <body>
 
-<div class="Around">
-  <div class="AroundRow">
+<header></header>
 
-    <div class="Lcol">
-      <div class="lfix">
-        <div id="logo"><a href="/"><img src="/img/logo-mini.png" alt=""></a></div>
-        <?
-        $tree = getTree("SELECT * FROM {$prx}am ORDER BY sort,id");
-				if (sizeof($tree)) {
-					?><div id="menu"><?
-					$i = 0;
-					$old_level = null;
-					foreach ($tree as $vetka) {
-						$item = $vetka['row'];
-						$level = $vetka['level'];
-						$id = $item['id'];
+<aside id="sidebar" style="left: 0px;">
 
-            $parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
-            $childs = getIdChilds("SELECT * FROM {$prx}am", $id);
-            $has_childs = sizeof($childs) > 1;
+	<?
+	$tree = getTree("SELECT * FROM {$prx}am ORDER BY sort,id");
+	if (sizeof($tree)) {
+		?><div id="menu"><?
+		$i = 0;
+		$old_level = null;
+	foreach ($tree as $vetka) {
+		$item = $vetka['row'];
+		$level = $vetka['level'];
+		$id = $item['id'];
 
-						if(!$i || $level > $old_level) {
-						  if(!$level){
-						    $display = 'block';
-							} else {
-						    $display = in_array($menu['id'], $parents) !== false ? 'block' : 'none';
-              }
-						  ?><ul style="display:<?=$display?>"><?
-						}
-						if($old_level !== null && $level < $old_level){ ?></li></ul><? }
+		$parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
+		$childs = getIdChilds("SELECT * FROM {$prx}am", $id);
+		$has_childs = sizeof($childs) > 1;
 
-						if(!$level){
+	if(!$i || $level > $old_level) {
+		if(!$level){
+			$display = 'block';
+		} else {
+			$display = in_array($menu['id'], $parents) !== false ? 'block' : 'none';
+		}
+		?><ul style="display:<?=$display?>"><?
+			}
+			if($old_level !== null && $level < $old_level){ ?></li></ul><? }
 
-						  $class = '';
-              if($has_childs) $class .= ' has-sub';
-              //if(in_array($menu['id'], $parents) !== false) $class .= ' highlight';
-              if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
+	if(!$level){
 
-							?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="fa fa-<?=$item['link']?>"></i><span><?=$item['name']?></span></a><?
-            } else {
+		$class = '';
+		if($has_childs) $class .= ' has-sub';
+		//if(in_array($menu['id'], $parents) !== false) $class .= ' highlight';
+		if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
 
-				      $class = '';
-				      if($id == $menu['id']) $class .= ' select';
+		?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="fa fa-<?=$item['link']?>"></i><span><?=$item['name']?></span></a><?
+	} else {
 
-				      ?><li><a class="<?=$class?>" href="<?=$item['link']?>.php"><span><?=$item['name']?></span></a><?
-            }
+	$class = '';
+	if($id == $menu['id']) $class .= ' select';
 
-            $old_level = $level;
-            $i++;
-					}
-          ?></li></ul></div><?
-				}
-        ?>
-        <div class="sz" style="padding-top:50px; text-align:center; color:#fff;"></div>
-      </div>
+	?><li><a class="<?=$class?>" href="<?=$item['link']?>.php"><span><?=$item['name']?></span></a><?
+	}
+
+		$old_level = $level;
+		$i++;
+	}
+		?></li></ul></div><?
+	}
+	?>
+
+</aside>
+
+<div class="dashboard-wrapper">
+
+  <? if($h1){ ?>
+    <div class="top-bar">
+      <div class="page-title"><?=$h1?></div>
     </div>
+	<?}?>
 
-    <div class="Center">
-      <div class="Header">
-        <div class="inHeader">
-        </div>
-      </div>
-      <? if($h1){ ?>
-        <div class="Middle-Head">
-          <h1><?=$h1?></h1>
-        </div>
-      <?}?>
-      <div class="Middle"><?=$content?></div>
+  <div class="main-container">
+    <div class="spacer">
+      <?=$content?>
     </div>
   </div>
 
-</div>
+  <footer>
+    Copyright Everest Admin Panel 2014.
+  </footer>
 
-<div class="Footer">
-  <div class="inFooter">
-    Футер
-  </div>
 </div>
 
 <iframe name="ajax" id="ajax"></iframe>
