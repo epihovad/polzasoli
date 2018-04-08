@@ -190,7 +190,7 @@ aside#sidebar {
 }
 .arr-body { padding: 15px; position: relative; border: 1px solid #ededed;}
 
-.table-list { width:100%;}
+.table-list { width:100%; background-color:#fff;}
 .table-list th, .table-list td {border:1px solid #ddd; }
 .table-list thead th { border-bottom-width:2px; text-align:left; padding:8px; vertical-align:middle; font-weight:600;}
 .table-list thead th a { text-decoration:none; font-weight:600; color:#4d4d4d; border-bottom:1px dotted #4d4d4d;}
@@ -219,6 +219,25 @@ aside#sidebar {
 	box-shadow: none;
 	border: 1px solid #d9d9d9;
 }
+
+.btn { -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
+.btn:focus { outline: none; box-shadow: none; box-shadow: none; }
+.btn-rounded { -webkit-border-radius: 50px; -moz-border-radius: 50px; border-radius: 50px; }
+.btn-transparent { background-color: transparent !important; color: #000000 !important; }
+.btn-default { background-color: #cbd6e3; border-color: #cbd6e3; color: #4b6a8d; }
+.btn-default:hover { color: #6083ab; background-color: #c4d1e0; border: 1px solid #c4d1e0; }
+.btn-danger { background-color: #D66061; border-color: #D66061; color: #ffffff; }
+.btn-danger:hover { color: #ffffff; background-color: #d14c4d; border: 1px solid #d9d9d9; }
+.btn-success { background-color: #009688; border-color: #009688; color: #ffffff; }
+.btn-success:hover { color: #ffffff; background-color: #007d71; border: 1px solid #007d71; }
+.btn-info { background-color: #5B90BF; border-color: #5B90BF; color: #ffffff; }
+.btn-info:hover { color: #ffffff; background-color: #4984b8; border: 1px solid #4984b8; }
+.btn-warning { background-color: #FF7043; border-color: #FF7043; color: #ffffff; }
+.btn-warning:hover { color: #ffffff; background-color: #ff5d29; border: 1px solid #ff5d29; }
+.btn-danger { background-color: #D66061; border-color: #D66061; color: #ffffff; }
+.btn-danger:hover { color: #ffffff; background-color: #d14c4d; border: 1px solid #d14c4d; }
+.btn-primary { background-color: #595959; border-color: #595959; color: #ffffff; }
+.btn-primary:hover { color: #ffffff; background-color: #4d4d4d; border: 1px solid #4d4d4d; }
 
 #listview_btns { float:right; }
 #listview_btns button { margin:0 0 15px 5px;}

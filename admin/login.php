@@ -1,5 +1,7 @@
 <?
-require('inc/common.php');
+@session_start();
+require('../inc/db.php');
+require('../inc/utils.php');
 
 // устанавливаем сессию с привилегиями
 function setPriv($login,$pwd)

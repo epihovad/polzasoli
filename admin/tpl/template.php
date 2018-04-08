@@ -16,6 +16,8 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
+  <link rel="stylesheet" href="css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" type="text/css" />
+
   <script src="/js/ui/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="css/ui/jquery-ui-1.8.1.custom.css" type="text/css">
   <script src="/js/ui/jquery.ui.datepicker-ru.js" type="text/javascript"></script>

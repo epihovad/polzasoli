@@ -254,11 +254,6 @@ else
 	$page_title .= ' :: '.$rubric;
 	$navigate .= 'Общий список';
 
-	if($sitemap) $razdel['Сохранить'] = "javascript:saveall();";
-	$razdel['Добавить'] = '?red=0';
-	$razdel['Удалить'] = "javascript:multidel(document.red_frm,'check_del_','');";
-	$subcontent = show_subcontent($razdel);
-
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
 	if($sitemap)
 	{
@@ -282,8 +277,7 @@ else
 	//-----------------------------
 	//echo $query;
 
-  show_listview_btns();
-
+  show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	show_filters($script);
 
 	if(!$sitemap){ ?>

@@ -646,21 +646,37 @@ function help($text)
 	/*?><a class="help" title="<?=htmlspecialchars($text)?>" href="" onClick="return false"><img src="img/help.png" width="16" height="16" align="absmiddle" /></a><?*/
 	return ob_get_clean();
 }
-//
-function show_listview_btns($btns = array()){
+// передача через массив (как $defaults) или строкой, с перечислением требуемых кнопок ('Сохранить::Добавить::Удалить')
+function show_listview_btns($btns = ''){
 
   global $script;
 
-  if(!sizeof($btns)){
-    $btns = array(
-      'Добавить' => array('link' => '?red=0'),
-      'Удалить' => array('js' => "multidel(document.red_frm,'check_del_','')"),
+  $defaults = array(
+      'Сохранить' => array('js' => "saveall()", 'class' => 'warning', 'icon' => 'far fa-save'),
+      'Добавить' => array('link' => '?red=0', 'class' => 'success', 'icon' => 'fa fa-plus'),
+      'Удалить' => array('js' => "multidel(document.red_frm,'check_del_','')", 'class' => 'danger', 'icon' => 'far fa-trash-alt'),
     );
+
+  if($btns){
+    if(is_array($btns) === false){
+      $arr = explode('::',$btns);
+      foreach ($defaults as $k => $none){
+        if(array_search($k, $arr) === false){
+          unset($defaults[$k]);
+        }
+      }
+      $btns = $defaults;
+    }
+  } else {
+    $btns = $defaults;
   }
+
   ?><div id="listview_btns"><?
-  foreach ($btns as $name => $event){
-    $onclick = $event['link'] ? "location.href = '".$event['link']."'" : $event['js'];
-    ?><button type="button" class="btn btn-default btn-sm" onclick="<?=$onclick?>"><?=$name?></button><?
+  foreach ($btns as $name => $prm){
+    $onclick = $prm['link'] ? "location.href = '".$prm['link']."'" : $prm['js'];
+    ?><button type="button" class="btn btn-<?=$prm['class']?> btn-xs" onclick="<?=$onclick?>"><?
+    if($prm['icon']){ ?><i class="<?=$prm['icon']?>"></i><? }?>
+    <span><?=$name?></span></button><?
   }
   ?></div><?
 }
