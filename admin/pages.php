@@ -70,12 +70,19 @@ if(isset($_GET['action']))
 				update($tbl,"link='".($link.'_'.$id)."'",$id);
 
 			// загружаем картинку
-			if($_FILES['img']['name'])
+			if(sizeof((array)$_FILES[$tbl]['name']))
 			{
-				$fname = "{$id}.jpg";
-				remove_img($id); // удаляем старую картинку
-				@move_uploaded_file($_FILES['img']['tmp_name'],$_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$fname}");
-				@chmod($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$fname}",0644);
+				foreach($_FILES[$tbl]['name'] as $num=>$null)
+				{
+					if(!$_FILES[$tbl]['name'][$num]) continue;
+
+					remove_img($id, $tbl);
+					$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
+					@move_uploaded_file($_FILES[$tbl]['tmp_name'][$num],$path);
+					@chmod($path,0644);
+
+					break;
+				}
 			}
 
 			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?		
@@ -114,8 +121,8 @@ if(isset($_GET['action']))
 			?><script>top.location.href = '<?=$script?>'</script><?
 			break;
 		// ----------------- удаление изображения
-		case 'pic_del':
-			remove_img($id);
+		case 'img_del':
+			remove_img($id,$tbl);
 			?><script>top.location.href = '<?=$script?>?red=<?=$id?>'</script><?
 			break;
 	}
@@ -169,15 +176,16 @@ elseif(isset($_GET['red']))
       <td><?=show_pole('text','name',htmlspecialchars($row['name']),$locked)?></td>
     </tr>
     <tr>
-      <th class="tab_red_th"><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
+      <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
       <th>Ссылка</th>
       <td><?=show_pole('text','link',$row['link'],$locked)?></td>
     </tr>
-		<?=show_tr_img('img',"/uploads/{$tbl}/","{$id}.jpg",$script."?action=pic_del&id={$id}")?>
+		<?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
+		<?//=show_tr_images('img',"/uploads/{$tbl}/","{$id}.jpg",$script."?action=pic_del&id={$id}")?>
     <tr>
       <th></th>
       <th>Краткое<br />описание</th>
-      <td><?=showCK('preview',$row['preview'],'medium','100%',20)?></td>
+      <td><?=showCK('preview',$row['preview'],'basic','100%',20)?></td>
     </tr>
     <tr class="for-page">
       <th></th>
@@ -185,7 +193,7 @@ elseif(isset($_GET['red']))
       <td><?=showCK('text',$row['text'])?></td>
     </tr>
     <tr class="for-page">
-      <th class="tab_red_th"><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
+      <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
       <th>Спр-к болезней</th>
       <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']))?></td>
     </tr>
@@ -199,7 +207,7 @@ elseif(isset($_GET['red']))
         <td><?=dll(array('page'=>'страница','link'=>'ссылка'),' name="type"',$row['type'])?></td>
       </tr>
       <tr>
-        <th class="tab_red_th"><?=help('отображать объект в главном меню')?></th>
+        <th><?=help('отображать объект в главном меню')?></th>
         <th>Главное меню</th>
         <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_main"',$row['is_main'])?></td>
       </tr>
@@ -212,12 +220,12 @@ elseif(isset($_GET['red']))
     }
     ?>
     <tr class="for-page">
-      <th class="tab_red_th"><?=help('отображать объект в слайдере<br>на главной странице')?></th>
+      <th><?=help('отображать объект в слайдере<br>на главной странице')?></th>
       <th>В слайдер</th>
       <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_slider"',$row['is_slider'])?></td>
     </tr>
     <tr class="for-page">
-      <th class="tab_red_th"><?=help('используется вместо названия в &lt;h1&gt;')?></th>
+      <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
       <th>Заголовок</th>
       <td><?=show_pole('text','h1',htmlspecialchars($row['h1']))?></td>
     </tr>
@@ -281,9 +289,10 @@ else
 	show_filters($script);
 
 	if(!$sitemap){ ?>
-    <div style="padding:5px 0 0 0;">Отобразить <a href="" style="color:#F60" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
-    <div class="clear"></div>
-	<? } ?>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
+  <? } ?>
+
+  <div class="clearfix"></div>
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
   <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
@@ -337,17 +346,17 @@ else
 						$big_src = "/{$tbl}/{$id}.jpg";
 					}
 					?>
-          <a href="<?=$big_src?>" class="highslide" onclick="return hs.expand(this)">
+          <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
             <img src="<?=$src?>" align="absmiddle" style="max-height:20px" />
           </a>
         </th>
 				<td><?=$prfx?><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
 				<? if($sitemap){?>
-          <th class="sitemap"><input type="text" class="datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
-          <th class="sitemap"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
-          <th class="sitemap"><input type="text" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" style="text-align:center; width:30px;" /></th>
+          <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+          <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+          <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
 				<? }?>
-				<td><?=$row['type']=='page'?'/':''?><a href="<?=$link?>" style="color:#090" target="_blank"><?=$row['link']?></a><?=$row['type']=='page'?'.htm':''?></td>
+				<td><?=$row['type']=='page'?'/':''?><a href="<?=$link?>" class="clr-green" target="_blank"><?=$row['link']?></a><?=$row['type']=='page'?'.htm':''?></td>
 				<th><?=$row['type']=='page'?'страница':'ссылка'?></th>
 				<th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
         <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>

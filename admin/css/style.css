@@ -20,10 +20,15 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus { outline
 input { outline:none !important; }
 input.button { display:none; }
 
-a, a:visited { color:#000; text-decoration:underline; }
-a:hover { color:#000; text-decoration:none; }
+a, a:visited { color:#000; text-decoration:none; }
+a:hover { color:#D66061; text-decoration:none; }
 a.help { border:none !important; text-decoration:none; vertical-align:top; font-size:0;}
-a.help span { font-size:13px; color:#449d44;}
+a.help span { font-size:13px; color:#007d71;}
+
+a.clr-green { color:#009688;}
+a.clr-orange { color:#FF7043;}
+a.clr-green:hover,
+a.clr-orange:hover { opacity:0.7;}
 
 #ajax { width:100%; display:none; }
 
@@ -36,6 +41,7 @@ a.back { margin-top:20px; font-size:12px; clear:both; float:left; }
 a.more:after { content:"в†’"; position:absolute; margin-left:5px; }
 
 img.flag { cursor:pointer;}
+
 
 header {
 	background: #2e2e2e;
@@ -90,9 +96,20 @@ aside#sidebar {
 	padding: 20px;
 }
 
-#logo { text-align:center; height:50px; background-color:#2e2e2e;}
-#logo a img { margin-right:15px; width:70px;}
-#logo a { text-decoration:none; font-family:'Good Times', Arial; font-size:28px; color:#fff; }
+.logo a {color:#fff; text-decoration:none; font-size:24px; display: block; width:170px;}
+.menu-toggle {
+	margin-left: 0px;
+	float: right;
+	display: block; }
+.menu-toggle i {
+	color: #999999;
+	font-size: 14px;
+	vertical-align: middle;
+	background: #3d3d3d;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	text-align: center; }
 
 #menu { margin: 20px 0 10px 0; display: block; width: 100%; }
 #menu ul, #menu li { margin: 0; padding: 0; border: 0; list-style: none; font-weight: normal; text-decoration: none; line-height: 1; position: relative; }
@@ -201,12 +218,13 @@ aside#sidebar {
 .table-list tbody tr:hover { background-color:#ededed;}
 
 .table-edit { width:100%; margin-bottom:40px;}
+.table-edit tbody tr:nth-child(odd) { background-color:#f9f9f9;}
 .table-edit th, .table-edit td { padding:5px 0; vertical-align:middle;}
-.table-edit th:nth-child(1) { padding-right:5px; white-space:nowrap;}
+.table-edit th:nth-child(1) { padding:0 10px 0 5px; white-space:nowrap; width:1%;}
 .table-edit th:nth-child(2) { padding-right:20px; white-space:nowrap; font-weight:600;}
-.table-edit a.help span { font-size:15px;}
-.table-edit .chosen-container { width:100% !important;}
-.table-edit .chosen-container .chosen-choices { border-color:#d9d9d9; background:none; box-shadow:none !important;}
+.table-edit a.help span { font-size:15px; top:0;}
+.table-edit .chosen-container { width:100% !important; background-color:#ffffff;}
+.table-edit .chosen-container .chosen-choices { border:1px solid #d9d9d9; background:none; box-shadow:none !important;}
 
 .frm-btns {
 	position:fixed;
@@ -239,8 +257,34 @@ aside#sidebar {
 .btn-primary { background-color: #595959; border-color: #595959; color: #ffffff; }
 .btn-primary:hover { color: #ffffff; background-color: #4d4d4d; border: 1px solid #4d4d4d; }
 
-#listview_btns { float:right; }
-#listview_btns button { margin:0 0 15px 5px;}
+#listview-btns { float:right; }
+#listview-btns button { margin:0 0 15px 5px;}
+
+#listview-filters { padding: 10px; margin-bottom:10px;}
+#listview-filters .fltr { padding:2px 0;}
+#listview-filters hr { padding: 1px 0 0 0; margin: 5px 0 5px 0; background-color: #E7D4B0; height: 0; border: none; border-bottom: 1px solid #FFF;}
+
+.sitemap.sm-lastmod input { width:90px !important; text-align:center; }
+.sitemap.sm-changefreq {  }
+.sitemap.sm-priority input { width:40px !important; text-align:center; }
+
+.blueimp-gallery { background:rgba(0, 0, 0, 0.8);}
+.blueimp-gallery-display { /*filter: blur(2px) grayscale(100%);*/}
+.blueimp-gallery > .indicator > li { background-size:cover; width:50px; height:50px; border-radius:0;}
+
+.gimg {}
+.gimg div.himg { float:left; padding-left:30px; font-weight:bold; }
+.gimg div.glist { float:left; padding-left:30px; }
+.gimg div.glist .add { height:25px; }
+.gimg div.glist .add div { float:left; }
+.gimg div.glist .add div.i2 { padding:3px 0 0 10px; }
+.gimg div.glist .add div.i3 { margin-left:10px; }
+.gimg div.glist .im { height:25px; clear:both; }
+.gimg div.glist .im div { float:left; }
+.gimg div.glist .im div.i0 { padding:3px 0 0 0; font-weight:bold; }
+.gimg div.glist .im div.i1 { padding:2px 0 0 10px; }
+.gimg div.glist .im div.i2 { padding:3px 0 0 10px; }
+.gimg div.glist .im div.i3 { margin-left:10px; }
 
 footer {
 	border-top: 1px solid #e0e0e0;

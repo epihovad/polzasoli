@@ -253,72 +253,13 @@ function get_criteria($tab)
 	return $mas;
 }
 
-function show_tr_img($input_name,$path,$fname='',$href,$name='Изображение',$help='',$tr='',$url=false,$img=true)
-{
-	ob_start();
-	?>
-	<?=$tr?$tr:'<tr>'?>
-    <th class="tab_red_th"><?=$help?help($help):''?></th>
-    <th><?=$name?></th>
-    <td align="left">
-      <table border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td style="border:none;"><input type="file" size="30" name="<?=$input_name?>" /></td>
-          <td align="left" style="border:none;">
-          <?
-          if($fname && file_exists($_SERVER['DOCUMENT_ROOT'].$path.$fname))
-          {
-            ?>
-            <table border="0" cellspacing="0" cellpadding="0">
-              <tr>
-              <td style="padding:0 5px 0 20px; border:none;">
-              	<?
-								if($img)
-								{
-									?>
-                  <a href="<?=$path.$fname?>" class="highslide" onclick="return hs.expand(this)">
-                  <img src="img/image20x20.png" width="20" height="20" title="показать изображение" />
-                  </a>
-                  <?
-								}
-								else
-								{
-									?><a href="<?=$path.$fname?>" target="_blank">файл</a><?
-								}
-								?>
-              </td>
-              <td style="padding:0 0 0 5px; border:none;">
-                <a href="<?=$href?>" target="ajax" style="border:none;">
-                <img src="img/del_pic.png" width="20" height="20" title="удалить изображение" />
-                </a>
-              </td>
-              </tr>
-            </table>
-            <?
-          }
-          ?>
-          </td>
-          <?
-					if($url)
-					{
-						?><th style="border:none; padding-left:20px;">Url: <input type="text" name="<?=$input_name?>_url" style="width:300px;" /></th><?
-					}
-					?>
-        </tr>
-      </table>
-    </td>
-  <?=$tr?$tr:'</tr>'?>
-  <?
-	return ob_get_clean();
-}
-
 function show_tr_images($mask,$title='Изображения',$help='',$count=3,$name='gimg',$dir='',$size_mini='45x45')
 {
 	global $prx, $tbl, $row;
 	$dir = $dir ? $dir : $tbl;
 	?>
 	<tr>
-		<th class="tab_red_th"><?=$help?help($help):''?></th>
+		<th><?=$help?help($help):''?></th>
 		<th><?=$title?></th>
 		<td>
 			<div class="gimg" count="<?=$count?>" name="<?=$name?>">
@@ -357,7 +298,7 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 							?>
 							<div class="im">
 								<div class="i0"><?=$i++?>.</div>
-								<div class="i1"><a href="/uploads/<?=$dir?>/<?=$fname?>" class="highslide" onclick="return hs.expand(this)"><img src="/uploads/<?=$dir?>/<?=$size_mini?>/<?=$fname?>" width="16"></a></div>
+								<div class="i1"><a href="/uploads/<?=$dir?>/<?=$fname?>" class="blueimp" title=""><img src="/uploads/<?=$dir?>/<?=$size_mini?>/<?=$fname?>" width="16"></a></div>
 								<div class="i2"><a href="?action=img_del&id=<?=$mask?>&dir=<?=$dir?>&fname=<?=$fname?>" target="ajax" title="удалить текущее изображение"><img src="img/del.png"></a></div>
 							</div>
 							<?
@@ -643,7 +584,6 @@ function help($text)
 {
 	ob_start();
 	?><a class="help" title="<?=htmlspecialchars($text)?>" href="" onClick="return false"><span class="glyphicon glyphicon-info-sign"></span></a><?
-	/*?><a class="help" title="<?=htmlspecialchars($text)?>" href="" onClick="return false"><img src="img/help.png" width="16" height="16" align="absmiddle" /></a><?*/
 	return ob_get_clean();
 }
 // передача через массив (как $defaults) или строкой, с перечислением требуемых кнопок ('Сохранить::Добавить::Удалить')
@@ -671,7 +611,7 @@ function show_listview_btns($btns = ''){
     $btns = $defaults;
   }
 
-  ?><div id="listview_btns"><?
+  ?><div id="listview-btns"><?
   foreach ($btns as $name => $prm){
     $onclick = $prm['link'] ? "location.href = '".$prm['link']."'" : $prm['js'];
     ?><button type="button" class="btn btn-<?=$prm['class']?> btn-xs" onclick="<?=$onclick?>"><?
@@ -788,27 +728,26 @@ function show_filters($link)
 {
 	global $filters;
 	
-	$mas = array();	
+	$mas = array();
 	foreach($filters as $prm=>$txt)
 	{
 		if($prm=='page') continue;
 		if($_SESSION['ss'][$prm])
-			$mas[$prm] = 'сбросить фильтр "'.$txt.'"';
+			$mas[$prm] = 'сбросить фильтр «'.$txt.'»';
 	}
 	
 	if(!sizeof($mas)) return;
 
 	?>
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin:3px 0 3px 0;">
-		<tr><td><?=help('здесь вы можете сбросить фильтры,<br>примененные ранее к текущему списку объектов')?></td></tr>
-		<?
-		foreach($mas as $k=>$v)
-		{
-			?><tr><td align="left"><a href="" onclick="RegSessionSort('<?=$link?>','<?=$k?>=remove');return false;" style="color:#697079;"><?=$v?></a></td></tr><?
-		}		
-		?>
-		<tr><td align="left"><a href="" onclick="RegSessionSort('<?=$link?>','filters=remove');return false;" style="color:#090;">сбросить все фильтры</a></td></tr>
-	</table>
+	<div id="listview-filters" class="pull-left bg-warning">
+	  <?=help('здесь вы можете сбросить фильтры,<br>примененные ранее к текущему списку объектов')?>
+	  <? foreach($mas as $k=>$v){
+			?><div class="fltr"><a href="" class="clr-orange" onclick="RegSessionSort('<?=$link?>','<?=$k?>=remove');return false;"><?=$v?></a></div><?
+		}?>
+		<hr>
+		<div><a href="" class="clr-orange" onclick="RegSessionSort('<?=$link?>','filters=remove');return false;"><b>сбросить все фильтры</b></a></div>
+  </div>
+  <div class="clearfix"></div>
 	<?
 }
 

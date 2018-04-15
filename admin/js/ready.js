@@ -42,6 +42,19 @@ $(function(){
 		});
 	});
 	//
+  var s = 0;
+  $('.menu-toggle').click(function() {
+    if (s == 0) {
+      s = 1;
+      $( "#sidebar" ).animate({left: "-210px"}, 100 );
+      $('.dashboard-wrapper').animate({'margin-left': "0px"}, 100);
+    } else {
+      s = 0;
+      $('#sidebar').animate({left: "0px"}, 100);
+      $('.dashboard-wrapper').animate({'margin-left': "210px"}, 100);
+    }
+  });
+	//
 	Search();
 	//
 	CKEditor();
@@ -52,6 +65,8 @@ $(function(){
 		$('.datepicker').css({'width':'80px','text-align':'center'});
 		$('.datepicker').datepicker();
 	}
+	//
+	Blueimp();
 	// флажки
 	//$.preloadImg('img/loader.gif');
 	$('.flag').click(function(){
@@ -160,32 +175,70 @@ function Search()
 
 function CKEditor() {
   // CKEditor
-  $('textarea[toolbar]').each(function () { // ПРИМЕР: <textarea name="text" toolbar="basic" rows="10"><?=$row['text']?></textarea>
+	var CKtoolbar = {
+		basic : {
+      toolbarGroups: [
+        {name: 'document', groups: ['mode', 'document', 'doctools']},
+        {name: 'clipboard', groups: ['clipboard', 'undo']},
+        {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+        {name: 'forms', groups: ['forms']},
+        {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+        {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+        {name: 'styles', groups: ['styles']},
+        {name: 'links', groups: ['links']},
+        {name: 'insert', groups: ['insert']},
+        '/',
+        {name: 'colors', groups: ['colors']},
+        {name: 'tools', groups: ['tools']},
+        {name: 'others', groups: ['others']},
+        {name: 'about', groups: ['about']}
+      ],
+      removeButtons : 'Save,NewPage,Preview,Print,Templates,SelectAll,Find,Replace,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,RemoveFormat,CopyFormatting,Flash,HorizontalRule,Smiley,PageBreak,Iframe,SpecialChar,Table,Image,Anchor,Unlink,Link,TextColor,BGColor,Maximize,ShowBlocks,About,Blockquote,CreateDiv,BidiLtr,BidiRtl,JustifyCenter,Language,Font,Styles,Source',
+    },
+		full : {
+      toolbarGroups: [
+        {name: 'document', groups: ['mode', 'document', 'doctools']},
+				{name: 'clipboard', groups: ['clipboard', 'undo']},
+				{name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+				{name: 'forms', groups: ['forms']},
+				'/',
+				{name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+				{name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+				{name: 'links', groups: ['links']},
+				{name: 'insert', groups: ['insert']},
+				'/',
+				{name: 'styles', groups: ['styles']},
+				{name: 'colors', groups: ['colors']},
+				{name: 'tools', groups: ['tools']},
+				{name: 'others', groups: ['others']},
+				{name: 'about', groups: ['about']}
+			],
+  		removeButtons : 'Save,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Language,About',
+		}
+	};
+	// ПРИМЕР: <textarea name="text" toolbar="basic" rows="10"><?=$row['text']?></textarea>
+  $('textarea[toolbar]').each(function () {
     this.id = this.name;
     var toolbar = $(this).attr('toolbar');
     var CKEditor = CKEDITOR.replace(
     	this.id,
       {
-        toolbarGroups : [
-          {name: 'document', groups: ['mode', 'document', 'doctools']},
-          {name: 'clipboard', groups: ['clipboard', 'undo']},
-          {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
-          {name: 'forms', groups: ['forms']},
-          '/',
-          {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-          {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
-          {name: 'links', groups: ['links']},
-          {name: 'insert', groups: ['insert']},
-          '/',
-          {name: 'styles', groups: ['styles']},
-          {name: 'colors', groups: ['colors']},
-          {name: 'tools', groups: ['tools']},
-          {name: 'others', groups: ['others']},
-          {name: 'about', groups: ['about']}
-        ],
-        removeButtons : 'Save,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,Language,About',
+        toolbar: toolbar,
+        //contentsCss: '/css/CK.css?v=20180414',
+        coreStyles_bold: { element : 'b' },
+        coreStyles_italic: { element : 'i' },
+        toolbarGroups : CKtoolbar[toolbar].toolbarGroups,
+        removeButtons : CKtoolbar[toolbar].removeButtons,
       }
     );
     CKFinder.setupCKEditor(CKEditor, '/js/ckfinder/');
+  });
+}
+
+function Blueimp() {
+	$('a.blueimp').click(function () {
+		var $a = $(this);
+    blueimp.Gallery($a, {});
+    return false;
   });
 }

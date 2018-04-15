@@ -24,8 +24,6 @@
   <script src="/js/ckeditor/ckeditor.js" type="text/javascript"></script>
   <script src="/js/ckfinder/ckfinder.js" type="text/javascript"></script>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" />
-
   <script src="/js/arcticmodal/jquery.arcticmodal-0.3.min.js"></script>
   <link rel="stylesheet" href="/js/arcticmodal/jquery.arcticmodal-0.3.css">
   <link rel="stylesheet" href="/js/arcticmodal/themes/simple.css">
@@ -42,8 +40,10 @@
   <link type="text/css" href="/js/tooltip/tooltip.css" rel="stylesheet">
   <script type="text/javascript" src="/js/tooltip/tooltip.js"></script>
 
-  <script type="text/javascript" src="/js/highslide/highslide-with-gallery.js"></script>
-  <link type="text/css" href="/js/highslide/highslide.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/js/blueimp-gallery/blueimp-gallery.css" type="text/css" />
+  <link rel="stylesheet" href="/js/blueimp-gallery/blueimp-gallery-indicator.css">
+  <script src="/js/blueimp-gallery/blueimp-gallery.js"></script>
+  <script src="/js/blueimp-gallery/blueimp-gallery-indicator.js"></script>
 
 	<? if ($f_context) { ?>
     <script type="text/javascript" src="/js/jquery.highlight.js"></script>
@@ -54,10 +54,31 @@
     </script>
 	<? } ?>
 
+  <link rel="stylesheet" href="css/style.css" type="text/css" />
+
 </head>
 <body>
 
-<header></header>
+<div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+  <div class="slides"></div>
+  <h3 class="title"></h3>
+  <a class="prev">‹</a>
+  <a class="next">›</a>
+  <a class="close">×</a>
+  <a class="play-pause"></a>
+  <ol class="indicator"></ol>
+</div>
+
+<header>
+
+  <div class="logo">
+    <a href="#" data-original-title="" title="">
+      MarkerCMS
+      <span class="menu-toggle hidden-xs"><i class="fa fa-bars"></i></span>
+    </a>
+  </div>
+
+</header>
 
 <aside id="sidebar" style="left: 0px;">
 
