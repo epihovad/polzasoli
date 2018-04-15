@@ -114,7 +114,7 @@
 		//if(in_array($menu['id'], $parents) !== false) $class .= ' highlight';
 		if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
 
-		?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="fa fa-<?=$item['link']?>"></i><span><?=$item['name']?></span></a><?
+		?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="<?=$item['im']?>"></i><span><?=$item['name']?></span></a><?
 	} else {
 
 	$class = '';
