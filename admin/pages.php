@@ -16,7 +16,7 @@ if(isset($_GET['action']))
 		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
-
+jAlert('необходимо указать название !');
 			if(!$name) errorAlert('необходимо указать название !');
 				
 			if($locked)
@@ -180,8 +180,12 @@ elseif(isset($_GET['red']))
       <th>Ссылка</th>
       <td><?=show_pole('text','link',$row['link'],$locked)?></td>
     </tr>
+    <tr>
+      <th></th>
+      <th>Дата</th>
+      <td><input type="text" class="form-control input-sm datepicker"></td>
+    </tr>
 		<?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
-		<?//=show_tr_images('img',"/uploads/{$tbl}/","{$id}.jpg",$script."?action=pic_del&id={$id}")?>
     <tr>
       <th></th>
       <th>Краткое<br />описание</th>

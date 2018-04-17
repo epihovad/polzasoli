@@ -244,21 +244,3 @@ function num2str($count,$txt='товар')
     default: return($pat[$txt][2]);
   }
 }
-
-// ВЫВОД ALERT ОБ ОШИБКЕ (и прерывание выполнения)
-function jAlert($text,$method='',$type='',$func='',$prm='',$exit=true)
-{
-  global $jAlert_js;
-
-	$method = $method ? $method : 'show';
-	$type = $type ? $type : 'alert';
-	$prm = $prm ? $prm : '{}';
-	?>
-  <script>
-		top.jQuery(document).jAlert('<?=$method?>','<?=$type?>','<?=$text?>',function(){<?=$func?>},<?=$prm?>);
-		top.jQuery('#ajax').attr('src','/inc/none.htm');
-	  <?=$jAlert_js?>
-  </script>
-  <?
-  if($exit) exit;
-}

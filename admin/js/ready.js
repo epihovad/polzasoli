@@ -62,7 +62,6 @@ $(function(){
 	if($('.datepicker').length)
 	{
 		$.datepicker.setDefaults($.datepicker.regional['ru']);
-		$('.datepicker').css({'width':'80px','text-align':'center'});
 		$('.datepicker').datepicker();
 	}
 	//
@@ -107,7 +106,7 @@ $(function(){
 				else
 				{					
 					$obj.attr({'src':new_src,'alt':new_alt,'title':new_title});
-					$obj.parents('tr:first').find('td').effect("highlight", {}, 1000);
+					$obj.parents('tr:first').find('td,th').effect("highlight", {}, 1000);
 				}
 				loader(false);		
 			}

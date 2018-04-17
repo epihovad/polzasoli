@@ -13,9 +13,18 @@
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
   <script src="/js/jquery-3.1.1.min.js"></script>
-
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link href="/css/animate.css" rel="stylesheet" media="screen">
+
+  <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
+  <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
+
+  <script src="/js/utils.js"></script>
+
+  <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
+  <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
+
   <link href="css/style.css" rel="stylesheet" media="screen">
   <link href="css/login.css" rel="stylesheet">
 
@@ -24,7 +33,7 @@
   <script src="/js/respond.min.js"></script>
   <![endif]-->
 
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 </head>
 

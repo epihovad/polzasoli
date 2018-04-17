@@ -1,3 +1,2 @@
 <?
-header("Location: statistics.php");
-?>
+header("Location: pages.php");

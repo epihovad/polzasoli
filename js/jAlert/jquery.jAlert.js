@@ -10,9 +10,8 @@ jAlert - собственный плагин (v1.0).
 	var $jA_wind = {}, $jA_wind_shadow = {}, $jA_btn_ok = {}, $jA_btn_yes = {}, $jA_btn_no = {}, $jA_blackout = {};
 	
 	/* ----------------------- ПЕРЕМЕННЫЕ ----------------------- */
-	var jA_blackout; /* затемнение */
-	var jA_blackout_params; /* параметры затемнения */
 	var ie;
+	var body_overflow_y;
 	
 	var jA_methods = {
 		/* ---------------- ИНИЦИАЛИЗАЦИЯ -------------------- */
@@ -45,11 +44,6 @@ jAlert - собственный плагин (v1.0).
 			});
 				
 			$(window).resize(function(){ reposjAlert() });
-
-			$(document).mousewheel(function(event){
-				if($jA_wind.is(':visible'))
-					event.preventDefault();
-			});
 			
 			function reposjAlert()
 			{
@@ -74,16 +68,11 @@ jAlert - собственный плагин (v1.0).
 			if($jA_wind.is(':visible')) jA_methods.hide.call();
 			
 			prm = $.extend({
-				ws : true, // с применением тени
-				ws_params : {bg:'',color:'#000',opacity:70,z:zmax?zmax:999}, // параметры тени
 				z : zmax?zmax+1:1000, // z-index окна
 				b_alert : 'Ok',
 				b_confirm : {b1:'Да',b2:'Нет'},
 				callbackNo : function(){}
 			}, prm);
-			
-			jA_blackout = prm.ws;
-			jA_blackout_params = prm.ws_params;
 			
 			var windW, windH, windL, windT;
 			
@@ -121,10 +110,17 @@ jAlert - собственный плагин (v1.0).
 				'top' : windT,
 				'z-index': zmax?(zmax+1):prm.z
 			});
-			
-			if(jA_blackout)
-				$jA_blackout = $(document).jB('show',jA_blackout_params);
-			$jA_wind.fadeIn();
+
+      $jA_blackout = $('<div id="jAlert_shadow" style="display:none"></div>');
+      $('body').prepend($jA_blackout);
+      $jA_blackout.fadeIn(500);
+			$jA_wind.show('drop', {direction: 'up'}, 200, 'swing');
+
+      body_overflow_y = $('body').css('overflow-y');
+      if(body_overflow_y != 'hidden'){
+        $('body').css('overflow-y','hidden');
+			}
+
 			if(ie && $.browser.version<'9.0')
 			{
 				$jA_wind_shadow.css({
@@ -140,10 +136,11 @@ jAlert - собственный плагин (v1.0).
 		},
 		
 		hide : function(){
-			$jA_wind.add($jA_wind_shadow).hide();
+			$jA_wind.hide('drop', {direction: 'down'}, 200, 'swing');
+      $jA_wind_shadow.hide();
 			$jA_wind.find('.btn_place').html('');
-			if(jA_blackout)
-				$jA_blackout.jB('hide');
+			$jA_blackout.fadeOut('slow');
+      $('body').css('overflow-y',body_overflow_y);
 		}
 	};
 	

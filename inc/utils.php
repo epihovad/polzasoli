@@ -377,8 +377,9 @@ function mailToFiles($to, $subject, $message, $from='', $files=array(), $charset
 // проверка mail адреса
 function check_mail($mail)
 {
-	$shablon = "/[0-9a-z_\-]+@[0-9a-z_\-^\.]+\.[a-z]{2,3}/i";
-	return preg_match($shablon,$mail);
+	/*$shablon = "/[0-9a-z_\-]+@[0-9a-z_\-^\.]+\.[a-z]{2,3}/i";
+	return preg_match($shablon,$mail);*/
+	return function_exists('filter_var') ? filter_var($mail, FILTER_VALIDATE_EMAIL) : true;
 }
 // проверка времени
 function check_time($time,$mask='чч:мм')
@@ -744,4 +745,21 @@ function smsTo($to, $msg)
 	$id = preg_replace("/message_id\s*=\s*/i", "", @strval($arr_id[0]));
 	return $id;
 }
-?>
+
+// ВЫВОД ALERT ОБ ОШИБКЕ (и прерывание выполнения)
+function jAlert($text, $exit = true, $method = null, $type = null, $func = null, $prm = null)
+{
+	global $jAlert_js;
+
+	$method = $method ? $method : 'show';
+	$type = $type ? $type : 'alert';
+	$prm = $prm ? $prm : '{}';
+	?>
+  <script>
+    top.jQuery(document).jAlert('<?=$method?>','<?=$type?>','<?=$text?>',function(){<?=$func?>},<?=$prm?>);
+    top.jQuery('#ajax').attr('src','/inc/none.htm');
+		<?=$jAlert_js?>
+  </script>
+	<?
+	if($exit) exit;
+}

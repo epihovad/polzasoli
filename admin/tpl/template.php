@@ -18,9 +18,13 @@
 
   <link rel="stylesheet" href="css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" type="text/css" />
 
+  <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
+  <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="/js/ui/jquery-ui.datepicker-ru.js" type="text/javascript"></script>
+  <?/*
   <script src="/js/ui/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
   <link rel="stylesheet" href="css/ui/jquery-ui-1.8.1.custom.css" type="text/css">
-  <script src="/js/ui/jquery.ui.datepicker-ru.js" type="text/javascript"></script>
+  <script src="/js/ui/jquery.ui.datepicker-ru.js" type="text/javascript"></script>*/?>
   <script src="/js/ckeditor/ckeditor.js" type="text/javascript"></script>
   <script src="/js/ckfinder/ckfinder.js" type="text/javascript"></script>
 
@@ -32,10 +36,8 @@
   <script type="text/javascript" src="js/spec.js"></script>
   <script type="text/javascript" src="js/ready.js"></script>
 
-  <script type="text/javascript" src="/js/jquery.mousewheel.min.js"></script>
-  <script type="text/javascript" src="/js/jB/jquery.jB.js"></script>
   <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
-  <script type="text/javascript" src="/js/jAlert/jquery.jAlert.js"></script>
+  <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
 
   <link type="text/css" href="/js/tooltip/tooltip.css" rel="stylesheet">
   <script type="text/javascript" src="/js/tooltip/tooltip.js"></script>
@@ -55,7 +57,18 @@
 	<? } ?>
 
   <link rel="stylesheet" href="css/style.css" type="text/css" />
-
+  <style>
+    .blackout {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      opacity: 0.6;
+      z-index: 100;
+    }
+  </style>
 </head>
 <body>
 

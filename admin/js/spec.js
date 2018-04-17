@@ -1,12 +1,3 @@
-var zmax = 1001; // стартовая переменная величина
-
-jQuery.browser = {};
-jQuery.browser.mozilla = /mozilla/.test(navigator.userAgent.toLowerCase()) && !/webkit/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.opera = /opera/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-jQuery.browser.iDevice = /ip(hone|od|ad)/i.test(navigator.userAgent || navigator.vendor || window.opera);
-
 jQuery.fn.zebra = function(options){
 
 	var tab = $(this);
@@ -39,7 +30,7 @@ function mark_change_tr()
 	if(id)
 	{
 		$('tr#row'+id).find('th,td').each(function(){
-			$(this).css('background-color','#ffffb7');
+			$(this).css('background-color','#ffffb7 !important');
 		});
 	}
 }

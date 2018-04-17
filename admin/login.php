@@ -38,7 +38,7 @@ if(isset($_GET['action']))
 			$pwd = clean($_GET['pwd_inAdmin']);
 
 			if(!setPriv($login,$pwd))
-				errorAlert('Неверный Логин/Пароль.');
+				jAlert('Неверный Логин/Пароль.');
 
 			if(@$_GET['rem_inAdmin']) // куки
 				setcookie('inAdmin',$login.'/'.$pwd,time()+3456000);
@@ -58,13 +58,13 @@ if(isset($_GET['action']))
 		// напомнить пароль
 		case 'remind':
 
-			// проверка e-mail (синтаксис)
+			// проверка Email (синтаксис)
 			if(!check_mail($_GET['email_inAdmin']))
-				errorAlert('Вы ввели неверный E-mail !');
+				jAlert('Вы ввели неверный Email !');
 
 			$to = set('admin_email');
 			if(strcasecmp($_GET['email_inAdmin'], $to))
-				errorAlert('Е-майл администратора введен не верно.');
+				jAlert('Е-майл администратора введен не верно.');
 
 			$admin = array(set('admin_login'),set('admin_pass'));
 			$title = set('title');
@@ -79,12 +79,8 @@ if(isset($_GET['action']))
 						<a href='{$url_admin}?action=vhod&login_inAdmin={$admin[0]}&pwd_inAdmin={$admin[1]}'>Войти</a>";
 			mailTo($to,$tema,$text,$to);
 
-			?>
-			<script>
-        alert('Пароль выслан на Е-майл администратора');
-        top.location.href = '<?=$url_admin?>';
-			</script>
-			<?
+			jAlert('Пароль выслан на Е-майл администратора', false);
+			?><script>top.location.href = '<?=$url_admin?>';</script><?
 			exit;
 	}
 }
@@ -116,14 +112,14 @@ ob_start();
 								<input type="submit" value="Войти" class="btn btn-danger btn-lg btn-block">
 								<input type="hidden" name="action" value="login">
 							</form>
-							<a href="#forgot-pwd" class="underline text-info">Забыли пароль?</a>
+							<?/*<a href="#forgot-pwd" class="underline text-info">Забыли пароль?</a>*/?>
 						</div>
 
 						<div id="forgot-pwd" class="form-action hide">
 							<div class="login-header">
 								<h4>Восстановление пароля</h4>
 							</div>
-							<form action="index.html" target="ajax">
+							<form target="ajax">
 								<div class="form-group has-feedback">
 									<label class="control-label" for="email">Укажите Ваш Email</label>
 									<input type="text" class="form-control" id="email" name="email_inAdmin" placeholder="Ваш Email">
