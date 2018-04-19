@@ -16,7 +16,7 @@ if(isset($_GET['action']))
 		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
-jAlert('необходимо указать название !');
+
 			if(!$name) errorAlert('необходимо указать название !');
 				
 			if($locked)
@@ -298,6 +298,44 @@ else
 
   <div class="clearfix"></div>
 
+  <script>
+    $(function () {
+      $('table.table-list tbody').sortable({
+        helper: fixWidthHelper,
+        axis: 'y',
+        containment: 'parent',
+        cursor: 'move',
+        handle: '.fa-sort',
+        revert: 600,
+        update: function (event, ui) {
+          var curRowClass = ui.item[0].classList[0];
+          var prevRowClass = ui.item[0].previousElementSibling.classList[0];
+          var nextRowClass = ui.item[0].nextElementSibling.classList[0];
+          console.log('curRowClass = ' + curRowClass + '\r\nprevRowClass = ' + prevRowClass + '\r\nnextRowClass = ' + nextRowClass + '\r\n');
+          if(curRowClass != prevRowClass || curRowClass != nextRowClass){
+            $(this).sortable('cancel',{revert:600});
+            //alert('сортировать строки возможно лишь в рамках одного уровня');
+          }
+          console.log('111');
+          //var data = $(this).sortable('serialize');
+          //console.log(data);
+          // POST to server using $.post or $.ajax
+          /*$.ajax({
+						data: data,
+						type: 'POST',
+						url: '/your/url/here'
+					});*/
+        }
+      });
+    });
+    function fixWidthHelper(event, ui) {
+      ui.children().each(function() {
+        $(this).width($(this).width());
+      });
+      return ui;
+    }
+</script>
+
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
   <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
   <table class="table-list">
@@ -338,7 +376,7 @@ else
 			$prfx = $prefix===NULL ? getPrefix($level) : str_repeat($prefix, $level);
 			
 			?>
-			<tr id="row<?=$id?>">
+			<tr id="item-<?=$id?>" class="par<?=$row['id_parent']?>">
 				<th><? if(!$locked){ ?><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /><? }?></th>
 				<th nowrap><?=$i++?></th>
         <th style="padding:3px 5px;">
@@ -365,7 +403,7 @@ else
 				<th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
         <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
 				<th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
-				<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><?=btn_sort($id)?></th><? }?>
+				<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
 				<th nowrap><?=btn_edit($id,$locked)?></th>
 			</tr>
 			<?

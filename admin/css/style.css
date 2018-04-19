@@ -21,7 +21,7 @@ input { outline:none !important; }
 input.button { display:none; }
 
 a, a:visited { color:#000; text-decoration:none; }
-a:hover { color:#D66061; text-decoration:none; }
+a:hover { color:#eb0d41; text-decoration:none; }
 a.help { border:none !important; text-decoration:none; vertical-align:top; font-size:0;}
 a.help span { font-size:13px; color:#007d71;}
 
@@ -29,6 +29,7 @@ a.clr-green { color:#009688;}
 a.clr-orange { color:#FF7043;}
 a.clr-green:hover,
 a.clr-orange:hover { opacity:0.7;}
+.fa-sort { cursor:move; font-size:17px;}
 
 #ajax { width:100%; display:none; }
 
@@ -89,7 +90,7 @@ aside#sidebar {
 	font-weight: 500;
 	display: inline-block;
 	float: left;
-	color: #2b3d51;
+	color: #eb0d41;
 }
 
 .spacer {
