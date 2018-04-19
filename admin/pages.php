@@ -303,20 +303,64 @@ else
       $('table.table-list tbody').sortable({
         helper: fixWidthHelper,
         axis: 'y',
-        containment: 'parent',
+        /*containment: 'parent',*/
         cursor: 'move',
         handle: '.fa-sort',
-        revert: 600,
+        start: function(event, ui){
+          /*var id = ui.item.attr('oid');
+          var $dragged = $(this).find('tr[par="'+id+'"]');
+          $dragged.appendTo(ui.item);*/
+        },
+        stop: function(event, ui){
+
+        },
         update: function (event, ui) {
-          var curRowClass = ui.item[0].classList[0];
-          var prevRowClass = ui.item[0].previousElementSibling.classList[0];
-          var nextRowClass = ui.item[0].nextElementSibling.classList[0];
-          console.log('curRowClass = ' + curRowClass + '\r\nprevRowClass = ' + prevRowClass + '\r\nnextRowClass = ' + nextRowClass + '\r\n');
-          if(curRowClass != prevRowClass || curRowClass != nextRowClass){
+          var cur = { 'id' : ui.item[0].attributes.oid.value, 'par' : ui.item[0].attributes.par.value, };
+          var prev = { 'id' : 0, 'par' : 0, 'has-childs' : false, };
+          var next = { 'id' : 0, 'par' : 0, 'has-childs' : false, };
+          var $prev, $next;
+          try {
+            prev = {
+              'id' : ui.item[0].previousElementSibling.attributes.oid.value,
+              'par' : ui.item[0].previousElementSibling.attributes.par.value,
+              'has-childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs'),
+            };
+          } catch (e){}
+          try {
+            next = {
+              'id' : ui.item[0].nextElementSibling.attributes.oid.value,
+              'par' : ui.item[0].nextElementSibling.attributes.par.value,
+              'has-childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs'),
+            };
+          } catch (e){}
+
+          // допускается ли перемещение
+          if(cur.par != prev.par && cur.par != next.par){
+            $(this).sortable('cancel');
+            $(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
+            return ui;
+          }
+
+          var childs = [];
+          getTree(cur.id, childs);
+          var $tree = ui.item;
+          var $last = ui.item;
+          childs.forEach(function($e) {
+            $tree = $tree.add($e);
+            $e.detach().insertAfter($last);
+            $last = $e;
+          });
+
+          $tree.effect("highlight", {}, 1000);
+
+          //var data = $(this).sortable('serialize');
+          //console.log(data);
+
+          //console.log(prev.id + ' - ' + prev.par);
+          /*if(curRowClass != prevRowClass || curRowClass != nextRowClass){
             $(this).sortable('cancel',{revert:600});
             //alert('сортировать строки возможно лишь в рамках одного уровня');
-          }
-          console.log('111');
+          }*/
           //var data = $(this).sortable('serialize');
           //console.log(data);
           // POST to server using $.post or $.ajax
@@ -333,6 +377,14 @@ else
         $(this).width($(this).width());
       });
       return ui;
+    }
+    function getTree (id, arr) {
+      var $ch = $('tr[par="' + id + '"');
+      $ch.each(function () {
+        arr.push($(this));
+        getTree($(this).attr('oid'), arr);
+      });
+      return arr;
     }
 </script>
 
@@ -374,11 +426,13 @@ else
 			$locked = $row['locked'];
 			$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
 			$prfx = $prefix===NULL ? getPrefix($level) : str_repeat($prefix, $level);
-			
+			$childs = getIdChilds("SELECT * FROM {$prx}{$tbl}", $id);
+			$has_childs = sizeof($childs) > 1;
+
 			?>
-			<tr id="item-<?=$id?>" class="par<?=$row['id_parent']?>">
+			<tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_parent']?>" class="<?=$has_childs?' has-childs':''?>">
 				<th><? if(!$locked){ ?><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /><? }?></th>
-				<th nowrap><?=$i++?></th>
+				<th nowrap><?=$id/*=$i++*/?></th>
         <th style="padding:3px 5px;">
 					<?
 					$src = '/uploads/no_photo.jpg';
