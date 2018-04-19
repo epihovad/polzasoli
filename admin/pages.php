@@ -93,6 +93,27 @@ if(isset($_GET['action']))
 		case 'status':
 			update_flag($tbl,$_GET['action'],$id);
 			break;
+		// ----------------- сортировка
+		case 'sort':
+			header("Access-Control-Allow-Orgin: *");
+			header("Access-Control-Allow-Methods: *");
+			header("Content-Type: application/json");
+
+			$i = 1;
+			$errors = 0;
+			foreach ($_POST['item'] as $id){
+			  if(!update($tbl, "`sort`={$i}", $id)){
+			    $errors++;
+			    continue;
+        }
+			  $i++;
+      }
+      if(!$errors){
+				echo json_encode(array('status' => 'ok', 'message' => 'success update ' . sizeof($_POST['item']) . ' items'));
+      } else {
+				echo json_encode(array('status' => 'error', 'message' => 'произошла ошибка'));
+      }
+			break;
 		// ----------------- сортировка вверх
 		case 'moveup':
 			$id_parent = gtv($tbl,'id_parent',$id);
@@ -315,29 +336,36 @@ else
 
         },
         update: function (event, ui) {
+
+          var $sortable = $(this);
+
           var cur = { 'id' : ui.item[0].attributes.oid.value, 'par' : ui.item[0].attributes.par.value, };
-          var prev = { 'id' : 0, 'par' : 0, 'has-childs' : false, };
-          var next = { 'id' : 0, 'par' : 0, 'has-childs' : false, };
-          var $prev, $next;
+          var prev = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
+          var next = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
           try {
             prev = {
               'id' : ui.item[0].previousElementSibling.attributes.oid.value,
               'par' : ui.item[0].previousElementSibling.attributes.par.value,
-              'has-childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs'),
+              'has_childs' : strpos(ui.item[0].previousElementSibling.className, 'has-childs') !== false,
             };
           } catch (e){}
           try {
             next = {
               'id' : ui.item[0].nextElementSibling.attributes.oid.value,
               'par' : ui.item[0].nextElementSibling.attributes.par.value,
-              'has-childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs'),
+              'has_childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs') !== false,
             };
           } catch (e){}
 
           // допускается ли перемещение
           if(cur.par != prev.par && cur.par != next.par){
-            $(this).sortable('cancel');
-            $(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
+            $sortable.sortable('cancel');
+            //$(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
+            return ui;
+          }
+          if(cur.par == prev.par && prev.has_childs){
+            $sortable.sortable('cancel');
+            //$(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
             return ui;
           }
 
@@ -353,22 +381,23 @@ else
 
           $tree.effect("highlight", {}, 1000);
 
-          //var data = $(this).sortable('serialize');
-          //console.log(data);
-
-          //console.log(prev.id + ' - ' + prev.par);
-          /*if(curRowClass != prevRowClass || curRowClass != nextRowClass){
-            $(this).sortable('cancel',{revert:600});
-            //alert('сортировать строки возможно лишь в рамках одного уровня');
-          }*/
-          //var data = $(this).sortable('serialize');
-          //console.log(data);
-          // POST to server using $.post or $.ajax
-          /*$.ajax({
+          var data = $sortable.sortable('serialize');
+          $.ajax({
 						data: data,
 						type: 'POST',
-						url: '/your/url/here'
-					});*/
+						url: 'pages.php?action=sort',
+            complete: function(data,status){
+						  if(data.responseJSON.status != 'ok'){
+                $sortable.sortable('cancel');
+						    $(document).jAlert('show', 'alert', data.responseJSON.message);
+						    return;
+              }
+              var i=1;
+              $('table.table-list tbody tr').each(function () {
+                $(this).find('th').eq(1).html(i++);
+              });
+            }
+					});
         }
       });
     });
@@ -395,6 +424,7 @@ else
       <tr>
         <th><input type="checkbox" name="check_del" id="check_del" /></th>
         <th>№</th>
+				<? if(!$_SESSION['ss']['sort']) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
         <th><img src="img/image.png" title="изображение" /></th>
         <th width="50%">Название<?//=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
         <? if($sitemap){?>
@@ -407,7 +437,6 @@ else
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Глав. меню','is_main')?> <?=help('отображать объект в главном меню')?></th>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'В слайдер','is_slider')?> <?=help('отображать объект в слайдере<br>на главной странице')?></th>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
-        <? if(!$_SESSION['ss']['sort']) { ?><th nowrap>Порядок <?=help('параметр с помощью которого можно изменить порядок вывода элемента в клиентской части сайта')?></th><? }?>
         <th style="padding:0 30px;"></th>
       </tr>
     </thead>
@@ -432,7 +461,8 @@ else
 			?>
 			<tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_parent']?>" class="<?=$has_childs?' has-childs':''?>">
 				<th><? if(!$locked){ ?><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /><? }?></th>
-				<th nowrap><?=$id/*=$i++*/?></th>
+				<th nowrap><?=$i++?></th>
+				<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
         <th style="padding:3px 5px;">
 					<?
 					$src = '/uploads/no_photo.jpg';
@@ -457,7 +487,6 @@ else
 				<th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
         <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
 				<th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
-				<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
 				<th nowrap><?=btn_edit($id,$locked)?></th>
 			</tr>
 			<?

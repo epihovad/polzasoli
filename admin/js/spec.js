@@ -48,26 +48,23 @@ function multidel(form,name,href)
 	var size = name.length;
 	var elements = document.getElementsByTagName('input');
 	
-	for(var i=0; i<elements.length; i++)
-	{
-		if ((elements[i].type=='checkbox')&&(elements[i].id.substr(0,size)==name)&&(elements[i].checked==true))
-		{
-			num++;				
+	for(var i=0; i<elements.length; i++){
+		if ((elements[i].type=='checkbox')&&(elements[i].id.substr(0,size)==name)&&(elements[i].checked==true)){
+			num++;
 		}
 	}
 	
-	if(num==0)
-		alert('Для удаления выберите хотя бы один объект!');
-	else
-	{
-		if(confirm('Уверены?'))
-		{
-			if(href)
-				form.action = href+'&action=multidel';
-			else
-				form.action = '?action=multidel';
-			form.submit();
-		}
+	if(num==0) {
+    $(document).jAlert('show', 'alert', 'Для удаления выберите хотя бы один объект');
+  } else {
+    $(document).jAlert('show', 'confirm', 'Уверены?', function () {
+      if(href) {
+        form.action = href + '&action=multidel';
+      } else {
+        form.action = '?action=multidel';
+      }
+      form.submit();
+    });
 	}
 }
 
@@ -77,20 +74,16 @@ function multimail(form,name)
 	var size = name.length;
 	var elements = document.getElementsByTagName('input');
 	
-	for(var i=0; i<elements.length; i++)
-	{
-		if ((elements[i].type=='checkbox')&&(elements[i].id.substr(0,size)==name)&&(elements[i].checked==true))
-		{
-			num++;				
+	for(var i=0; i<elements.length; i++){
+		if ((elements[i].type=='checkbox')&&(elements[i].id.substr(0,size)==name)&&(elements[i].checked==true)){
+			num++;
 		}
 	}
 	
-	if(num==0)
-		alert('Для рассылки выберите хотя бы один объект!');
-	else
-	{
-		if(confirm('Уверены?'))
-		{
+	if(num==0){
+    $(document).jAlert('show','alert','Для рассылки выберите хотя бы один объект');
+	} else {
+		if(confirm('Уверены?')){
 			form.action = '?action=multimail';
 			form.submit();
 		}
