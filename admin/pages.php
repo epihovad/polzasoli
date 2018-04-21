@@ -2,6 +2,8 @@
 require('inc/common.php');
 
 $h1 = 'Страницы';
+$h = 'Общий список страниц';
+$title .= ' :: Страницы';
 $tbl = 'pages';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -21,7 +23,8 @@ if(isset($_GET['action']))
 				
 			if($locked)
 			{
-				$set = "text=".($text?"'{$text}'":"NULL").",
+				$set = "preview=".($preview?"'{$preview}'":"NULL").",
+				        text=".($text?"'{$text}'":"NULL").",
 								h1=".($h1?"'{$h1}'":"NULL").",
 								title=".($title?"'{$title}'":"NULL").",
 								keywords=".($keywords?"'{$keywords}'":"NULL").",
@@ -51,7 +54,8 @@ if(isset($_GET['action']))
 			
 			$set = "id_parent='{$id_parent}',
 							name='{$name}',
-							text=".($text?"'{$text}'":"NULL").",
+							preview=".($preview?"'{$preview}'":"NULL").",
+				      text=".($text?"'{$text}'":"NULL").",
 							ids_disease=".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
 							type='{$type}',
 							is_main='{$is_main}',
@@ -152,13 +156,14 @@ if(isset($_GET['action']))
 // ------------------ РЕДАКТИРОВАНИЕ --------------------
 elseif(isset($_GET['red']))
 {
-	$id = (int)$_GET['red'];
-
-	$navigate .= $id ? 'Редактирование' : 'Добавление';
-	$page_title .= ' :: '.$rubric;
-	
-	$row = gtv($tbl,'*',$id);
+	$row = gtv($tbl,'*',(int)$_GET['red']);
+	$id = $row['id'];
 	$locked = $row['locked'];
+	$readonly = $locked ? ' readonly' : '';
+
+	$title .= ' :: ' . ($id ? $row['name'] . ' (редактирование)' : 'Добавление страницы');
+	$h = $id ? $row['name'] . ' <small>(редактирование)</small>' : 'Добавление страницы';
+	$navigate = '<span></span><a href="' . $script . '">Страницы</a><span></span>' . ($id ? $row['name'] : 'Добавление страницы');
 	
 	ob_start();
 	?>
@@ -186,33 +191,35 @@ elseif(isset($_GET['red']))
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
   <input type="hidden" name="locked" value="<?=$locked?>" />
   <table class="table-edit">
+    <? if(!$locked){ ?>
     <tr>
       <th></th>
       <th>Подчинение</th>
       <td><?=dllTree("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id",'name="id_parent"',$row['id_parent'],array('0'=>'без подчинения'),$id)?></td>
     </tr>
+    <? } ?>
     <tr>
       <th></th>
       <th>Название</th>
-      <td><?=show_pole('text','name',htmlspecialchars($row['name']),$locked)?></td>
+      <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"<?=$readonly?>></td>
     </tr>
     <tr>
       <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
       <th>Ссылка</th>
-      <td><?=show_pole('text','link',$row['link'],$locked)?></td>
+      <td><input type="text" class="form-control input-sm" name="link" value="<?=htmlspecialchars($row['link'])?>"<?=$readonly?>></td>
     </tr>
-    <tr>
+    <?/*<tr>
       <th></th>
       <th>Дата</th>
       <td><input type="text" class="form-control input-sm datepicker"></td>
-    </tr>
+    </tr>*/?>
 		<?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
     <tr>
       <th></th>
       <th>Краткое<br />описание</th>
       <td><?=showCK('preview',$row['preview'],'basic','100%',20)?></td>
     </tr>
-    <tr class="for-page">
+    <tr>
       <th></th>
       <th>Текст</th>
       <td><?=showCK('text',$row['text'])?></td>
@@ -249,25 +256,25 @@ elseif(isset($_GET['red']))
       <th>В слайдер</th>
       <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_slider"',$row['is_slider'])?></td>
     </tr>
-    <tr class="for-page">
+    <tr>
       <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
       <th>Заголовок</th>
-      <td><?=show_pole('text','h1',htmlspecialchars($row['h1']))?></td>
+      <td><input type="text" class="form-control input-sm" name="h1" value="<?=htmlspecialchars($row['h1'])?>"></td>
     </tr>
-    <tr class="for-page">
+    <tr>
       <th></th>
       <th>title</th>
-      <td><?=show_pole('text','title',htmlspecialchars($row['title']))?></td>
+      <td><input type="text" class="form-control input-sm" name="title" value="<?=htmlspecialchars($row['title'])?>"></td>
     </tr>
-    <tr class="for-page">
+    <tr>
       <th></th>
       <th>keywords</th>
-      <td><?=show_pole('text','keywords',htmlspecialchars($row['keywords']))?></td>
+      <td><input type="text" class="form-control input-sm" name="keywords" value="<?=htmlspecialchars($row['keywords'])?>"></td>
     </tr>
-    <tr class="for-page">
+    <tr>
       <th></th>
       <th>description</th>
-      <td><?=show_pole('textarea','description',$row['description'])?></td>
+      <td><textarea class="form-control input-sm" name="description"><?=$row['description']?></textarea></td>
     </tr>
   </table>
   <div class="frm-btns">
@@ -276,7 +283,7 @@ elseif(isset($_GET['red']))
   </div>
   </form>
   <?
-	$content = arr($navigate, ob_get_clean());
+	$content = arr($h, ob_get_clean());
 }
 // -----------------ПРОСМОТР-------------------
 else
@@ -284,8 +291,7 @@ else
 	$cur_page = $_SESSION['ss']['page'] ? $_SESSION['ss']['page'] : 1;
 	$sitemap = isset($_SESSION['ss']['sitemap']);
 
-	$page_title .= ' :: '.$rubric;
-	$navigate .= 'Общий список';
+	$navigate = '<span></span>Общий список страниц';
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
 	if($sitemap)
@@ -319,104 +325,6 @@ else
 
   <div class="clearfix"></div>
 
-  <script>
-    $(function () {
-      $('table.table-list tbody').sortable({
-        helper: fixWidthHelper,
-        axis: 'y',
-        /*containment: 'parent',*/
-        cursor: 'move',
-        handle: '.fa-sort',
-        start: function(event, ui){
-          /*var id = ui.item.attr('oid');
-          var $dragged = $(this).find('tr[par="'+id+'"]');
-          $dragged.appendTo(ui.item);*/
-        },
-        stop: function(event, ui){
-
-        },
-        update: function (event, ui) {
-
-          var $sortable = $(this);
-
-          var cur = { 'id' : ui.item[0].attributes.oid.value, 'par' : ui.item[0].attributes.par.value, };
-          var prev = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
-          var next = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
-          try {
-            prev = {
-              'id' : ui.item[0].previousElementSibling.attributes.oid.value,
-              'par' : ui.item[0].previousElementSibling.attributes.par.value,
-              'has_childs' : strpos(ui.item[0].previousElementSibling.className, 'has-childs') !== false,
-            };
-          } catch (e){}
-          try {
-            next = {
-              'id' : ui.item[0].nextElementSibling.attributes.oid.value,
-              'par' : ui.item[0].nextElementSibling.attributes.par.value,
-              'has_childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs') !== false,
-            };
-          } catch (e){}
-
-          // допускается ли перемещение
-          if(cur.par != prev.par && cur.par != next.par){
-            $sortable.sortable('cancel');
-            //$(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
-            return ui;
-          }
-          if(cur.par == prev.par && prev.has_childs){
-            $sortable.sortable('cancel');
-            //$(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
-            return ui;
-          }
-
-          var childs = [];
-          getTree(cur.id, childs);
-          var $tree = ui.item;
-          var $last = ui.item;
-          childs.forEach(function($e) {
-            $tree = $tree.add($e);
-            $e.detach().insertAfter($last);
-            $last = $e;
-          });
-
-          $tree.effect("highlight", {}, 1000);
-
-          var data = $sortable.sortable('serialize');
-          $.ajax({
-						data: data,
-						type: 'POST',
-						url: 'pages.php?action=sort',
-            complete: function(data,status){
-						  if(data.responseJSON.status != 'ok'){
-                $sortable.sortable('cancel');
-						    $(document).jAlert('show', 'alert', data.responseJSON.message);
-						    return;
-              }
-              var i=1;
-              $('table.table-list tbody tr').each(function () {
-                $(this).find('th').eq(1).html(i++);
-              });
-            }
-					});
-        }
-      });
-    });
-    function fixWidthHelper(event, ui) {
-      ui.children().each(function() {
-        $(this).width($(this).width());
-      });
-      return ui;
-    }
-    function getTree (id, arr) {
-      var $ch = $('tr[par="' + id + '"');
-      $ch.each(function () {
-        arr.push($(this));
-        getTree($(this).attr('oid'), arr);
-      });
-      return arr;
-    }
-</script>
-
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
   <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
   <table class="table-list">
@@ -440,12 +348,13 @@ else
         <th style="padding:0 30px;"></th>
       </tr>
     </thead>
+    <tbody>
   <?
 	$mas = getTree($query);
 	if(sizeof($mas))
 	{
 		$i=1;
-		?><tbody><?
+		?><?
 		foreach($mas as $vetka)
 		{
 			$row = $vetka['row'];
@@ -507,7 +416,7 @@ else
   </table>
   </form>
   <?
-	$content = arr($navigate, ob_get_clean(), 'Date - <small class="text-success">20:08:2014</small>');
+	$content = arr($h, ob_get_clean());
 }
 
 require('tpl/template.php');

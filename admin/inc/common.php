@@ -16,7 +16,7 @@ require($_SERVER['DOCUMENT_ROOT'].'/inc/tree.php'); // функции для д�
 // ------------------------------
 
 // функции, константы, переменные
-$page_title = 'Администрирование';
+$title = 'Администрирование';
 $script = basename($_SERVER['SCRIPT_FILENAME']);
 $script_name = basename($_SERVER['SCRIPT_FILENAME'],'.php');
 // ------------------------------

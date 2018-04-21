@@ -78,8 +78,6 @@ aside#sidebar {
 .top-bar {
 	padding: 12px 20px;
 	vertical-align: middle;
-	height: 65px;
-	line-height: 40px;
 	background: #ffffff;
 	border-bottom: 1px solid #ededed;
 }
@@ -92,6 +90,12 @@ aside#sidebar {
 	float: left;
 	color: #eb0d41;
 }
+
+.top-bar .navigate { font-size:11px; color:#929292; line-height:1; padding-top:5px; }
+.top-bar .navigate span { padding:0 12px;}
+.top-bar .navigate span:after { position:absolute; content:"→"; margin:-3px 0 0 -7px; font-size:14px;}
+.top-bar .navigate a { color:#929292; text-decoration:underline;}
+.top-bar .navigate a:hover { text-decoration:none;}
 
 .spacer {
 	padding: 20px;
@@ -217,6 +221,9 @@ aside#sidebar {
 .table-list tbody td { text-align:left;}
 .table-list tbody tr:nth-child(odd) { background-color:#f9f9f9;}
 .table-list tbody tr:hover { background-color:#ededed;}
+.table-list tbody tr.nofind { background-color:#fff !important;}
+.table-list tbody tr.nofind td { padding:5px; text-align:center;}
+.table-list tbody tr.nofind .bg-warning { padding:7px;}
 
 .table-edit { width:100%; margin-bottom:40px;}
 .table-edit tbody tr:nth-child(odd) { background-color:#f9f9f9;}

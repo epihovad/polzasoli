@@ -157,6 +157,102 @@ $(function(){
 
 		return false;
 	});
+	// сортировка
+  $(function () {
+    $('table.table-list tbody').sortable({
+      helper: fixWidthHelper,
+      axis: 'y',
+      /*containment: 'parent',*/
+      cursor: 'move',
+      handle: '.fa-sort',
+      start: function(event, ui){
+        /*var id = ui.item.attr('oid');
+        var $dragged = $(this).find('tr[par="'+id+'"]');
+        $dragged.appendTo(ui.item);*/
+      },
+      stop: function(event, ui){
+
+      },
+      update: function (event, ui) {
+
+        var $sortable = $(this);
+
+        var cur = { 'id' : ui.item[0].attributes.oid.value, 'par' : ui.item[0].attributes.par.value, };
+        var prev = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
+        var next = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
+        try {
+          prev = {
+            'id' : ui.item[0].previousElementSibling.attributes.oid.value,
+            'par' : ui.item[0].previousElementSibling.attributes.par.value,
+            'has_childs' : strpos(ui.item[0].previousElementSibling.className, 'has-childs') !== false,
+          };
+        } catch (e){}
+        try {
+          next = {
+            'id' : ui.item[0].nextElementSibling.attributes.oid.value,
+            'par' : ui.item[0].nextElementSibling.attributes.par.value,
+            'has_childs' : strpos(ui.item[0].nextElementSibling.className, 'has-childs') !== false,
+          };
+        } catch (e){}
+
+        // допускается ли перемещение
+        if(cur.par != prev.par && cur.par != next.par){
+          $sortable.sortable('cancel');
+          //$(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
+          return ui;
+        }
+        if(cur.par == prev.par && prev.has_childs){
+          $sortable.sortable('cancel');
+          //$(document).jAlert('show','alert','сортировать строки возможно лишь в рамках одного уровня');
+          return ui;
+        }
+
+        var childs = [];
+        getTree(cur.id, childs);
+        var $tree = ui.item;
+        var $last = ui.item;
+        childs.forEach(function($e) {
+          $tree = $tree.add($e);
+          $e.detach().insertAfter($last);
+          $last = $e;
+        });
+
+        $tree.effect("highlight", {}, 1000);
+
+        var data = $sortable.sortable('serialize');
+        $.ajax({
+          data: data,
+          type: 'POST',
+          url: 'pages.php?action=sort',
+          complete: function(data,status){
+            if(data.responseJSON.status != 'ok'){
+              $sortable.sortable('cancel');
+              $(document).jAlert('show', 'alert', data.responseJSON.message);
+              return;
+            }
+            var i=1;
+            $('table.table-list tbody tr').each(function () {
+              $(this).find('th').eq(1).html(i++);
+            });
+          }
+        });
+      }
+    });
+  });
+  function fixWidthHelper(event, ui) {
+    ui.children().each(function() {
+      $(this).width($(this).width());
+    });
+    return ui;
+  }
+  function getTree (id, arr) {
+    var $ch = $('tr[par="' + id + '"');
+    $ch.each(function () {
+      arr.push($(this));
+      getTree($(this).attr('oid'), arr);
+    });
+    return arr;
+  }
 });
 
 function Search()

@@ -1,4 +1,49 @@
 <?
+function menu()
+{
+  global $prx, $menu;
+
+  $tree = getTree("SELECT * FROM {$prx}am ORDER BY sort,id");
+	if (sizeof($tree)) {
+		?><div id="menu"><?
+		$i = 0;
+		$old_level = null;
+	  foreach ($tree as $vetka) {
+		$item = $vetka['row'];
+		$level = $vetka['level'];
+		$id = $item['id'];
+
+		//$parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
+		$childs = getIdChilds("SELECT * FROM {$prx}am", $id);
+		$siblings = getArr("SELECT id FROM {$prx}am WHERE id_parent = '{$item['id_parent']}'");
+
+		$has_childs = sizeof($childs) > 1;
+
+    if(!$i || $level > $old_level) {
+      $display = !$level ? 'block' : (in_array($menu['id'], $siblings) !== false ? 'block' : 'none');
+      ?><ul style="display:<?=$display?>"><?
+    }
+    if($old_level !== null && $level < $old_level){ ?></li></ul><? }
+
+    if(!$level){
+      $class = '';
+      if($has_childs) $class .= ' has-sub';
+      if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
+
+      ?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="<?=$item['im']?>"></i><span><?=$item['name']?></span></a><?
+    } else {
+      $class = '';
+      if($id == $menu['id']) $class .= ' select';
+
+      ?><li><a class="<?=$class?>" href="<?=$item['link']?>.php"><span><?=$item['name']?></span></a><?
+    }
+
+		$old_level = $level;
+		$i++;
+	}
+		?></li></ul></div><?
+	}
+}
 function arr($head, $body, $custom = null)
 {
   ob_start();
@@ -520,66 +565,7 @@ function ins_div($tek_lvl,$old_lvl,$id_parent)
 		}
 	}
 }
-
-function show_pole($type,$name,$value='',$locked=0,$rows=3)
-{
-	ob_start();
-	switch($type)
-	{
-		case 'text':
-			?><input type="<?=$type?>" class="form-control input-sm" name="<?=$name?>" value="<?=$value?>" style="width:100%;"<?=($locked?" readonly":"")?>><?
-			break;
-		
-		case 'textarea':
-			?><textarea name="<?=$name?>" class="form-control" style="width:100%;" rows="<?=$rows?>"<?=($locked?" readonly":"")?>><?=$value?></textarea><?
-			break;
-		
-		case "checkbox":
-			?>
-			<input type="hidden" name="<?=$name?>" id="ch_<?=$name?>"  value="<?=$value?>">
-			<input type="checkbox" <?=($value=="true" ? "checked" : "")?> onClick="$('#ch_<?=$name?>').val(this.checked);" style="width:auto;"<?=($locked?" readonly":"")?>>
-			<?
-			break;
-
-		case "datetime":
-		case "date":
-			echo aInput($type, "name='{$name}'", $value);	
-			break;
-
-		case "color":
-			echo aInput("color", "name='{$name}'", $value);	
-			break;
-		
-		case "file":
-			?>
-			<table class="tab_no_borders" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td><input type="file" name="<?=$name?>"></td>
-            <?
-				if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/settings/{$name}.jpg"))
-				{
-					?>
-					<td style="padding:0 10px 0 10px;">
-					<a href="/uploads/settings/<?=$name?>.jpg" class="highslide" onclick="return hs.expand(this)">
-					<img src="/img_spec/20x20/<?=$name?>.jpg" width="20" height="20" style="border:1px solid #333;" />
-					</a>
-					</td>
-					<td>
-					<a href="?action=pic_del&id=<?=$name?>" target="ajax">
-					<img src="img/del_pic.png" title="удалить текущую картинку" width="20" height="20" style="border:1px solid #333;" class="alpha_png" />
-					</a>
-					</td>
-					<?
-				}
-				?>
-              </tr>
-			</table>
-            <?
-			
-			break;
-	}
-	return ob_get_clean();
-}
+//
 function help($text)
 {
 	ob_start();

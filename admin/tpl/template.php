@@ -94,62 +94,16 @@
 </header>
 
 <aside id="sidebar" style="left: 0px;">
-
-	<?
-	$tree = getTree("SELECT * FROM {$prx}am ORDER BY sort,id");
-	if (sizeof($tree)) {
-		?><div id="menu"><?
-		$i = 0;
-		$old_level = null;
-	foreach ($tree as $vetka) {
-		$item = $vetka['row'];
-		$level = $vetka['level'];
-		$id = $item['id'];
-
-		$parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
-		$childs = getIdChilds("SELECT * FROM {$prx}am", $id);
-		$has_childs = sizeof($childs) > 1;
-
-	if(!$i || $level > $old_level) {
-		if(!$level){
-			$display = 'block';
-		} else {
-			$display = in_array($menu['id'], $parents) !== false ? 'block' : 'none';
-		}
-		?><ul style="display:<?=$display?>"><?
-			}
-			if($old_level !== null && $level < $old_level){ ?></li></ul><? }
-
-	if(!$level){
-
-		$class = '';
-		if($has_childs) $class .= ' has-sub';
-		//if(in_array($menu['id'], $parents) !== false) $class .= ' highlight';
-		if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
-
-		?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="<?=$item['im']?>"></i><span><?=$item['name']?></span></a><?
-	} else {
-
-	$class = '';
-	if($id == $menu['id']) $class .= ' select';
-
-	?><li><a class="<?=$class?>" href="<?=$item['link']?>.php"><span><?=$item['name']?></span></a><?
-	}
-
-		$old_level = $level;
-		$i++;
-	}
-		?></li></ul></div><?
-	}
-	?>
-
+	<?=menu()?>
 </aside>
 
 <div class="dashboard-wrapper">
 
-  <? if($h1){ ?>
+	<? if($h1){ ?>
     <div class="top-bar">
       <div class="page-title"><?=$h1?></div>
+      <div class="clearfix"></div>
+      <div class="navigate"><a href="/admin/">Главная</a><?=$navigate?></div>
     </div>
 	<?}?>
 
