@@ -5,7 +5,7 @@ function getTree($query, $id_parent = 0, $depth = 0, $level = 0, &$rows = NULL) 
 	if (is_null($rows)) {
 		$rows = $tree = array();
 		$res = sql($query);
-		while ($row = mysql_fetch_assoc($res))
+		while ($row = mysqli_fetch_assoc($res))
 			$rows[$row['id_parent']][] = $row;
 	}
 	if (!$depth || $depth > $level)

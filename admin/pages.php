@@ -1,4 +1,5 @@
 <?
+ini_set('display_errors',1);
 require('inc/common.php');
 
 $h1 = 'Страницы';
@@ -19,7 +20,7 @@ if(isset($_GET['action']))
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
 
-			if(!$name) errorAlert('необходимо указать название !');
+			if(!$name) jAlert('необходимо указать название !');
 				
 			if($locked)
 			{
@@ -33,10 +34,10 @@ if(isset($_GET['action']))
 				?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
 				exit;
 			}
-			
+
 			$updateLink = false;
 			$where = $id ? " AND id<>'{$id}'" : '';
-			
+
 			if($type=='page')
 			{
 				if($link)
@@ -51,7 +52,7 @@ if(isset($_GET['action']))
 						$updateLink = true;
 				}
 			}
-			
+
 			$set = "id_parent='{$id_parent}',
 							name='{$name}',
 							preview=".($preview?"'{$preview}'":"NULL").",
@@ -66,10 +67,10 @@ if(isset($_GET['action']))
 							keywords=".($keywords?"'{$keywords}'":"NULL").",
 							description=".($description?"'{$description}'":"NULL");
 			if(!$updateLink) $set .= ",link='{$link}'";
-				
+
 			if(!$id = update($tbl,$set,$id))
-				errorAlert('Во время сохранения данных произошла ошибка.');
-			
+				jAlert('Во время сохранения данных произошла ошибка.');
+
 			if($updateLink)
 				update($tbl,"link='".($link.'_'.$id)."'",$id);
 
@@ -88,7 +89,6 @@ if(isset($_GET['action']))
 					break;
 				}
 			}
-
 			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?		
 			break;
 		// ----------------- обновление в меню
@@ -118,22 +118,10 @@ if(isset($_GET['action']))
 				echo json_encode(array('status' => 'error', 'message' => 'произошла ошибка'));
       }
 			break;
-		// ----------------- сортировка вверх
-		case 'moveup':
-			$id_parent = gtv($tbl,'id_parent',$id);
-			sort_moveup($tbl,$id,"id_parent='{$id_parent}'");
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
-			break;
-		// ----------------- сортировка вниз
-		case 'movedown':
-			$id_parent = gtv($tbl,'id_parent',$id);
-			sort_movedown($tbl,$id,"id_parent='{$id_parent}'");
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
-			break;
 		// ----------------- удаление одной записи
 		case 'del':
 			if(gtv($tbl,'locked',$id))
-				errorAlert("данная страница защищена от удаления!");
+				jAlert("данная страница защищена от удаления!");
 			else
 				remove_object($id);
 			?><script>top.location.href = '<?=$script?>'</script><?
@@ -188,7 +176,7 @@ elseif(isset($_GET['red']))
     })
   </script>
 
-  <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
+  <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="">
   <input type="hidden" name="locked" value="<?=$locked?>" />
   <table class="table-edit">
     <? if(!$locked){ ?>
@@ -312,7 +300,7 @@ else
 		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
 	}
 	else
-		$query .= ' ORDER BY sort,id';
+		$query .= ' ORDER BY A.sort,A.id';
 	//-----------------------------
 	//echo $query;
 

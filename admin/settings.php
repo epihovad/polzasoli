@@ -66,8 +66,8 @@ $type = in_array($type,array('client','admin')) ? $type : 'admin';
 $rubric .= ' &raquo; '.($type=='client'?'Клиентская':'Административная').' часть';
 	
 $query = "SELECT * FROM {$prx}{$tbl} WHERE flag='{$type}' ORDER BY sort,id";
-$res = mysql_query($query);
-if(@mysql_num_rows($res))
+$res = sql($query);
+if(@mysqli_num_rows($res))
 {
 	?>
 	<style>.tab_red th span { color:#090; }</style>
@@ -76,7 +76,7 @@ if(@mysql_num_rows($res))
 	<input type="hidden" name="type" value="<?=$type?>" />
 	<table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
 	<?
-	while($row = mysql_fetch_array($res))
+	while($row = mysqli_fetch_assoc($res))
 	{
 		?>
 		<tr id="row_<?=$row['id']?>">

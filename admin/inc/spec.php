@@ -290,8 +290,8 @@ function get_criteria($tab)
 	
 	$mas = array();
 	
-	$res = mysql_query("SELECT * FROM {$prx}criteria WHERE tab_name='{$tab}'");
-	while($row = @mysql_fetch_assoc($res))
+	$res = sql("SELECT * FROM {$prx}criteria WHERE tab_name='{$tab}'");
+	while($row = @mysqli_fetch_assoc($res))
 		if($row['show_flag'])
 			$mas[] = $row['field_name'];
 	
@@ -313,7 +313,6 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 						<div class="i1"><input type="file" name="<?=$name?>[]"></div>
 						<? if($count>1){ ?><div class="i2"><a href="" title="добавить">ещё</a></div><? }?>
 					</div>
-          <div class="clear" style="padding-top:5px;"></div>
 					<?
 					$images = array();
 			
@@ -338,6 +337,7 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 					if($images)
 					{
 						$i=1;
+						?><div class="clear" style="padding-top:5px;"></div><?
 						foreach($images as $fname)
 						{
 							?>
@@ -405,9 +405,9 @@ function resort($tab,$where='')
 	
 	$where = $where ? ' AND '.str_replace(',',' AND ',$where) : '';
 	
-	$res = mysql_query("SELECT id FROM {$prx}{$tab} WHERE sort>0{$where} ORDER BY sort,id");
+	$res = sql("SELECT id FROM {$prx}{$tab} WHERE sort>0{$where} ORDER BY sort,id");
 	$i=0;
-	while($row = @mysql_fetch_assoc($res))
+	while($row = @mysqli_fetch_assoc($res))
 		update($tab,"sort=".(++$i),$row['id']);
 }
 // В САМЫЙ ВЕРХ
@@ -619,8 +619,8 @@ function show_letter_navigate($link,$tab,$pole,$where='')
 	$mas_ru_in_base = array();
 	$mas_num_in_base = array();
 	
-	$res = mysql_query("SELECT DISTINCT SUBSTRING({$pole},1,1) as symbol from {$prx}{$tab} WHERE 1=1 {$where} ORDER BY {$pole}");
-	while($row = @mysql_fetch_assoc($res))
+	$res = sql("SELECT DISTINCT SUBSTRING({$pole},1,1) as symbol from {$prx}{$tab} WHERE 1=1 {$where} ORDER BY {$pole}");
+	while($row = @mysqli_fetch_assoc($res))
 	{
 		//$symbol = strto($row['symbol'],'upper');
 		$symbol = mb_strtoupper($row['symbol']);

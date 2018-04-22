@@ -252,7 +252,7 @@ elseif(isset($_GET['red']))
           <?
           $r = sql("SELECT * FROM {$prx}mods WHERE id_good='{$good['id']} ORDER BY sort,id'");
           $i=1;
-          while ($mod = mysql_fetch_assoc($r)){
+          while ($mod = mysqli_fetch_assoc($r)){
             ?>
             <tr>
               <th class="mod-number"><span><?=$i++?></span><input type="hidden" name="mods[id][]" value="<?=$mod['id']?>"></th>
@@ -345,7 +345,7 @@ else
   $query .= " WHERE 1{$where} GROUP BY G.id";
 
   $r = sql($query);
-  $count_obj = (int)@mysql_num_rows($r); // кол-во объектов в базе
+  $count_obj = (int)@mysqli_num_rows($r); // кол-во объектов в базе
   $count_obj_on_page = 30; // кол-во объектов на странице
   $kol_str = ceil($count_obj/$count_obj_on_page); // количество страниц
 
@@ -411,11 +411,11 @@ else
         <th style="padding:0 30px;"></th>
       </tr>
       <?
-      $res = mysql_query($query);
-      if(@mysql_num_rows($res))
+      $res = sql($query);
+      if(@mysqli_num_rows($res))
       {
         $i=1;
-        while($good = mysql_fetch_array($res))
+        while($good = mysqli_fetch_assoc($res))
         {
           $id = $good['id'];
           ?>

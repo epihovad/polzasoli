@@ -146,11 +146,11 @@ else
       <th style="padding:0 30px;"></th>
     </tr>
 		<?
-		$res = mysql_query($query);
-		if(@mysql_num_rows($res))
+		$res = sql($query);
+		if(@mysqli_num_rows($res))
 		{
 			$i=1;
-			while($row = mysql_fetch_array($res))
+			while($row = mysqli_fetch_assoc($res))
 			{
 				$id = $row['id'];
         ?>

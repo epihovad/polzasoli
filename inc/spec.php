@@ -17,11 +17,11 @@ function main()
 	global $prx, $mainID;
 
 	$res = sql("SELECT * FROM {$prx}pages WHERE status=1 AND main=1 ORDER BY sort,id");
-	if(!$count = @mysql_num_rows($res)) return;
+	if(!$count = @mysqli_num_rows($res)) return;
 
 	$url = $_SERVER['REQUEST_URI'];
 	?><div id="main"><?
-	while($row = mysql_fetch_assoc($res))
+	while($row = mysqli_fetch_assoc($res))
 	{
 		$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
 		$cur = $row['id']==$mainID || ($url=='/' && $link=='/') ? true : false;
@@ -39,7 +39,7 @@ function islider()
 
 	?><div id="islider"><?
 	$r = sql("SELECT * FROM {$prx}slider WHERE status=1 ORDER BY sort,id");
-	while($img = @mysql_fetch_assoc($r))
+	while($img = @mysqli_fetch_assoc($r))
 	{
 		$id = $img['id'];
 		if($img['link']){ ?><a href="<?=$img['link']?>"><img src="/slider/<?=$id?>.jpg"></a><? }
@@ -124,7 +124,7 @@ function counters()
 	global $prx;
 
 	$res = sql("SELECT html FROM {$prx}counters WHERE status=1 ORDER BY sort,id");
-	while($row = @mysql_fetch_assoc($res))
+	while($row = @mysqli_fetch_assoc($res))
 		echo "&nbsp;{$row['html']}&nbsp;";
 }
 

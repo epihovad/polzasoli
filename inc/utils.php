@@ -44,8 +44,8 @@ function cleanReserve()
 {
 	global $prx;
 	
-	$res = mysql_query("SELECT * FROM {$prx}reserve WHERE `date` < DATE_SUB(NOW(),INTERVAL 1 DAY)");
-	while($row = @mysql_fetch_assoc($res))
+	$res = sql("SELECT * FROM {$prx}reserve WHERE `date` < DATE_SUB(NOW(),INTERVAL 1 DAY)");
+	while($row = @mysqli_fetch_assoc($res))
 	{
 		update('goods',"nalich=nalich+1",$row['id_goods']);
 		update('reserve','',$row['id']);
@@ -58,14 +58,14 @@ function getArr($sql, $simple=true) // $simple=true - возвратит "про
 	
 	if($simple)
 	{
-		while($row = mysql_fetch_row($res))
-			if(mysql_num_fields($res)>1)
+		while($row = mysqli_fetch_row($res))
+			if(mysqli_num_fields($res)>1)
 				$arr[$row[0]] = $row[1];
 			else
 				$arr[] = $row[0];
 	}
 	else
-		while($row = mysql_fetch_assoc($res))
+		while($row = mysqli_fetch_assoc($res))
 			$arr[] = $row;
 
 	return (array)$arr;
@@ -177,15 +177,15 @@ function makeUrl($str)
 // ПОЛУЧАЕТ ОДНО ЗНАЧЕНИЕ ИЗ ТАБЛИЦЫ
 function getField($sql)
 {
-	$res = mysql_query($sql); 
-	$field = @mysql_result($res,0,0);
-	return $field;
+	$res = sql($sql);
+	$arr = @mysqli_fetch_array($res);
+	return $arr[0];
 }	
 // ПОЛУЧАЕТ МАССИВ ПЕРВОЙ СТРОКИ ТАБЛИЦЫ
 function getRow($sql)
 {
-	$res = mysql_query($sql); 
-	$row = @mysql_fetch_assoc($res);
+	$res = sql($sql);
+	$row = mysqli_fetch_assoc($res);
 	return $row;
 }
 // ЗНАЧЕНИЕ ПОЛЯ В ОПРЕДЕЛЁННОЙ СТРОКЕ ТАБЛИЦЫ
@@ -220,7 +220,7 @@ function dllEnum($tab,$field,$properties,$value="",$default=NULL)
 		}
 	}
 	$res = sql("SHOW COLUMNS FROM {$prx}{$tab} LIKE '{$field}'");
-	$val = mysql_result($res,0,1);
+	$val = mysqli_result($res,0,1);
 	$val = str_replace(array("enum(",")","'"), "", $val);
 	$arr = explode(",",$val);
 	foreach($arr as $val) 
@@ -246,7 +246,7 @@ function set($name, $tbl='settings')
 // ОБНОВЛЕНИЕ / ДОБАВЛЕНИЕ / УДАЛЕНИЕ ЗАПИСИ В ТАБЛИЦЕ
 function update($tbl, $set="", $id=0) // таблица, обновляемые поля, id (для удаления id может быть массивом, строкой через ',' или NULL)
 {
-	global $prx;
+	global $mysqli, $prx;
 	if(!$set)
 	{
 		if(is_null($id))
@@ -264,7 +264,7 @@ function update($tbl, $set="", $id=0) // таблица, обновляемые 
 	else
 	{
 		sql("INSERT INTO {$prx}{$tbl} SET {$set}");
-		$id = mysql_insert_id();
+		$id = mysqli_insert_id($mysqli);
 	}
 	return $id;
 }
@@ -291,26 +291,26 @@ function pre($data)
 	else echo $data;
 	?></pre><?
 }
-// ЗАМЕНА mysql_query - ВЫВОДИТ ТЕКСТ ЗАПРОСА В СЛУЧАИ НЕУДАЧИ
+// ЗАМЕНА mysqli_query - ВЫВОДИТ ТЕКСТ ЗАПРОСА В СЛУЧАИ НЕУДАЧИ
 function sql($sql, $debug=false)
 {
-	global $debugSql;
-	$res = mysql_query($sql);
+	global $mysqli, $debugSql;
+	$res = mysqli_query($mysqli, $sql);
 	if((!$res && @$_SESSION['admin']) || $debugSql || $debug)
 	{
-		$text = $sql."\r\n".mysql_error()."\r\n";
+		$text = $sql."\r\n".mysqli_error($mysqli)."\r\n";
 		echo nl2br($text);
-		$text = cleanJS($text);
 		?>
 		<script>
-		if(top.window !== window && <?=(!$debugSql && !$debug ? "true" : "false")?>) // если мы во фрейме, то выводим алерт и прерываем фрейм
-		{
-			alert('<?=$text?>');
-			location.href = "/inc/none.html";
-		}
-		else
-			alert('<?=$text?>');
-		top.loader(false);
+      console.log('<?=cleanJS($text)?>');
+      if(top.window !== window && <?=(!$debugSql && !$debug ? "true" : "false")?>) // если мы во фрейме, то выводим алерт и прерываем фрейм
+      {
+        top.jQuery(document).jAlert('show','alert','<?=cleanJS(nl2br($text))?>',function(){},{});
+        location.href = "/inc/none.html";
+      }
+      else
+        top.jQuery(document).jAlert('show','alert','<?=cleanJS(nl2br($text))?>',function(){},{});
+      top.loader(false);
 		</script><?
 	}
 	return $res;
@@ -575,14 +575,14 @@ function getStructureTable($tableName,$pole='')
 			  [number] => 0
 		 )
 	*/
-	$res = mysql_query("SHOW FULL FIELDS FROM {$prx}{$tableName}");
+	$res = sql("SHOW FULL FIELDS FROM {$prx}{$tableName}");
 	if(!$res)
 		return false;
 	else
 	{
 		$mas = array();
 		$i=0;
-		while($row = mysql_fetch_assoc($res))
+		while($row = mysqli_fetch_assoc($res))
 		{
 			if($pole && $pole==$row['Field'])
 				return 	$row['Comment'];
@@ -709,8 +709,8 @@ function get_nasled_classifer($id_catalog,$tab='classifer')
 {
 	global $prx, $mas_nasled;
 	
-	$res = mysql_query("SELECT A.* FROM {$prx}{$tab} A INNER JOIN {$prx}{$tab}_catalog B ON A.id = B.id_{$tab} WHERE B.id_catalog='{$id_catalog}' ORDER BY A.sort");
-	while($row = @mysql_fetch_array($res))
+	$res = sql("SELECT A.* FROM {$prx}{$tab} A INNER JOIN {$prx}{$tab}_catalog B ON A.id = B.id_{$tab} WHERE B.id_catalog='{$id_catalog}' ORDER BY A.sort");
+	while($row = @mysqli_fetch_assoc($res))
 	{
 		if(!in_array($row['id'],(array)$mas_nasled))
 			$mas_nasled[$row['id']] = $row;
@@ -756,8 +756,8 @@ function jAlert($text, $exit = true, $method = null, $type = null, $func = null,
 	$prm = $prm ? $prm : '{}';
 	?>
   <script>
-    top.jQuery(document).jAlert('<?=$method?>','<?=$type?>','<?=$text?>',function(){<?=$func?>},<?=$prm?>);
-    top.jQuery('#ajax').attr('src','/inc/none.htm');
+    top.$(document).jAlert('<?=$method?>','<?=$type?>','<?=$text?>',function(){<?=$func?>},<?=$prm?>);
+    top.$('#ajax').attr('src','/inc/none.htm');
 		<?=$jAlert_js?>
   </script>
 	<?

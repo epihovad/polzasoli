@@ -249,12 +249,12 @@ else
       <th style="padding:0 30px;"></th>
     </tr>
   <?
-	$res = mysql_query($query);
-	if(@mysql_num_rows($res))
+	$res = sql($query);
+	if(@mysqli_num_rows($res))
 	{
 		$arr_status = array('новый','обработан','выполнен','закрыт');
 
-		while($order = mysql_fetch_array($res))
+		while($order = mysqli_fetch_assoc($res))
 		{
 			$id = $order['id'];
 			?>

@@ -46,7 +46,7 @@ if(isset($_GET["action"]))
 
 			// создаем массивы с данными
 			$r = sql("SELECT date,COUNT(ip) as kol FROM {$prx}users_visit WHERE date>='{$date1}' AND date<='{$date2}' GROUP BY DATE ORDER BY date");
-			while($arr = @mysql_fetch_assoc($r))
+			while($arr = @mysqli_fetch_assoc($r))
 				$unic[$arr['date']] = $arr['kol'];
 			$maxY = getField("SELECT COUNT(ip) AS kol FROM {$prx}users_visit GROUP BY DATE ORDER BY kol DESC LIMIT 1");
 			$maxY = round($maxY+$maxY*0.05);

@@ -98,10 +98,10 @@ if(isset($_GET['show']))
 					<th>Название</th>
 				</tr>
 				<?
-				$res = mysql_query($query);
-				if(@mysql_num_rows($res))
+				$res = sql($query);
+				if(@mysqli_num_rows($res))
 				{
-					while($row = mysql_fetch_assoc($res))
+					while($row = mysqli_fetch_assoc($res))
 					{
 						?>
 						<tr>
@@ -191,11 +191,11 @@ if(isset($_GET['show']))
           <th style="width:30%">e-mail</th>
         </tr>
       <?
-			$res = mysql_query($query);
-			if(@mysql_num_rows($res))
+			$res = sql($query);
+			if(@mysqli_num_rows($res))
 			{
 				$i=1;
-				while($row = mysql_fetch_assoc($res))
+				while($row = mysqli_fetch_assoc($res))
 				{
 					?>
           <tr>
@@ -239,11 +239,11 @@ if(isset($_GET['show']))
           <th style="width:70%">Описание</th>
         </tr>
       <?
-			$res = mysql_query("SELECT * FROM {$prx}classifer ORDER BY sort,id");
-			if(@mysql_num_rows($res))
+			$res = sql("SELECT * FROM {$prx}classifer ORDER BY sort,id");
+			if(@mysqli_num_rows($res))
 			{
 				$i=1;
-				while($row = mysql_fetch_assoc($res))
+				while($row = mysqli_fetch_assoc($res))
 				{
 					?>
           <tr>

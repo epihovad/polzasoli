@@ -188,7 +188,7 @@ else
 	$query .= " WHERE 1{$where}";
 	
 	$r = sql($query);
-	$count_obj = @mysql_num_rows($r); // кол-во объектов в базе
+	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
 	$count_obj_on_page = 30; // кол-во объектов на странице
 	$kol_str = ceil($count_obj/$count_obj_on_page); // количество страниц
 
@@ -243,11 +243,11 @@ else
       <th style="padding:0 30px;"></th>
     </tr>
   <?
-	$res = mysql_query($query);
-	if(@mysql_num_rows($res))
+	$res = sql($query);
+	if(@mysqli_num_rows($res))
 	{
 		$i=1;
-		while($row = mysql_fetch_array($res))
+		while($row = mysqli_fetch_assoc($res))
 		{
 			$id = $row['id'];
 			?>

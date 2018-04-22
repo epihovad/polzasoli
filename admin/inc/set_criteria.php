@@ -72,8 +72,8 @@ $(function(){
 $tbl = clean($_GET['tab']);
 $location = clean($_GET['location']);
 
-$res = mysql_query("SELECT * FROM {$prx}criteria WHERE tab_name='{$tbl}' ORDER BY id");
-if(@mysql_num_rows($res))
+$res = sql("SELECT * FROM {$prx}criteria WHERE tab_name='{$tbl}' ORDER BY id");
+if(@mysqli_num_rows($res))
 {
 	?>
 	<form action="?action=save" method="post" target="ajax" style="margin:0;">
@@ -86,7 +86,7 @@ if(@mysql_num_rows($res))
     </tr>
 	<?
 	$i=0;
-	while($row = mysql_fetch_assoc($res))
+	while($row = mysqli_fetch_assoc($res))
 	{
 		$comment = $row['comment'] ? $row['comment'] : getStructureTable($tbl,$row['field_name']);
 		?>

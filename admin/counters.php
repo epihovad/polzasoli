@@ -117,10 +117,10 @@ else
     </tr>
   <?
 	$res = sql("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id");
-	if(@mysql_num_rows($res))
+	if(@mysqli_num_rows($res))
 	{
 		$i=1;
-		while($row = mysql_fetch_array($res))
+		while($row = mysqli_fetch_assoc($res))
 		{
 		  ?>
 		  <tr id="<?=$row['id']?>">
