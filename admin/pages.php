@@ -1,10 +1,9 @@
 <?
-ini_set('display_errors',1);
 require('inc/common.php');
 
 $h1 = 'Страницы';
 $h = 'Общий список страниц';
-$title .= ' :: Страницы';
+$title .= ' :: ' . $h1;
 $tbl = 'pages';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -149,9 +148,9 @@ elseif(isset($_GET['red']))
 	$locked = $row['locked'];
 	$readonly = $locked ? ' readonly' : '';
 
-	$title .= ' :: ' . ($id ? $row['name'] . ' (редактирование)' : 'Добавление страницы');
-	$h = $id ? $row['name'] . ' <small>(редактирование)</small>' : 'Добавление страницы';
-	$navigate = '<span></span><a href="' . $script . '">Страницы</a><span></span>' . ($id ? $row['name'] : 'Добавление страницы');
+	$title .= ' :: ' . ($id ? $row['name'] . ' (редактирование)' : 'Добавление');
+	$h = $id ? $row['name'] . ' <small>(редактирование)</small>' : 'Добавление';
+	$navigate = '<span></span><a href="' . $script . '">' . $h1 . '</a><span></span>' . ($id ? $row['name'] : 'Добавление');
 	
 	ob_start();
 	?>
@@ -176,7 +175,7 @@ elseif(isset($_GET['red']))
     })
   </script>
 
-  <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="">
+  <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
   <input type="hidden" name="locked" value="<?=$locked?>" />
   <table class="table-edit">
     <? if(!$locked){ ?>
@@ -276,7 +275,7 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else
 {
-	$cur_page = $_SESSION['ss']['page'] ? $_SESSION['ss']['page'] : 1;
+	$cur_page = (int)$_GET['page'] ?: 1;
 	$sitemap = isset($_SESSION['ss']['sitemap']);
 
 	$navigate = '<span></span>Общий список страниц';

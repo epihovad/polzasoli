@@ -745,7 +745,70 @@ function smsTo($to, $msg)
 	$id = preg_replace("/message_id\s*=\s*/i", "", @strval($arr_id[0]));
 	return $id;
 }
+//
+function pagination($count_page, $cur_page, $wrap = false, $style = null)
+{
+	if($count_page < 2) return;
 
+  $url = $_SERVER['REQUEST_URI'];
+  if(strpos($url,'page=') === false){
+    if(strpos($url, '?') === false){
+      $url .= '?page=';
+    } else {
+			$url .= '&page=';
+    }
+  }
+
+  if($wrap){ ?><div class="wrap-pagination" style="<?=$style?>"> <? }
+	?>
+  <ul class="pagination pagination-sm">
+    <li<?=$cur_page==1?' class="disabled"':''?>><a href="<?=sgp($url, 'page', $cur_page>1?$cur_page-1:1)?>">&laquo;</a></li>
+		<?
+		for ($page = 1; $page <= $count_page; $page++) {
+			if ($page == $cur_page) {
+				?><li class="active"><a href="<?=sgp($url, 'page', $page)?>"><?=$page?> <span class="sr-only">(current)</span></a></li><?
+			} else {
+				?><li><a href="<?=sgp($url, 'page', $page)?>"><?=$page?></a></li><?
+			}
+		}
+		?>
+    <li<?=$cur_page==$count_page?' class="disabled"':''?>><a href="<?=sgp($url, 'page', $cur_page<$count_page?$cur_page+1:$count_page)?>">&raquo;</a></li>
+  </ul>
+	<?
+	if($wrap){ ?></div> <? }
+}
+// substitute get parameter
+function sgp($url, $varname, $value, $add = false)
+{
+	if (is_array($varname)) {
+		foreach ($varname as $i => $n) {
+			$v = (is_array($value))
+				? ( isset($value[$i]) ? $value[$i] : NULL )
+				: $value;
+			$url = sgp($url, $n, $v);
+		}
+		return $url;
+	}
+
+	preg_match('/^([^?]+)(\?.*?)?(#.*)?$/', $url, $matches);
+	$gp = (isset($matches[2])) ? $matches[2] : ''; // GET-parameters
+	if (!$gp) return $url;
+
+	$pattern = "/([?&])$varname=.*?(?=&|#|\z)/";
+	if (preg_match($pattern, $gp)) {
+		$substitution = ($value !== '') ? "\${1}$varname=" . preg_quote($value) : '';
+		$newgp = preg_replace($pattern, $substitution, $gp); // new GET-parameters
+		$newgp = preg_replace('/^&/', '?', $newgp);
+	}
+	else    {
+		$s = ($gp) ? '&' : '?';
+		$newgp = $gp.$s.$varname.'='.$value;
+	}
+
+	$anchor = (isset($matches[3])) ? $matches[3] : '';
+	$newurl = $matches[1].$newgp.$anchor;
+	return $newurl;
+}
 // ВЫВОД ALERT ОБ ОШИБКЕ (и прерывание выполнения)
 function jAlert($text, $exit = true, $method = null, $type = null, $func = null, $prm = null)
 {

@@ -51,7 +51,6 @@ if(isset($_GET['action']))
 		// логинимся через куки
 		case 'loginc':
 			$admin = explode('/',$_COOKIE['inAdmin']);
-			pre($admin); exit;
 			header('location: '.(setPriv($admin[0],$admin[1]) ? $_GET['urlback'] : $_SERVER['PHP_SELF']));
 			exit;
 

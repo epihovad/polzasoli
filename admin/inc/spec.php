@@ -140,97 +140,6 @@ function ShowNavigate()
 	<?
 }
 
-// выводим субконтент раздела меню (редактировать, удалить, добавить...)
-function show_subcontent($razdel)
-{
-	$script = basename($_SERVER['SCRIPT_FILENAME']);
-	ob_start();
-	?><table class="razdel"><tr><td><?
-		$i = 0;
-		foreach($razdel as $k=>$v)
-		{
-			$cur = mb_strpos($v,$script)!==false;
-			?><?=($i++>0?'<span>|</span>':'')?><a href="<?=$v?>"<?=$cur?' class="cur"':''?>><?=$k?></a><?
-		}
-	?></td></tr></table><?
-	return ob_get_clean();
-}
-
-// Страницы навигации
-// show_navigate_pages(количество страниц,текущая,'ссылка = ?topic=news&page=')
-function show_navigate_pages($x,$p,$link)
-{
-	if($x<2)
-		return '';
-	
-	?>
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" class="str_page">
-  	<tr>
-    <td align="left" valign="middle">&nbsp;
-	<?
-	if($x<4)
-	{
-		for($i=1;$i<=$x;$i++)
-		{
-			if($i==$p)
-				echo "[".$i."]&nbsp;";
-			else
-				echo get_href($link,$i)."&nbsp;";
-		}
-	}
-	if($x==4)
-	{
-		if($p==1) // 1
-			echo "[".$p."]&nbsp;".get_href($link,$p+1)."&nbsp;...&nbsp;".get_href($link,$x);
-		if($p==2) // 2
-			echo get_href($link,1)."&nbsp;[".$p."]&nbsp;".get_href($link,$p+1)."&nbsp;...&nbsp;".get_href($link,$x);
-		if(($p-1)==2) // 3
-			echo get_href($link,1)."&nbsp;...&nbsp;".get_href($link,$p-1)."&nbsp;[".$p."]&nbsp;".get_href($link,$x);
-		if($p==$x) // 4
-			echo get_href($link,1)."&nbsp;...&nbsp;".get_href($link,$x-1)."&nbsp;[".$p."]";
-	}
-	if($x>4)
-	{
-		if($p==1) // 1
-			echo "[1]&nbsp;".get_href($link,$p+1)."&nbsp;...&nbsp;".get_href($link,$x);
-		elseif($p==2) // 2
-			echo get_href($link,1)."&nbsp;[".$p."]&nbsp;".get_href($link,$p+1)."&nbsp;...&nbsp;".get_href($link,$x);
-		elseif(($p-1)==2) // 3
-			echo get_href($link,1)."&nbsp;...&nbsp;".get_href($link,$p-1)."&nbsp;[".$p."]&nbsp;".get_href($link,$p+1)."&nbsp;...&nbsp;".get_href($link,$x);
-		elseif(($x-$p)==1) // 4
-			echo get_href($link,1)."&nbsp;...&nbsp;".get_href($link,$p-1)."&nbsp;[".$p."]&nbsp;".get_href($link,$x);
-		elseif($p==$x) // 5
-			echo get_href($link,1)."&nbsp;...&nbsp;".get_href($link,$x-1)."&nbsp;[".$p."]";
-		else
-			echo get_href($link,1)."&nbsp;...&nbsp;".get_href($link,$p-1)."&nbsp;[".$p."]&nbsp;".get_href($link,$p+1)."&nbsp;...&nbsp;".get_href($link,$x);
-	}
-	?>
-    </td>
-    <td align="right" valign="middle">
-    <span>перейти к странице&nbsp;</span>
-    <select onchange="RegSessionSort('<?=$link?>','page='+this.value);">
-    <?
-	for($i=1;$i<=$x;$i++)
-	{
-    	?><option value="<?=$i?>" <?=($p==$i?"selected":"")?>><?=$i?></option><?
-	}
-	?>
-    </select>&nbsp;
-    </td>
-    </tr>
-	</table>
-    </div>
-    <?	
-}
-function get_href($link,$name)
-{
-	ob_start();
-	?>
-    <a href="" target="_blank" onclick="RegSessionSort('<?=$link?>','page=<?=$name?>');return false;"><?=$name?></a>
-    <?
-	return ob_get_clean();
-}
-
 function btn_flag($flag,$id,$link,$locked=0)
 {
 	global $script;
@@ -263,16 +172,6 @@ function btn_edit($id,$locked=0,$properties='')
 		?><img src="img/del.png" width="16" height="16" alt="удалить" title="удалить" /><?
     ?></a><?
 	}
-	return ob_get_clean();
-}
-
-function btn_sort($id,$param='')
-{
-	ob_start();
-	?>
-  <a href="" target="ajax" onclick="toajax('?action=moveup&id=<?=$id?><?=$param?>');return false;"><img src="img/up.png" width="16" height="16" class="alpha_png" alt="вверх" title="вверх" border="0" /></a>
-  <a href="" target="ajax" onclick="toajax('?action=movedown&id=<?=$id?><?=$param?>');return false;"><img src="img/down.png" width="16" height="16" class="alpha_png" alt="вниз" title="вниз" border="0" /></a>
-  <?
 	return ob_get_clean();
 }
 
@@ -396,135 +295,11 @@ function show_tr_file($input_name,$path,$fname,$href,$name,$help='',$tr='')
     <?
 	return ob_get_clean();
 }
-
-// ------------------------ ФУНКЦИИ СОРТИРОВКИ -----------------------------
-// ПЕРЕСОРТИРОВКА
-function resort($tab,$where='')
-{
-	global $prx;
-	
-	$where = $where ? ' AND '.str_replace(',',' AND ',$where) : '';
-	
-	$res = sql("SELECT id FROM {$prx}{$tab} WHERE sort>0{$where} ORDER BY sort,id");
-	$i=0;
-	while($row = @mysqli_fetch_assoc($res))
-		update($tab,"sort=".(++$i),$row['id']);
-}
-// В САМЫЙ ВЕРХ
-function sort_movetop($tab,$id,$where='')
-{
-	global $prx;
-	
-	if(!getField("SELECT id FROM {$prx}{$tab} WHERE id='{$id}'"))
-		exit;
-	
-	// пересортировка
-	resort($tab,$where);
-	
-	$where = $where ? str_replace(',',' and ',$where) : '';
-	
-	// определим новое значение поля sort
-	$res = getRow("SELECT id,sort FROM {$prx}{$tab} WHERE sort>0{$where} ORDER BY sort,id LIMIT 1");
-	if($res['id']==$id)
-		errorAlert('Выше некуда!');
-	else
-	{
-		$sort = (int)$res['sort']-1;
-		update($tab,"sort={$sort}",$id);
-	}
-}
-// В САМЫЙ НИЗ
-function sort_movebottom($tab,$id,$where='')
-{
-	global $prx;
-	
-	if(!getField("SELECT id FROM {$prx}{$tab} WHERE id='{$id}'"))
-		exit;
-	
-	// пересортировка
-	resort($tab,$where);
-	
-	$where = $where ? str_replace(',',' and ',$where) : '';
-	
-	// определим новое значение поля sort
-	$res = getRow("SELECT id,sort FROM {$prx}{$tab} WHERE sort>0{$where} ORDER BY sort DESC, id DESC LIMIT 1");
-	if($res['id']==$id)
-		errorAlert('И так уже внизу!');
-	else
-	{
-		$sort = (int)$res['sort']+1;
-		update($tab,"sort={$sort}",$id);
-	}
-}
-// НА ОДНУ ПОЗИЦИЮ ВЕРХ
-function sort_moveup($tab,$id,$where='')
-{
-	global $prx;
-	
-	if(!getField("SELECT id FROM {$prx}{$tab} WHERE id='{$id}'"))
-		exit;
-	
-	// пересортировка
-	resort($tab,$where);
-	
-	$where = $where ? ' and '.str_replace(',',' and ',$where) : '';
-	
-	// текущая позиция
-	$cur_sort = getField("SELECT sort FROM {$prx}{$tab} WHERE id='{$id}'");
-	// верхняя позиция
-	$res = getRow("SELECT id,sort FROM {$prx}{$tab} WHERE sort>0 and sort<{$cur_sort}{$where} ORDER BY sort DESC, id DESC LIMIT 1");
-	if($res)
-	{
-		$pre_id = $res['id'];
-		$pre_sort = $res['sort'];				
-	}
-	if($pre_id)
-	{
-		// меняем позицию предыдущей записи
-		update($tab,"sort={$cur_sort}",$pre_id);
-		// меняем позицию текущей записи
-		update($tab,"sort={$pre_sort}",$id);
-	}
-	else
-		errorAlert('Выше некуда!');
-}
-// НА ОДНУ ПОЗИЦИЮ ВНИЗ
-function sort_movedown($tab,$id,$where='')
-{
-	global $prx;
-	
-	if(!getField("SELECT id FROM {$prx}{$tab} WHERE id='{$id}'"))
-		exit;
-	
-	// пересортировка
-	resort($tab,$where);
-	
-	$where = $where ? ' and '.str_replace(',',' and ',$where) : '';
-	
-	// текущая позиция
-	$cur_sort = getField("SELECT sort FROM {$prx}{$tab} WHERE id='{$id}'");
-	// нижняя позиция
-	$res = getRow("SELECT id,sort FROM {$prx}{$tab} WHERE sort>0 and sort>{$cur_sort}{$where} ORDER BY sort,id LIMIT 1");
-	if($res)
-	{	
-		$sled_id = $res['id'];
-		$sled_sort = $res['sort'];
-	}
-	if($sled_id)
-	{
-		// меняем позицию предыдущей записи
-		update($tab,"sort={$cur_sort}",$sled_id);
-		// меняем позицию текущей записи
-		update($tab,"sort={$sled_sort}",$id);
-	}
-	else
-		errorAlert('И так уже внизу!');
-}
 // ShowSortPole('страница = news.php','Имя столбца = Название','текущая сортировка = up/down/0','имя поля в БД = name');
 function ShowSortPole($page,$cur_pole,$cur_sort,$name,$pole)
 {
 	ob_start();
-	
+
 	if(!$cur_pole) // если сессии нет
 	{
 		?><a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:down');return false;"><?=$name?></a><?
@@ -534,8 +309,8 @@ function ShowSortPole($page,$cur_pole,$cur_sort,$name,$pole)
 		if($pole==$cur_pole)
 		{
 			?>
-			<a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:<?=($cur_sort=="up"?"down":"up")?>');return false;"><?=$name?></a>
-			<img src='img/sort_<?=$cur_sort?>.gif' border='0' width='9' height='9' title='сортировка <?=($cur_sort=="up"?"по убыванию (Я-А)":"по возрастанию (А-Я)")?>' align="absmiddle" />
+      <a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:<?=($cur_sort=="up"?"down":"up")?>');return false;"><?=$name?></a>
+      <img src='img/sort_<?=$cur_sort?>.gif' border='0' width='9' height='9' title='сортировка <?=($cur_sort=="up"?"по убыванию (Я-А)":"по возрастанию (А-Я)")?>' align="absmiddle" />
 			<?
 		}
 		else
@@ -543,27 +318,8 @@ function ShowSortPole($page,$cur_pole,$cur_sort,$name,$pole)
 			?><a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:down');return false;"><?=$name?></a><?
 		}
 	}
-		
-	return ob_get_clean();
-}
 
-function ins_div($tek_lvl,$old_lvl,$id_parent)
-{
-	// текущий уровень больше предыдущего
-	if($tek_lvl>$old_lvl)
-	{
-		?><div id="cat_<?=$id_parent?>" style="display:none;"><?
-	}
-	// текущий уровень меньше предыдущего
-	if($tek_lvl<$old_lvl)
-	{
-		$delta = ($old_lvl-$tek_lvl);
-		while($delta>0)
-		{
-			echo "</div>";
-			$delta--;
-		}
-	}
+	return ob_get_clean();
 }
 //
 function help($text)
@@ -698,7 +454,7 @@ function show_letter_navigate($link,$tab,$pole,$where='')
   </table>
 	<?
 }
-
+//
 $filters = array(	'page'=>'постраничный вывод объектов',
 									'sort'=>'сортировка по колонкам',
 									'letter'=>'выбор объектов по букве',
@@ -813,251 +569,6 @@ function get_pic_name($prefix,$dir='')
 		$new_fname = "{$prefix}_1.jpg";
 	
 	return $new_fname;
-}
-
-function get_rubric_tab($id_modul)
-{
-	$tab = 'rubrics';
-	switch($id_modul)
-	{
-		case 3: $tab = 'spr'; break;
-		case 5: $tab = 'art_rubrics'; break;
-		case 8: $tab = 'srubrics'; break;
-		case 17: $tab = 'gal_rubrics'; break;
-		case 18: $tab = 'not_rubrics'; break;
-	}
-	return $tab;
-}
-
-function popup_modul()
-{
-	ob_start();
-	?>    
-  <div id="popup_window" style="display:none;">
-  <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td height="16" width="100%" style="background-color:#d4dff2; border-bottom:1px solid #FFF;">
-          <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
-            <tr>
-              <td align="center"><span id="popup_window_title" class="window_title"></span></td>
-            </tr>
-          </table>
-      </td>
-      <td width="16" style="padding:3px; background-color:#d4dff2; border-bottom:1px solid #FFF;">
-          <img src="img/exit.png" border="0" align="absmiddle" style="cursor:pointer;" onclick="hide_popup_window()" />
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2" bgcolor="#FFFFFF">
-      <div id="popup_loader"><img src="img/loader.gif"></div>
-      <iframe id="popup_frame"></iframe>
-      </td>
-    </tr>
-  </table>
-  </div>
-  <script>$(function(){$.preloadImg("img/popup_loader.gif")})</script>
-  <?	
-	return ob_get_clean();
-}
-
-function stat_around($block)
-{
-	ob_start();
-	?>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tab_subcontent">
-      <tr>
-        <td width="50" height="50"><img src="img/stat_left_up.jpg" border="0" alt="" /></td>
-        <td style="background-image:url(img/stat_up.jpg); background-repeat:repeat-x;"></td>
-        <td width="50"><img src="img/stat_right_up.jpg" border="0" alt="" /></td>
-      </tr>
-      <tr>
-        <td style="background-image:url(img/stat_left.jpg); background-repeat:repeat-y;"></td>
-        <th style="background-color:#ecf0fb;" valign="top"><?=$block?></th>
-        <td style="background-image:url(img/stat_right.jpg); background-repeat:repeat-y;"></td>
-      </tr>
-      <tr>
-        <td height="50"><img src="img/stat_left_down.jpg" border="0" alt="" /></td>
-        <td style="background-image:url(img/stat_down.jpg); background-repeat:repeat-x;"></td>
-        <td><img src="img/stat_right_down.jpg" border="0" alt="" /></td>
-      </tr>
-    </table>
-    <?
-	return ob_get_clean();
-}
-
-function show_stat_visit()
-{
-	global $prx;
-	
-	// за сегодня
-	$date = date("Y-m-d");
-	$day = getField("SELECT count(*) FROM {$prx}users_visit WHERE date='{$date}'");
-	
-	// за вчера
-	$date = date("Y-m-d", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
-	$yesterday = getField("SELECT count(*) FROM {$prx}users_visit WHERE date='{$date}'");
-	
-	// за неделю
-	$date = date("Y-m-d", mktime(0,0,0,date("m"),date("d")-7,date("Y")));
-	$week = getField("SELECT count(*) FROM {$prx}users_visit WHERE date>='{$date}'");
-	
-	// за месяц
-	$date = date("Y-m-d", mktime(0,0,0,date("m")-1,date("d"),date("Y")));
-	$month = getField("SELECT count(*) FROM {$prx}users_visit WHERE date>='{$date}'");
-	
-	// за год
-	$date = date("Y-m-d", mktime(0,0,0,date("m"),date("d"),date("Y")-1));
-	$year = getField("SELECT count(*) FROM {$prx}users_visit WHERE date>='{$date}'");
-	
-	// всего
-	$all = getField("SELECT count(*) FROM {$prx}users_visit");
-	
-	ob_start();
-	?>
-    <table width="100%" border="0" height="100%">
-      <tr>
-        <th style="color:#697079;font:normal 14px Tahoma, Geneva, sans-serif;" align="left">
-          <? $date_start = getField("SELECT MIN(date) FROM {$prx}users_visit"); ?>
-          Статистика посещений сайта c <?=date("d.m.Y", $date_start ? strtotime($date_start) : time())?>
-        </th>
-      </tr>
-      <tr>
-        <td colspan="2" valign="middle">
-        
-          <table class="tab_stat" cellpadding="5" style="margin:10px 0 10px 0;">
-            <tr>
-                <th>Сегодня</th>
-                <th>Вчера</th>
-                <th>Неделя</th>
-                <th>Месяц</th>
-                <th>Год</th>
-                <th>Всего</th>
-            </tr>
-            <tr>
-                <td style="color:#3e6aaa;"><b><?=(int)$day?></b></td>
-                <td><?=(int)$yesterday?></td>
-                <td><?=(int)$week?></td>
-                <td><?=(int)$month?></td>
-                <td><?=(int)$year?></td>
-                <td style="color:#3e6aaa;"><b><?=(int)$all?></b></td>
-            </tr>
-          </table>
-
-        </td>
-      </tr>
-      <tr>
-      	<th style="text-align:right; font-weight:normal;">
-        	<a href="" onclick="if(confirm('Вы действительно хотите удалить всю статистику?')) toajax('visit.php?action=del');return false;">удалить статистику</a>
-        </th>
-      </tr>
-  	</table>
-    <?
-	return ob_get_clean();
-}
-
-function show_stat_order()
-{
-	global $prx;
-	
-	// за сегодня
-	$date = date("Y-m-d");
-	$day = getField("SELECT count(*) FROM {$prx}orders WHERE DATE_FORMAT(date,'%Y-%m-%d')='{$date}'");
-	
-	// за вчера
-	$date = date("Y-m-d", mktime(0,0,0,date("m"),date("d")-1,date("Y")));
-	$yesterday = getField("SELECT count(*) FROM {$prx}orders WHERE DATE_FORMAT(date,'%Y-%m-%d')='{$date}'");
-	
-	// за неделю
-	$date = date("Y-m-d", mktime(0,0,0,date("m"),date("d")-7,date("Y")));
-	$week = getField("SELECT count(*) FROM {$prx}orders WHERE DATE_FORMAT(date,'%Y-%m-%d')>='{$date}'");
-	
-	// за месяц
-	$date = date("Y-m-d", mktime(0,0,0,date("m")-1,date("d"),date("Y")));
-	$month = getField("SELECT count(*) FROM {$prx}orders WHERE DATE_FORMAT(date,'%Y-%m-%d')>='{$date}'");
-	
-	// за год
-	$date = date("Y-m-d", mktime(0,0,0,date("m"),date("d"),date("Y")-1));
-	$year = getField("SELECT count(*) FROM {$prx}orders WHERE DATE_FORMAT(date,'%Y-%m-%d')>='{$date}'");
-	
-	// всего
-	$all = getField("SELECT count(*) FROM {$prx}orders");
-	
-	ob_start();
-	?>
-    <table width="100%" border="0">
-      <tr>
-        <th align="left">
-          <? $date_start = getField("SELECT MIN(date) FROM {$prx}orders"); ?>
-          <span class="rubric">Статистика заказов c <?=date("d.m.Y", $date_start ? strtotime($date_start) : time())?></span>
-        </th>
-      </tr>
-      <tr>
-        <td valign="middle">
-        
-          <table width="100%" class="tab_stat" cellpadding="5" style="margin:10px 0 0 0;">
-            <tr>
-                <th>Сегодня</th>
-                <th>Вчера</th>
-                <th>Неделя</th>
-                <th>Месяц</th>
-                <th>Год</th>
-                <th>Всего</th>
-            </tr>
-            <tr>
-                <td style="color:#3e6aaa;"><b><?=(int)$day?></b></td>
-                <td><?=(int)$yesterday?></td>
-                <td><?=(int)$week?></td>
-                <td><?=(int)$month?></td>
-                <td><?=(int)$year?></td>
-                <td style="color:#3e6aaa;"><b><?=(int)$all?></b></td>
-            </tr>
-          </table>
-
-        </td>
-      </tr>
-  	</table>
-    <?
-	return ob_get_clean();
-}
-
-function show_stat_count()
-{
-	global $prx;
-	
-	ob_start();
-	?>
-    <style type="text/css">
-	.stat_count td
-	{
-		color:#15428b;
-		font:normal 12px Tahoma, Geneva, sans-serif;
-		padding:5px 0 0 0;
-	}
-	.comment
-	{
-		font:normal 12px Tahoma, Geneva, sans-serif;
-		color:#697079;
-	}
-	.stat_count b
-	{
-		color:#069;
-	}
-    </style>    
-    <table width="100%" border="0" cellspacing="0" cellpadding="0" class="stat_count">
-   	  <tr><th align="left" style="padding-bottom:15px;"><span class="rubric">Общая статистика</span></th></tr>
-      <tr><td>Кол-во страниц: <b><?=(int)getField("select count(*) from {$prx}pages");?></b> (<span class="comment">заблокированных:</span> <b><?=(int)getField("select count(*) from {$prx}pages where status=0")?></b>)</td></tr>
-      <? /*<tr><td>Кол-во производителей: <b><?=(int)getField("select count(*) from {$prx}makers");?></b></td></tr>
-      <tr><td>Кол-во рубрик в каталоге: <b><?=(int)getField("select count(*) from {$prx}rubrics");?></b></td></tr>
-      <tr><td>Кол-во товаров: <b><?=(int)getField("select count(*) from {$prx}goods");?></b> (<span class="comment">заблокированных:</span> <b><?=(int)getField("select count(*) from {$prx}goods where status=0")?></b>)</td></tr>
-      <tr><td>Кол-во заказов: <b><?=(int)getField("select count(*) from {$prx}orders");?></b> (<span class="comment">действующих:</span> <b><?=(int)getField("select count(*) from {$prx}orders where status=1")?></b>; <span class="comment">завершенных:</span> <b><?=(int)getField("select count(*) from {$prx}orders where status=2")?></b>)</td></tr>
-      <tr><td>Кол-во новостей: <b><?=(int)getField("select count(*) from {$prx}news");?></b> (<span class="comment">заблокированных:</span> <b><?=(int)getField("select count(*) from {$prx}news where status=0")?></b>)</td></tr>
-      <tr><td>Кол-во статей: <b><?=(int)getField("select count(*) from {$prx}articles");?></b> (<span class="comment">заблокированных:</span> <b><?=(int)getField("select count(*) from {$prx}articles where status=0")?></b>)</td></tr>
-      <tr><td>Кол-во сообщений: <b><?=(int)getField("select count(*) from {$prx}messages");?></b></td></tr>
-      <tr><td>Кол-во менеджеров: <b><?=(int)getField("select count(*) from {$prx}managers");?></b></td></tr>*/?>
-      <tr><td>Кол-во пользователей: <b><?=(int)getField("select count(*) from {$prx}users");?></b> (<span class="comment">заблокированных:</span> <b><?=(int)getField("select count(*) from {$prx}users where status=0")?></b>)</td></tr>
-    </table>
-	<?
-	return ob_get_clean();
 }
 
 function showCK($name,$text,$toolBar='full',$width="100%",$rows=20)

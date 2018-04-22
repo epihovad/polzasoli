@@ -21,10 +21,7 @@
   <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
   <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
   <script src="/js/ui/jquery-ui.datepicker-ru.js" type="text/javascript"></script>
-  <?/*
-  <script src="/js/ui/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
-  <link rel="stylesheet" href="css/ui/jquery-ui-1.8.1.custom.css" type="text/css">
-  <script src="/js/ui/jquery.ui.datepicker-ru.js" type="text/javascript"></script>*/?>
+
   <script src="/js/ckeditor/ckeditor.js" type="text/javascript"></script>
   <script src="/js/ckfinder/ckfinder.js" type="text/javascript"></script>
 
