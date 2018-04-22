@@ -184,53 +184,52 @@ else
 
   <?=pagination($count_page, $cur_page, true, 'padding:0 0 10px;')?>
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
-    <table class="table-list">
-      <thead>
-      <tr>
-        <th><input type="checkbox" name="check_del" id="check_del" /></th>
-        <th>№</th>
-        <th width="100%">Название</th>
-        <th nowrap>Статус</th>
-        <th style="padding:0 30px;"></th>
-      </tr>
-      </thead>
-      <tbody>
-			<?
-			$res = sql($query);
-			if(mysqli_num_rows($res))
-			{
-				?><?
-				$i=1;
-				while($row = mysqli_fetch_assoc($res))
-				{
-					$id = $row['id'];
-					$active = $id == $_GET['id'] ? ' active' : '';
-					?>
-          <tr id="item-<?=$id?>" class="<?=$active?>">
-            <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
-            <th nowrap><?=$i++?></th>
-            <td><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
-            <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
-            <th nowrap><?=btn_edit($id)?></th>
-          </tr>
-					<?
-				}
-			} else {
-				?>
-        <tr class="nofind">
-          <td colspan="10">
-            <div class="bg-warning">
-              по вашему запросу ничего не найдено.
-							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-            </div>
-          </td>
+  <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
+  <table class="table-list">
+    <thead>
+    <tr>
+      <th><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th>№</th>
+      <th width="100%">Название</th>
+      <th nowrap>Статус</th>
+      <th style="padding:0 30px;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?
+    $res = sql($query);
+    if(mysqli_num_rows($res))
+    {
+      $i=1;
+      while($row = mysqli_fetch_assoc($res))
+      {
+        $id = $row['id'];
+        $active = $id == $_GET['id'] ? ' active' : '';
+        ?>
+        <tr id="item-<?=$id?>" class="<?=$active?>">
+          <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
+          <th nowrap><?=$i++?></th>
+          <td><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
+          <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
+          <th nowrap><?=btn_edit($id)?></th>
         </tr>
-				<?
-			}
-			?>
-      </tbody>
-    </table>
+        <?
+      }
+    } else {
+      ?>
+      <tr class="nofind">
+        <td colspan="10">
+          <div class="bg-warning">
+            по вашему запросу ничего не найдено.
+            <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+          </div>
+        </td>
+      </tr>
+      <?
+    }
+    ?>
+    </tbody>
+  </table>
   </form>
 	<?=pagination($count_page, $cur_page, true, 'padding:10px 0 0;')?>
 	<?

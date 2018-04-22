@@ -221,6 +221,7 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 .table-edit a.help span { font-size:15px; top:0;}
 .table-edit .chosen-container { width:100% !important; background-color:#ffffff;}
 .table-edit .chosen-container .chosen-choices { border:1px solid #d9d9d9; background:none; box-shadow:none !important;}
+.table-edit .chosen-search-input { width:auto !important;}
 
 .frm-btns {
 	position:fixed;

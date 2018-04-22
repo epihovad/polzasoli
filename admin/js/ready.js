@@ -18,13 +18,9 @@ $(function(){
       return false;
     }
   });
-	// выделение сохраненного объекта
-	mark_change_tr();
-	// полосатая таблица
-	$('.tab1').zebra();
 	//
 	$('#check_del').click(function(){
-		$("input[id^='check_del_']").not(this).attr('checked',$(this).attr('checked'));
+	  $('input[id^="check_del_"]').not(this).prop('checked',$(this).prop('checked'));
 	});
 	// check_all
 	$('.check_all').click(function(){
@@ -38,7 +34,7 @@ $(function(){
 		$table.find('tr').slice(tr_index+1).each(function(){
 			$check = jQuery(this).find('td').eq(th_index).find('input');
 			if($check.length)
-				$check.attr('checked',checked);
+				$check.prop('checked',checked);
 		});
 	});
 	//
@@ -53,6 +49,12 @@ $(function(){
       $('#sidebar').animate({left: "0px"}, 100);
       $('.dashboard-wrapper').animate({'margin-left': "210px"}, 100);
     }
+  });
+  //
+  $('select.chosen').each(function () {
+    $(this).chosen({
+      no_results_text: "Нет данных по запросу",
+    });
   });
 	//
 	Search();

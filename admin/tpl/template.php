@@ -29,6 +29,9 @@
   <link rel="stylesheet" href="/js/arcticmodal/jquery.arcticmodal-0.3.css">
   <link rel="stylesheet" href="/js/arcticmodal/themes/simple.css">
 
+  <link rel="stylesheet" href="/js/chosen/chosen.min.css">
+  <script src="/js/chosen/chosen.jquery.min.js" type="text/javascript"></script>
+
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="js/spec.js"></script>
   <script type="text/javascript" src="js/ready.js"></script>

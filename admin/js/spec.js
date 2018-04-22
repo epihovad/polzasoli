@@ -1,38 +1,6 @@
-jQuery.fn.zebra = function(options){
-
-	var tab = $(this);
-	
-	// настройки по умолчанию
-	var options = jQuery.extend({
-		odd: '#ffffff', 	/* цвет для нечетных ячеек */
-		even: '#f7f9fd', 	/* цвет для четных ячеек */
-		over: '#ecf0fb'		/* цвет при наведении */
-	},options);
-	
-	tab.find('tr:odd').addClass("odd");
-	tab.find('tr:even').addClass("even");
-  
-	tab.find('tr').hover(function(){
-		$(this).find('td').addClass("over");							 
-	}, function(){
-		$(this).find('td').removeClass("over");
-	});
-};
-
 function RegSessionSort(url,filter)
 {
 	toajax('inc/session_sort.php?'+filter+'&location='+url);
-}
-
-function mark_change_tr()
-{
-	var id = $('#cur_id').val();
-	if(id)
-	{
-		$('tr#row'+id).find('th,td').each(function(){
-			$(this).css('background-color','#ffffb7 !important');
-		});
-	}
 }
 
 function saveall($frm)

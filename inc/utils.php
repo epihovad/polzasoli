@@ -71,12 +71,12 @@ function getArr($sql, $simple=true) // $simple=true - возвратит "про
 	return (array)$arr;
 }
 // ВЫПАДАЮЩИЙ СПИСОК/МУЛЬТИСПИСОК для таблицы/массива
-function dll($obj, $properties, $value='', $default=NULL) // запрос/массив, св-ва списка, значение (может быть массивом), "пустое" значение(может быть массивом)
+function dll($obj, $properties, $value='', $default = null, $class = null) // запрос/массив, св-ва списка, значение (может быть массивом), "пустое" значение(может быть массивом)
 { 
 	ob_start();
 	
-	?><select class="form-control input-sm" <?=$properties?>><?
-	if($default !== NULL)
+	?><select class="form-control input-sm <?=$class?>" <?=$properties?>><?
+	if($default !== null)
 	{
 		if(is_array($default)) 
 		{
@@ -198,14 +198,14 @@ function gtv($tab,$pole,$id)
 		return getField("SELECT {$pole} FROM {$prx}{$tab} WHERE id='{$id}'");
 }
 // ВЫПАДАЮЩИЙ СПИСОК ДЛЯ ПОЛЯ enum
-function dllEnum($tab,$field,$properties,$value="",$default=NULL)
+function dllEnum($tab,$field,$properties,$value="",$default=null)
 {
 	global $prx;
 	
 	ob_start();
 	?>
 	<select <?=$properties?>><? 
-	if($default!==NULL)
+	if($default!==null)
 	{
 		if(is_array($default)) 
 		{
@@ -244,7 +244,7 @@ function set($name, $tbl='settings')
 	return $val=='true' ? true : ($val=='false' ? false : $val);
 }
 // ОБНОВЛЕНИЕ / ДОБАВЛЕНИЕ / УДАЛЕНИЕ ЗАПИСИ В ТАБЛИЦЕ
-function update($tbl, $set="", $id=0) // таблица, обновляемые поля, id (для удаления id может быть массивом, строкой через ',' или NULL)
+function update($tbl, $set="", $id=0) // таблица, обновляемые поля, id (для удаления id может быть массивом, строкой через ',' или null)
 {
 	global $mysqli, $prx;
 	if(!$set)
@@ -783,7 +783,7 @@ function sgp($url, $varname, $value, $add = false)
 	if (is_array($varname)) {
 		foreach ($varname as $i => $n) {
 			$v = (is_array($value))
-				? ( isset($value[$i]) ? $value[$i] : NULL )
+				? ( isset($value[$i]) ? $value[$i] : null )
 				: $value;
 			$url = sgp($url, $n, $v);
 		}

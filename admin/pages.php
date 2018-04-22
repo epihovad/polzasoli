@@ -154,12 +154,9 @@ elseif(isset($_GET['red']))
 	
 	ob_start();
 	?>
-  <link rel="stylesheet" href="/js/chosen/chosen.min.css">
   <style>
     .for-page { display:<?=$row['type']=='link'?'none':'table-row'?>;}
-    .chosen-search-input { width:auto !important;}
   </style>
-  <script src="/js/chosen/chosen.jquery.min.js" type="text/javascript"></script>
   <script>
     $(function () {
       //
@@ -167,10 +164,6 @@ elseif(isset($_GET['red']))
         var val = $(this).find('option:selected').val();
         if(val=='link'){ $('.for-page').hide(); }
         else { $('.for-page').show(); }
-      });
-      //
-      $('select[name="ids_disease\[\]"]').chosen({
-        no_results_text: "Нет данных по запросу",
       });
     })
   </script>
@@ -214,7 +207,7 @@ elseif(isset($_GET['red']))
     <tr class="for-page">
       <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
       <th>Спр-к болезней</th>
-      <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']))?></td>
+      <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
     </tr>
     <?
     if(!$locked)
