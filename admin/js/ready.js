@@ -225,7 +225,7 @@ $(function(){
         $.ajax({
           data: data,
           type: 'POST',
-          url: 'pages.php?action=sort',
+          url: window.location.pathname + '?action=sort',
           complete: function(data,status){
             if(data.responseJSON.status != 'ok'){
               $sortable.sortable('cancel');

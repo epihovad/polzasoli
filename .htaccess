@@ -25,10 +25,10 @@ RewriteRule ^([^\/.]+)/([^&^\/.]+)$ $1/$2/ [R=301,L]
 RewriteRule ^([^\/.]+)/([^\/.]+)/([^&^\/.]+)$ $1/$2/$3/ [R=301,L]
 
 # -------------- Картинки
-RewriteRule ^(pages|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9-]+)x([0-9-]+)/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/$1/&fname=$4&width=$2&height=$3
-RewriteRule ^(pages|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9]+)?.jpg$ uploads/$1/$2.jpg
-RewriteRule ^uploads/(pages|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9-]+)x([0-9-]+)/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/$1/&fname=$4&width=$2&height=$3
-RewriteRule ^uploads/(pages|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9]+)?.jpg$ inc/im.php?fpath=/uploads/$1/&fname=$2.jpg
+RewriteRule ^(pages|tickets|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9-]+)x([0-9-]+)/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/$1/&fname=$4&width=$2&height=$3
+RewriteRule ^(pages|tickets|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9]+)?.jpg$ uploads/$1/$2.jpg
+RewriteRule ^uploads/(pages|tickets|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9-]+)x([0-9-]+)/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/$1/&fname=$4&width=$2&height=$3
+RewriteRule ^uploads/(pages|tickets|slider|banner_mini|gallery|gallery_catalog|reviews)/([0-9]+)?.jpg$ inc/im.php?fpath=/uploads/$1/&fname=$2.jpg
 
 # -------------- Страницы
 RewriteRule ^([a-zA-Z0-9_-]+).htm$ pages.php?link=$1

@@ -220,15 +220,16 @@ function dllEnum($tab,$field,$properties,$value="",$default=null)
 		}
 	}
 	$res = sql("SHOW COLUMNS FROM {$prx}{$tab} LIKE '{$field}'");
-	$val = mysqli_result($res,0,1);
-	$val = str_replace(array("enum(",")","'"), "", $val);
-	$arr = explode(",",$val);
+	$arr = mysqli_fetch_array($res);
+	$val = $arr[1];
+	$val = str_replace(array('enum(',')',"'"), '', $val);
+	$arr = explode(',',$val);
 	foreach($arr as $val) 
 	{
 	  if(!$val) continue;
-		?><option value="<?=$val?>" <?=($val==$value ? "selected" : "")?>><?=$val?></option><? 
+		?><option value="<?=$val?>" <?=($val==$value ? 'selected' : '')?>><?=$val?></option><?
 	} 
-	?></select><? 	
+	?></select><?
 	return ob_get_clean();
 }
 // ВОЗВРАЩАЕТ ЗНАЧЕНИЕ ПЕРЕМЕННОЙ ИЗ ТАБЛИЦЫ settings

@@ -31,6 +31,7 @@ if(isset($_GET['action']))
 			        ids_who = ".(sizeof($_POST['ids_who']) > 0 ? "'".implode(',', $_POST['ids_who'])."'" : 'NULL').",
 			        ids_disease = ".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
 			        status = '{$status}',
+							h1 = " . ($h1 ? "'{$h1}'" : "NULL") . ",
 							title = " . ($title ? "'{$title}'" : "NULL") . ",
 							keywords = " . ($keywords ? "'{$keywords}'" : "NULL") . ",
 							description = " . ($description ? "'{$description}'" : "NULL");
@@ -39,12 +40,19 @@ if(isset($_GET['action']))
 				jAlert('Во время сохранения данных произошла ошибка.');
 
 			// загружаем картинку
-			if($_FILES['img']['name'])
+			if(sizeof((array)$_FILES[$tbl]['name']))
 			{
-				remove_img($id);
-				$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
-				@move_uploaded_file($_FILES['img']['tmp_name'],$path);
-				@chmod($path,0644);
+				foreach($_FILES[$tbl]['name'] as $num=>$null)
+				{
+					if(!$_FILES[$tbl]['name'][$num]) continue;
+
+					remove_img($id, $tbl);
+					$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
+					@move_uploaded_file($_FILES[$tbl]['tmp_name'][$num],$path);
+					@chmod($path,0644);
+
+					break;
+				}
 			}
 
 			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
@@ -86,58 +94,78 @@ if(isset($_GET['red']))
 	?>
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
     <table class="table-edit">
-    <tr>
-      <th></th>
-      <th>Название</th>
-      <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"></td>
-    </tr>
-		<?=show_tr_images($id,'Фото','Для корректного отображения,<br>рекомендуется загружать квадратное изображение размером 282x282 пискелей',1,$tbl,$tbl)?>
-    <tr>
-      <th></th>
-      <th>Описание</th>
-      <td><template class="form-control input-sm" name="text"><?=$row['text']?></template></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Цена</th>
-      <td><input type="text" class="form-control input-sm" name="price" value="<?=$row['price']?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Старая цена</th>
-      <td><input type="text" class="form-control input-sm" name="old_price" value="<?=$row['old_price']?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Срок действия</th>
-      <td><input type="text" class="form-control input-sm" name="validity" value="<?=$row['validity']?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Возрастные ограничения</th>
-      <td><?//=dllEnum($tbl,'age',"name='age' style='width:auto;'",$row['age'])?></td>
-    </tr>
-    <tr>
-      <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
-      <th>Заголовок</th>
-      <td><input type="text" class="form-control input-sm" name="h1" value="<?=htmlspecialchars($row['h1'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>title</th>
-      <td><input type="text" class="form-control input-sm" name="title" value="<?=htmlspecialchars($row['title'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>keywords</th>
-      <td><input type="text" class="form-control input-sm" name="keywords" value="<?=htmlspecialchars($row['keywords'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>description</th>
-      <td><textarea class="form-control input-sm" name="description"><?=$row['description']?></textarea></td>
-    </tr>
-  </table>
+      <tr>
+        <th></th>
+        <th>Название</th>
+        <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"></td>
+      </tr>
+      <?=show_tr_images($id,'Фото','Для корректного отображения,<br>рекомендуется загружать квадратное изображение размером 320x320 пискелей',1,$tbl,$tbl)?>
+      <tr>
+        <th></th>
+        <th>Описание</th>
+        <td><textarea class="form-control input-sm" name="text"><?=$row['text']?></textarea></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Цена</th>
+        <td><input type="text" class="form-control input-sm" name="price" value="<?=$row['price']?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Старая цена</th>
+        <td><input type="text" class="form-control input-sm" name="old_price" value="<?=$row['old_price']?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Срок действия</th>
+        <td><input type="text" class="form-control input-sm" name="validity" value="<?=$row['validity']?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Возрастные ограничения</th>
+        <td><?=dllEnum($tbl,'age','name="age" class="form-control input-sm"',$row['age'])?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Тип абонемента</th>
+        <td><?=dll("SELECT * FROM {$prx}tickets_type ORDER BY name",'name="ids_type[]" multiple data-placeholder="Укажите тип абонемента" style="width:100%"',explode(',',$row['ids_type']),null,'chosen')?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Тип посетителей</th>
+        <td><?=dll("SELECT * FROM {$prx}tickets_who ORDER BY name",'name="ids_who[]" multiple data-placeholder="Укажите тип посетителей" style="width:100%"',explode(',',$row['ids_who']),null,'chosen')?></td>
+      </tr>
+      <tr>
+        <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
+        <th>Спр-к болезней</th>
+        <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Статус</th>
+        <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
+      </tr>
+      <tr>
+        <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
+        <th>Заголовок</th>
+        <td><input type="text" class="form-control input-sm" name="h1" value="<?=htmlspecialchars($row['h1'])?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>title</th>
+        <td><input type="text" class="form-control input-sm" name="title" value="<?=htmlspecialchars($row['title'])?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>keywords</th>
+        <td><input type="text" class="form-control input-sm" name="keywords" value="<?=htmlspecialchars($row['keywords'])?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>description</th>
+        <td><textarea class="form-control input-sm" name="description"><?=$row['description']?></textarea></td>
+      </tr>
+    </table>
     <div class="frm-btns">
       <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
       <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
@@ -201,10 +229,10 @@ else
   <table class="table-list">
     <thead>
     <tr>
-      <th><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th>№</th>
-      <th><img src="img/image.png" title="изображение" /></th>
-      <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
+      <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th style="width:1%">№</th>
+      <th style="width:1%; text-align:center;"><img src="img/image.png" title="изображение" /></th>
+      <th width="40%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
 			<? if($sitemap){?>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
@@ -232,29 +260,34 @@ else
 			<tr id="row<?=$row['id']?>">
 			  <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
 			  <th nowrap><?=$i++?></th>
-        <th style="padding:3px 5px;">
+        <th>
 					<?
 					$src = '/uploads/no_photo.jpg';
 					$big_src = '/uploads/no_photo.jpg';
 					if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
-						$src = "/{$tbl}/20x20/{$id}.jpg";
+						$src = "/{$tbl}/60x60/{$id}.jpg";
 						$big_src = "/{$tbl}/{$id}.jpg";
 					}
 					?>
           <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
-            <img src="<?=$src?>" align="absmiddle" style="max-height:20px" />
+            <img src="<?=$src?>" align="absmiddle" style="max-height:60px; max-width:60px;" class="img-rounded">
           </a>
         </th>
-        <td class="sp" nowrap><?=$row['name']?></td>
+        <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
 				<? if($sitemap){?>
           <th class="sitemap"><input type="text" class="datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
           <th class="sitemap"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
           <th class="sitemap"><input type="text" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" style="text-align:center; width:30px;" /></th>
 				<? }?>
-        <td nowrap><?=$row['price'] . ($row['old_price'] ? ' (<u>'.$row['old_price'].'</u>)' : '')?></td>
-        <td nowrap><?=$row['validity']?></td>
-        <td nowrap><?=$row['age']?></td>
-        <td></td>
+        <th nowrap><?=$row['price'] . ($row['old_price'] ? ' (<s>'.$row['old_price'].'</s>)' : '')?></th>
+        <th nowrap><?=$row['validity']?></th>
+        <th nowrap><?=$row['age']?></th>
+        <td><?
+          $q = sql("SELECT * FROM {$prx}tickets_type where id IN (" . ($row['ids_type'] ?: '0' ) . ")");
+          while ($arr = @mysqli_fetch_assoc($q)){
+            ?><small><?=$arr['name']?></small><?
+          }
+        ?></td>
         <td></td>
         <td></td>
         <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
@@ -282,5 +315,4 @@ else
 	<?
 	$content = arr($h, ob_get_clean());
 }
-
 require('tpl/template.php');

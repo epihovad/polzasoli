@@ -365,7 +365,7 @@ else
             <img src="<?=$src?>" align="absmiddle" style="max-height:20px" />
           </a>
         </th>
-				<td><?=$prfx?><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
+				<td><?=$prfx?><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
 				<? if($sitemap){?>
           <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
           <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
