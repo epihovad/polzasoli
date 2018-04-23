@@ -56,6 +56,8 @@ $(function(){
       no_results_text: "Нет данных по запросу",
     });
   });
+  //
+  markChangeRow();
 	//
 	Search();
 	//
@@ -256,6 +258,15 @@ $(function(){
     return arr;
   }
 });
+
+function markChangeRow() {
+  var parsedUrl = new URL(window.location.href);
+  var id = parsedUrl.searchParams.get('id');
+  if(id == undefined){
+    return;
+  }
+  $('tr#item-'+id).addClass('active');
+}
 
 function Search()
 {

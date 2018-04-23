@@ -204,9 +204,8 @@ else
       while($row = mysqli_fetch_assoc($res))
       {
         $id = $row['id'];
-        $active = $id == $_GET['id'] ? ' active' : '';
         ?>
-        <tr id="item-<?=$id?>" class="<?=$active?>">
+        <tr id="item-<?=$id?>">
           <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
           <th nowrap><?=$i++?></th>
           <td><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>

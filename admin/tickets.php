@@ -257,7 +257,7 @@ else
 		{
 			$id = $row['id'];
 			?>
-			<tr id="row<?=$row['id']?>">
+			<tr id="item-<?=$row['id']?>">
 			  <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
 			  <th nowrap><?=$i++?></th>
         <th>
