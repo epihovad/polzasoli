@@ -187,66 +187,122 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else
 {
+	$sitemap = isset($_SESSION['ss']['sitemap']);
+
+	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
+	if($sitemap)
+	{
+		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
+		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
+	}	else $query  = sprintf($query,'');
 
 	ob_start();
-	?>
+	// проверяем текущую сортировку
+	// и формируем соответствующий запрос
+	if($_SESSION['ss']['sort'])
+	{
+		$sort = explode(':',$_SESSION['ss']['sort']);
+		$cur_pole = $sort[0];
+		$cur_sort = $sort[1];
 
-  <link href="css/google-grid.css" rel="stylesheet" media="screen">
-	<?/*<link href="/js/GridGallery/css/component.css" rel="stylesheet" media="screen">*/?>
-  <div class="row">
-  <div class="col-md-12 col-sm-12 col-xs-12">
-    <div id="grid-gallery" class="grid-gallery">
-      <section class="grid-wrap">
-        <ul class="grid">
-          <li class="grid-sizer"></li><!-- for Masonry column width -->
-          <? for($i=1; $i<=10; $i++){ ?>
-          <li>
-            <figure>
-              <img src="img/users/user<?=$i?>.jpg" alt="img<?=$i?>"/>
-              <figcaption>
-                <div class="ribbon">
-                  <div class="name">Image Name</div>
-                </div>
-              </figcaption>
-            </figure>
-          </li>
-          <?}?>
-        </ul>
-      </section>
-      <section class="slideshow">
-        <ul>
-					<? for($i=1; $i<=10; $i++){ ?>
-          <li>
-            <figure>
-              <figcaption>
-                <h3>Ever since the 1500s</h3>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-              </figcaption>
-              <img src="img/users/user<?=$i?>.jpg" alt="img<?=$i?>"/>
-            </figure>
-          </li>
-					<?}?>
-        </ul>
-        <nav>
-          <span class="icon nav-prev"></span>
-          <span class="icon nav-next"></span>
-          <span class="icon nav-close"></span>
-        </nav>
-      </section>
-    </div>
-  </div>
-  </div>
+		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
+	}
+	else
+		$query .= ' ORDER BY A.sort,A.id';
+	//-----------------------------
+	//echo $query;
 
-  <script src="/js/modernizr.custom.js"></script>
-  <!-- Google Grid JS -->
-  <script src="/js/GridGallery/js/imagesloaded.pkgd.min.js"></script>
-  <script src="/js/GridGallery/js/masonry.pkgd.min.js"></script>
-  <script src="/js/GridGallery/js/classie.js"></script>
-  <script src="/js/GridGallery/js/cbpGridGallery.js"></script>
-  <script type="text/javascript">
-    new CBPGridGallery( document.getElementById( 'grid-gallery' ) );
-  </script>
+	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+	show_filters($script);
+
+	if(!$sitemap){ ?>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
+	<? } ?>
+
+  <div class="clearfix"></div>
+
+  <form action="?action=multidel" name="red_frm" method="post" target="ajax">
+    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
+    <table class="table-list">
+      <thead>
+      <tr>
+        <th><input type="checkbox" name="check_del" id="check_del" /></th>
+        <th>№</th>
+				<? if(!$_SESSION['ss']['sort']) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
+        <th><img src="img/image.png" title="изображение" /></th>
+        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
+				<? if($sitemap){?>
+          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
+          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
+          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
+				<? }?>
+        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
+        <th style="padding:0 30px;"></th>
+      </tr>
+      </thead>
+      <tbody>
+			<?
+			$mas = getTree($query);
+			if(sizeof($mas))
+			{
+				$i=1;
+				?><?
+				foreach($mas as $vetka)
+				{
+					$row = $vetka['row'];
+					$level = $vetka['level'];
+
+					$id = $row['id'];
+					$link = '/gallery/' . $row['link'] . '/';
+					$prfx = $prefix===NULL ? getPrefix($level) : str_repeat($prefix, $level);
+					$childs = getIdChilds("SELECT * FROM {$prx}{$tbl}", $id);
+					$has_childs = sizeof($childs) > 1;
+
+					?>
+          <tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_parent']?>" class="<?=$has_childs?' has-childs':''?>">
+            <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
+            <th nowrap><?=$i++?></th>
+						<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
+            <th style="padding:3px 5px;">
+							<?
+							$src = '/uploads/no_photo.jpg';
+							$big_src = '/uploads/no_photo.jpg';
+							if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
+								$src = "/{$tbl}/60x60/{$id}.jpg";
+								$big_src = "/{$tbl}/{$id}.jpg";
+							}
+							?>
+              <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
+                <img src="<?=$src?>" align="absmiddle" style="max-height:60px; max-width:60px;" class="img-rounded">
+              </a>
+            </th>
+            <td><?=$prfx?><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+						<? if($sitemap){?>
+              <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+              <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+              <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
+						<? }?>
+            <td>/gallery/<a href="<?=$link?>" class="clr-green" target="_blank"><?=$row['link']?></a>/</td>
+            <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
+            <th nowrap><?=btn_edit($id)?></th>
+          </tr>
+					<?
+				}
+			} else {
+				?>
+        <tr>
+          <td colspan="10" align="center">
+            по вашему запросу ничего не найдено. <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+          </td>
+        </tr>
+				<?
+			}
+			?>
+      </tbody>
+    </table>
+  </form>
 	<?
-	$content = ob_get_clean();
+	$content = arr($h, ob_get_clean());
 }
 require('tpl/template.php');

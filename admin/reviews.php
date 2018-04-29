@@ -195,7 +195,11 @@ else
             </th>
             <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
             <td><?=$row['text']?></td>
-            <th><?=$row['youtube']?></th>
+            <th><?
+              $ycode = preg_replace('/width=\"[0-9]+\"/', 'width="100%"', $row['youtube']);
+							$ycode = preg_replace('/height=\"[0-9]+\"/', '', $ycode);
+              echo $ycode;
+            ?></th>
             <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
             <th nowrap><?=btn_edit($id)?></th>
           </tr>
