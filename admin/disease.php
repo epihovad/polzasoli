@@ -16,6 +16,11 @@ if(isset($_GET['action']))
 	switch($_GET['action'])
 	{
 		// ----------------- сохранение
+		case 'saveall':
+			updateSitemap();
+			jAlert('Данные успешно сохранены');
+			break;
+		// ----------------- сохранение
 		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
@@ -87,12 +92,12 @@ elseif(isset($_GET['red']))
     <tr>
       <th></th>
       <th>Название</th>
-      <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"></td>
+      <td><?=input('text', 'name', $row['name'])?></td>
     </tr>
     <tr>
       <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
       <th>Ссылка</th>
-      <td><input type="text" class="form-control input-sm" name="link" value="<?=htmlspecialchars($row['link'])?>"></td>
+      <td><?=input('text', 'link', $row['link'])?></td>
     </tr>
     <tr>
       <th></th>
@@ -107,23 +112,15 @@ elseif(isset($_GET['red']))
     <tr>
       <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
       <th>Заголовок</th>
-      <td><input type="text" class="form-control input-sm" name="h1" value="<?=htmlspecialchars($row['h1'])?>"></td>
+      <td><?=input('text', 'h1', $row['h1'])?></td>
     </tr>
-    <tr>
-      <th></th>
-      <th>title</th>
-      <td><input type="text" class="form-control input-sm" name="title" value="<?=htmlspecialchars($row['title'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>keywords</th>
-      <td><input type="text" class="form-control input-sm" name="keywords" value="<?=htmlspecialchars($row['keywords'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>description</th>
-      <td><textarea class="form-control input-sm" name="description"><?=$row['description']?></textarea></td>
-    </tr>
+		<? foreach (array('title','keywords','description') as $v){?>
+      <tr>
+        <th></th>
+        <th><?=$v?></th>
+        <td><?=input('text', $v, $row[$v])?></td>
+      </tr>
+		<?}?>
   </table>
     <div class="frm-btns">
       <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
@@ -155,7 +152,7 @@ else
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
-	$count_obj_on_page = 3; // кол-во объектов на странице
+	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
 	ob_start();
@@ -190,8 +187,13 @@ else
     <tr>
       <th><input type="checkbox" name="check_del" id="check_del" /></th>
       <th>№</th>
-      <th width="100%">Название</th>
-      <th nowrap>Статус</th>
+      <th width="100%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
+			<? if($sitemap){?>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
+        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
+			<? }?>
+      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status');?></th>
       <th style="padding:0 30px;"></th>
     </tr>
     </thead>
@@ -204,15 +206,20 @@ else
       while($row = mysqli_fetch_assoc($res))
       {
         $id = $row['id'];
-        ?>
-        <tr id="item-<?=$id?>">
-          <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
+				?>
+        <tr id="item-<?=$row['id']?>">
+          <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
           <th nowrap><?=$i++?></th>
-          <td><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
+          <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+					<? if($sitemap){?>
+            <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+            <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+            <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
+					<? }?>
           <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
           <th nowrap><?=btn_edit($id)?></th>
         </tr>
-        <?
+				<?
       }
     } else {
       ?>

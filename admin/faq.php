@@ -78,9 +78,9 @@ elseif(isset($_GET['red']))
 	$row = gtv($tbl,'*',(int)$_GET['red']);
 	$id = $row['id'];
 
-	$title .= ' :: ' . ($id ? $row['name'] . ' (редактирование)' : 'Добавление');
-	$h = $id ? $row['name'] . ' <small>(редактирование)</small>' : 'Добавление';
-	$navigate = '<span></span><a href="' . $script . '">' . $h1 . '</a><span></span>' . ($id ? $row['name'] : 'Добавление');
+	$title .= ' :: ' . ($id ? $row['question'] . ' (редактирование)' : 'Добавление');
+	$h = $id ? $row['question'] . ' <small>(редактирование)</small>' : 'Добавление';
+	$navigate = '<span></span><a href="' . $script . '">' . $h1 . '</a><span></span>' . ($id ? $row['question'] : 'Добавление');
 
 	ob_start();
 	?>
@@ -89,11 +89,11 @@ elseif(isset($_GET['red']))
       <tr>
         <th></th>
         <th>Вопрос</th>
-        <td><input type="text" class="form-control input-sm" name="question" value="<?=htmlspecialchars($row['question'])?>"></td>
+        <td><?=input('text', 'question', $row['question'])?></td>
       </tr>
         <th></th>
         <th>Ответ</th>
-        <td><?=showCK('answer',$row['answer'])?></td>
+        <td><?=showCK('answer',$row['answer'], 'basic')?></td>
       </tr>
       <tr>
         <th></th>

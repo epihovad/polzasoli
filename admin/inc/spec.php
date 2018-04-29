@@ -44,6 +44,7 @@ function menu()
 		?></li></ul></div><?
 	}
 }
+
 function arr($head, $body, $custom = null)
 {
   ob_start();
@@ -77,25 +78,7 @@ function updateSitemap()
 		sql($q);
 	}
 }
-// горячая статистика - на самом верху
-function show_hot_statistic()
-{
-	global $prx;
-	
-	// пользователи
-	$str_res = "пользователей онлайн: ".users_online();
-	
-	$count = getField("select count(*) from {$prx}orders where status='новый'");
-	if($count)
-	{
-		if($str_res) $str_res .= "&nbsp;|&nbsp;";
-		ob_start();
-		?><a href="" target="ajax" onclick="RegSessionSort('orders.php','filters=remove');return false;"><?=$count?></a>&nbsp;<?
-		$str_res .= "новых заказов: ".ob_get_clean();
-	}
-	
-	return $str_res;
-}
+
 // главное меню - навигация
 function ShowNavigate()
 {
@@ -138,6 +121,64 @@ function ShowNavigate()
 	</table>
 	</div>
 	<?
+}
+
+function input($type, $name, $value = null, $property = null, $class = null)
+{
+	ob_start();
+	switch($type)
+	{
+		case 'text':
+			?><input name="<?=$name?>" value="<?=htmlspecialchars($value)?>" type="text" class="form-control input-sm <?=$class?>" <?=$property?>><?
+			break;
+
+		case 'textarea':
+			?><textarea name="<?=$name?>" class="form-control input-sm <?=$class?>" <?=$property?>><?=$value?></textarea><?
+			break;
+
+		case 'date':
+			?><input name="<?=$name?>" value="<?=$value?>" type="text" class="form-control input-sm datepicker <?=$class?>" <?=$property?>><?
+			break;
+
+		case "checkbox":
+			/*?>
+      <input type="hidden" name="<?=$name?>" id="ch_<?=$name?>"  value="<?=$value?>">
+      <input type="checkbox" <?=($value=="true" ? "checked" : "")?> onClick="$('#ch_<?=$name?>').val(this.checked);" style="width:auto;"<?=($locked?" readonly":"")?>>
+			<?*/
+			break;
+
+		case "color":
+			//echo aInput("color", "name='{$name}'", $value);
+			break;
+
+		case "file":
+			/*?>
+      <table class="tab_no_borders" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td><input type="file" name="<?=$name?>"></td>
+					<?
+					if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/settings/{$name}.jpg"))
+					{
+						?>
+            <td style="padding:0 10px 0 10px;">
+              <a href="/uploads/settings/<?=$name?>.jpg" class="highslide" onclick="return hs.expand(this)">
+                <img src="/img_spec/20x20/<?=$name?>.jpg" width="20" height="20" style="border:1px solid #333;" />
+              </a>
+            </td>
+            <td>
+              <a href="?action=pic_del&id=<?=$name?>" target="ajax">
+                <img src="img/del_pic.png" title="удалить текущую картинку" width="20" height="20" style="border:1px solid #333;" class="alpha_png" />
+              </a>
+            </td>
+						<?
+					}
+					?>
+        </tr>
+      </table>
+			<?*/
+			break;
+	}
+	return ob_get_clean();
 }
 
 function btn_flag($flag,$id,$link,$locked=0)

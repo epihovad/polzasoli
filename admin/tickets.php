@@ -15,6 +15,11 @@ if(isset($_GET['action']))
 	switch($_GET['action'])
 	{
 		// ----------------- сохранение
+		case 'saveall':
+			updateSitemap();
+      jAlert('Данные успешно сохранены');
+			break;
+		// ----------------- сохранение
 		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
@@ -97,28 +102,28 @@ if(isset($_GET['red']))
       <tr>
         <th></th>
         <th>Название</th>
-        <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"></td>
+        <td><?=input('text', 'name', $row['name'])?></td>
       </tr>
       <?=show_tr_images($id,'Фото','Для корректного отображения,<br>рекомендуется загружать квадратное изображение размером 320x320 пискелей',1,$tbl,$tbl)?>
       <tr>
         <th></th>
         <th>Описание</th>
-        <td><textarea class="form-control input-sm" name="text"><?=$row['text']?></textarea></td>
+        <td><?=input('textarea', 'text', $row['text'])?></td>
       </tr>
       <tr>
         <th></th>
         <th>Цена</th>
-        <td><input type="text" class="form-control input-sm" name="price" value="<?=$row['price']?>"></td>
+        <td><?=input('text', 'price', $row['price'])?></td>
       </tr>
       <tr>
         <th></th>
         <th>Старая цена</th>
-        <td><input type="text" class="form-control input-sm" name="old_price" value="<?=$row['old_price']?>"></td>
+        <td><?=input('text', 'old_price', $row['old_price'])?></td>
       </tr>
       <tr>
         <th></th>
         <th>Срок действия</th>
-        <td><input type="text" class="form-control input-sm" name="validity" value="<?=$row['validity']?>"></td>
+        <td><?=input('text', 'validity', $row['validity'])?></td>
       </tr>
       <tr>
         <th></th>
@@ -148,23 +153,15 @@ if(isset($_GET['red']))
       <tr>
         <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
         <th>Заголовок</th>
-        <td><input type="text" class="form-control input-sm" name="h1" value="<?=htmlspecialchars($row['h1'])?>"></td>
+        <td><?=input('text', 'h1', $row['h1'])?></td>
       </tr>
-      <tr>
-        <th></th>
-        <th>title</th>
-        <td><input type="text" class="form-control input-sm" name="title" value="<?=htmlspecialchars($row['title'])?>"></td>
-      </tr>
-      <tr>
-        <th></th>
-        <th>keywords</th>
-        <td><input type="text" class="form-control input-sm" name="keywords" value="<?=htmlspecialchars($row['keywords'])?>"></td>
-      </tr>
-      <tr>
-        <th></th>
-        <th>description</th>
-        <td><textarea class="form-control input-sm" name="description"><?=$row['description']?></textarea></td>
-      </tr>
+      <? foreach (array('title','keywords','description') as $v){?>
+        <tr>
+          <th></th>
+          <th><?=$v?></th>
+          <td><?=input('text', $v, $row[$v])?></td>
+        </tr>
+      <?}?>
     </table>
     <div class="frm-btns">
       <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
@@ -196,7 +193,7 @@ else
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
-	$count_obj_on_page = 3; // кол-во объектов на странице
+	$count_obj_on_page = 20; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
 	ob_start();
@@ -232,7 +229,7 @@ else
       <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
       <th style="width:1%">№</th>
       <th style="width:1%; text-align:center;"><img src="img/image.png" title="изображение" /></th>
-      <th width="40%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
+      <th width="30%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
 			<? if($sitemap){?>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
@@ -243,7 +240,6 @@ else
       <th>Возраст</th>
       <th>Типы абонемента</th>
       <th>Типы посетителей</th>
-      <th>Заболевания</th>
       <th nowrap>Статус</th>
       <th style="padding:0 30px;"></th>
     </tr>
@@ -275,21 +271,25 @@ else
         </th>
         <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
 				<? if($sitemap){?>
-          <th class="sitemap"><input type="text" class="datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
-          <th class="sitemap"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
-          <th class="sitemap"><input type="text" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" style="text-align:center; width:30px;" /></th>
+          <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+          <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+          <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
 				<? }?>
         <th nowrap><?=$row['price'] . ($row['old_price'] ? ' (<s>'.$row['old_price'].'</s>)' : '')?></th>
         <th nowrap><?=$row['validity']?></th>
         <th nowrap><?=$row['age']?></th>
-        <td><?
+        <th><?
           $q = sql("SELECT * FROM {$prx}tickets_type where id IN (" . ($row['ids_type'] ?: '0' ) . ")");
           while ($arr = @mysqli_fetch_assoc($q)){
-            ?><small><?=$arr['name']?></small><?
+            ?><div><small><?=$arr['name']?>;</small></div><?
           }
-        ?></td>
-        <td></td>
-        <td></td>
+        ?></th>
+        <th><?
+					$q = sql("SELECT * FROM {$prx}tickets_who where id IN (" . ($row['ids_who'] ?: '0' ) . ")");
+					while ($arr = @mysqli_fetch_assoc($q)){
+						?><div><small><?=$arr['name']?>;</small></div><?
+					}
+					?></th>
         <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
         <th nowrap><?=btn_edit($id)?></th>
 			</tr>

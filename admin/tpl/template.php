@@ -32,6 +32,8 @@
   <link rel="stylesheet" href="/js/chosen/chosen.min.css">
   <script src="/js/chosen/chosen.jquery.min.js" type="text/javascript"></script>
 
+  <script src="/js/jquery.scrollUp.js"></script>
+
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="js/spec.js"></script>
   <script type="text/javascript" src="js/ready.js"></script>

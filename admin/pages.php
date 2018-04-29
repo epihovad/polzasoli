@@ -15,6 +15,11 @@ if(isset($_GET['action']))
 	switch($_GET['action'])
 	{
 		// ----------------- сохранение
+		case 'saveall':
+			updateSitemap();
+			jAlert('Данные успешно сохранены');
+			break;
+		// ----------------- сохранение
 		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
@@ -181,23 +186,18 @@ elseif(isset($_GET['red']))
     <tr>
       <th></th>
       <th>Название</th>
-      <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"<?=$readonly?>></td>
+      <td><?=input('text', 'name', $row['name'], $readonly)?></td>
     </tr>
     <tr>
       <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
       <th>Ссылка</th>
-      <td><input type="text" class="form-control input-sm" name="link" value="<?=htmlspecialchars($row['link'])?>"<?=$readonly?>></td>
+      <td><?=input('text', 'link', $row['link'], $readonly)?></td>
     </tr>
-    <?/*<tr>
-      <th></th>
-      <th>Дата</th>
-      <td><input type="text" class="form-control input-sm datepicker"></td>
-    </tr>*/?>
 		<?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
     <tr>
       <th></th>
       <th>Краткое<br />описание</th>
-      <td><?=showCK('preview',$row['preview'],'basic','100%',20)?></td>
+      <td><?=showCK('preview',$row['preview'],'basic')?></td>
     </tr>
     <tr>
       <th></th>
@@ -239,23 +239,15 @@ elseif(isset($_GET['red']))
     <tr>
       <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
       <th>Заголовок</th>
-      <td><input type="text" class="form-control input-sm" name="h1" value="<?=htmlspecialchars($row['h1'])?>"></td>
+      <td><?=input('text', 'h1', $row['h1'])?></td>
     </tr>
-    <tr>
-      <th></th>
-      <th>title</th>
-      <td><input type="text" class="form-control input-sm" name="title" value="<?=htmlspecialchars($row['title'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>keywords</th>
-      <td><input type="text" class="form-control input-sm" name="keywords" value="<?=htmlspecialchars($row['keywords'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>description</th>
-      <td><textarea class="form-control input-sm" name="description"><?=$row['description']?></textarea></td>
-    </tr>
+		<? foreach (array('title','keywords','description') as $v){?>
+      <tr>
+        <th></th>
+        <th><?=$v?></th>
+        <td><?=input('text', $v, $row[$v])?></td>
+      </tr>
+		<?}?>
   </table>
   <div class="frm-btns">
     <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
