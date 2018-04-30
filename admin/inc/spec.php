@@ -522,7 +522,7 @@ function show_filters($link)
 	if(!sizeof($mas)) return;
 
 	?>
-	<div id="listview-filters" class="pull-left bg-warning">
+	<div id="listview-clear-filters" class="pull-left bg-warning">
 	  <?=help('здесь вы можете сбросить фильтры,<br>примененные ранее к текущему списку объектов')?>
 	  <? foreach($mas as $k=>$v){
 			?><div class="fltr"><a href="" class="clr-orange" onclick="RegSessionSort('<?=$link?>','<?=$k?>=remove');return false;"><?=$v?></a></div><?

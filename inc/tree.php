@@ -23,13 +23,13 @@ function getPrefix($level = 0, $prefix = "&raquo;&nbsp;") {
 }
 
 // ВЫПАДАЮЩИЙ СПИСОК ДЛЯ ДЕРЕВА
-// $sql = "SELECT * FROM {$prx}{$tbl} WHERE id_parent='%s'", 
-// св-ва списка, 
-// значение, 
-// "пустое" значение(может быть массивом),  
-// значение скрываемой рубрики (и ее подрубрик), 
-// id начала веток, 
-// глубина дерева, 
+// $sql = "SELECT * FROM {$prx}{$tbl} WHERE id_parent='%s'",
+// св-ва списка,
+// значение,
+// "пустое" значение(может быть массивом),
+// значение скрываемой рубрики (и ее подрубрик),
+// id начала веток,
+// глубина дерева,
 // свой префикс
 function dllTree($sql, $properties, $value = "", $default = NULL, $hidevalue = "", $id_parent = 0, $depth = 0, $prefix = NULL) {
 	ob_start();
@@ -102,17 +102,19 @@ function getCatUrl($rubric, $echo = false, $tbl = 'catalog', $prfx = 'catalog') 
 	global $prx;
 	$href = $prfx ? "/{$prfx}/" : '';
 	$str = $href;
-	$ids = getArrParents("SELECT id,id_parent FROM {$prx}{$tbl} WHERE id='%s'", $rubric['id']);
-	foreach ($ids as $id_catalog) {
-		if ($id_catalog == $rubric['id']) {
-			$href .= $rubric['link'] . '/';
-			$str .= '<a href="' . $href . '" style="color:#090" target="_blank">' . $rubric['link'] . '</a>/';
-		} else {
-			$link = gtv($tbl, 'link', $id_catalog);
-			$href .= $link . '/';
-			$str .= $link . '/';
+	if($rubric['id']){
+		$ids = getArrParents("SELECT id,id_parent FROM {$prx}{$tbl} WHERE id='%s'", $rubric['id']);
+		foreach ($ids as $id_catalog) {
+			if ($id_catalog == $rubric['id']) {
+				$href .= $rubric['link'] . '/';
+				$str .= '<a href="' . $href . '" class="clr-green" target="_blank">' . $rubric['link'] . '</a>/';
+			} else {
+				$link = gtv($tbl, 'link', $id_catalog);
+				$href .= $link . '/';
+				$str .= $link . '/';
+			}
 		}
-	}
+  }
 	if ($echo)
 		echo $str; // для админки
 	else return $href;

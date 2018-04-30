@@ -58,6 +58,8 @@ $(function(){
   });
   //
   markChangeRow();
+  //
+  Filters();
 	//
 	Search();
 	//
@@ -285,10 +287,26 @@ function markChangeRow() {
   $('tr#item-'+id).addClass('active');
 }
 
+function Filters() {
+
+  var $filters = $('#listview-filters');
+  var $sh = $('#sh-filters');
+
+  $sh.click(function () {
+    if($filters.hasClass('active')){
+      $sh.add($filters).removeClass('active');
+    } else {
+      $sh.add($filters).addClass('active');
+    }
+    return false;
+  });
+}
+
 function Search()
 {
-	var $field = $('#searchTxt');
-	var $btn = $('#searchBtn');
+  var $sblock = $('#listview-filters .search');
+	var $field = $sblock.find('input');
+	var $btn = $sblock.find('button');
 	if(!$field.length || !$btn.length) return false;
 
 	$field.keydown(function(e){

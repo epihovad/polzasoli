@@ -26,14 +26,16 @@ if(isset($_GET['action']))
 
 			if(!$name) jAlert('Укажите название');
 
+			$updateLink = false;
 			$where = $id ? " and id<>{$id}" : "";
+
 			if($link){
 				if(getField("SELECT id FROM {$prx}{$tbl} WHERE link='{$link}'{$where}"))
-					jAlert('объект с данной ссылкой уже существует');
+					$updateLink = true;
 			} else {
 				$link = makeUrl($name);
 				if(getField("SELECT id FROM {$prx}{$tbl} WHERE link='{$link}'{$where}"))
-					jAlert('ссылка автоматически сформированна - '.$link.',<br>но объект с данной ссылкой уже существует');
+					$updateLink = true;
 			}
 
 			$set = "name='{$name}',

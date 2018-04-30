@@ -26,8 +26,7 @@ if(isset($_GET['action']))
 
 			if(!$name) jAlert('необходимо указать название !');
 				
-			if($locked)
-			{
+			if($locked){
 				$set = "preview=".($preview?"'{$preview}'":"NULL").",
 				        text=".($text?"'{$text}'":"NULL").",
 								h1=".($h1?"'{$h1}'":"NULL").",
@@ -42,15 +41,11 @@ if(isset($_GET['action']))
 			$updateLink = false;
 			$where = $id ? " AND id<>'{$id}'" : '';
 
-			if($type=='page')
-			{
-				if($link)
-				{
+			if($type=='page'){
+				if($link){
 					if(getField("SELECT id FROM {$prx}{$tbl} WHERE link='{$link}'{$where}"))
 						$updateLink = true;
-				}
-				else
-				{
+				} else {
 					$link = makeUrl($name);
 					if(getField("SELECT id FROM {$prx}{$tbl} WHERE link='{$link}'{$where}"))
 						$updateLink = true;

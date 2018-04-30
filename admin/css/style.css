@@ -257,9 +257,21 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 #listview-btns { float:right; }
 #listview-btns button { margin:0 0 15px 5px;}
 
-#listview-filters { padding: 10px; margin-bottom:10px;}
-#listview-filters .fltr { padding:2px 0;}
-#listview-filters hr { padding: 1px 0 0 0; margin: 5px 0 5px 0; background-color: #E7D4B0; height: 0; border: none; border-bottom: 1px solid #FFF;}
+#listview-clear-filters { padding: 10px; margin-bottom:10px;}
+#listview-clear-filters .fltr { padding:2px 0;}
+#listview-clear-filters hr { padding: 1px 0 0 0; margin: 5px 0 5px 0; background-color: #E7D4B0; height: 0; border: none; border-bottom: 1px solid #FFF;}
+
+#sh-filters { text-decoration:none;}
+#sh-filters:before { content:'показать';}
+#sh-filters.active:before { content:'скрыть';}
+#listview-filters { display:none;}
+#listview-filters .form-group { margin-bottom:10px; }
+#listview-filters .form-group:last-child { margin-bottom:0;}
+#listview-filters .search input { width:200px;display:inline-block;}
+#listview-filters .search button i { margin-right:3px;}
+#listview-filters.active { display:block; border-top: 1px solid #bfbfbf; margin-top: 15px; padding-top:10px;}
+
+span.highlight { background-color:#ffff00;}
 
 .sitemap.sm-lastmod input { width:90px !important; text-align:center; }
 .sitemap.sm-changefreq {  }
