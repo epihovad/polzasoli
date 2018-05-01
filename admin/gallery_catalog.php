@@ -207,10 +207,10 @@ else {
 	//echo $query;
 
 	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
-	show_filters($script);
+	ActiveFilters();
 
 	if(!$sitemap){ ?>
-    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort(REQUEST_URI,'sitemap');return false;">Sitemap поля</a></div>
 	<? } ?>
 
   <div class="clearfix"></div>

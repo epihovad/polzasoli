@@ -146,15 +146,15 @@ else
 	$query .= ' LIMIT '.($count_obj_on_page*$cur_page-$count_obj_on_page).",".$count_obj_on_page;
 	//-----------------------------
 	//echo $query;
-	
-	show_filters($script);
+
+	ActiveFilters();
 	show_navigate_pages($kol_str,$cur_page,$script);
 
 	?>
 	<table class="filter_tab" style="margin:5px 0 0 0;">
 		<tr>
 			<td align="left">Тип</td>
-			<td colspan="2"><?=dllEnum($tbl,'type','name="msg" onChange="RegSessionSort(\''.$script.'\',\'msg=\'+this.value);return false;"',$f_msg?$f_msg:'-- все --',array('remove'=>'-- все --'))?></tr>
+			<td colspan="2"><?=dllEnum($tbl,'type','name="msg" onChange="RegSessionSort(REQUEST_URI,\'msg=\'+this.value);return false;"',$f_msg?$f_msg:'-- все --',array('remove'=>'-- все --'))?></tr>
 		<tr>
 			<td>контекстный поиск</td>
 			<td><input type="text" id="searchTxt" value="<?=htmlspecialchars($f_context)?>" style="width:200px;"></td>

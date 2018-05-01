@@ -265,7 +265,7 @@ else {
 	//echo $query;
 
 	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
-	show_filters($script);
+	ActiveFilters();
 	?>
 
   <div class="clearfix"></div>
@@ -282,12 +282,17 @@ else {
     .panel-white h4.heading { margin: 0;}
   </style>
 
-  <div class="panel-white">
-    <h4 class="heading">Фильтры <a id="sh-filters" href="#"<?//=$show_filters?' class="active"':''?>></a></h4>
-    <div id="listview-filters"<?//=$show_filters?' class="active"':''?>>
+  <div id="filters" class="panel-white">
+    <h4 class="heading">Фильтры
+      <a href="#"<?//=$show_filters?' class="active"':''?>>
+        <i class="fas fa-eye" title="показать фильтры">
+        </i><i class="fas fa-eye-slash" title="скрыть фильтры"></i>
+      </a>
+    </h4>
+    <div class="fbody<?//=$show_filters?' active':''?>">
       <div class="form-group">
         <label>Рубрика <?=help('отображаются объекты выбранной рубрики<br>(вместе с объектами подчинённых рубрик)')?></label>
-				<?=dllTree("SELECT * FROM {$prx}{$tbl}_catalog ORDER BY sort,id",'onChange="RegSessionSort(\''.$script.'\',\'gallery_catalog=\'+this.value);return false;"',$f_catalog,array('remove'=>'-- все --'))?>
+				<?=dllTree("SELECT * FROM {$prx}{$tbl}_catalog ORDER BY sort,id",'onChange="RegSessionSort(REQUEST_URI,\'gallery_catalog=\'+this.value);return false;"',$f_catalog,array('remove'=>'-- все --'))?>
       </div>
       <div class="form-group search">
         <label>Контекстный поиск</label><br>

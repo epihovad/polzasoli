@@ -131,7 +131,7 @@ else
 	//echo $query;
 
 	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
-	show_filters($script);
+	ActiveFilters();
   ?>
 
   <div class="clearfix"></div>

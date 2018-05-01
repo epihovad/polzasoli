@@ -367,7 +367,7 @@ else
 
   ob_start();
 
-  show_filters($script);
+	ActiveFilters();
   show_navigate_pages($kol_str,$cur_page,$script);
 
   ?>
@@ -388,7 +388,7 @@ else
   </table>
 
   <? if(!$sitemap){ ?>
-  <div style="padding:5px 0 0 0;">Отобразить <a href="" style="color:#F60" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
+  <div style="padding:5px 0 0 0;">Отобразить <a href="" style="color:#F60" onclick="RegSessionSort(REQUEST_URI,'sitemap');return false;">Sitemap поля</a></div>
   <div class="clear"></div>
   <? } ?>
 

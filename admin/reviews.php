@@ -148,7 +148,7 @@ else
 	//echo $query;
 
 	show_listview_btns('Добавить::Удалить');
-	show_filters($script);
+	ActiveFilters();
   ?>
   <div class="clearfix"></div>
 

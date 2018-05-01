@@ -261,15 +261,22 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 #listview-clear-filters .fltr { padding:2px 0;}
 #listview-clear-filters hr { padding: 1px 0 0 0; margin: 5px 0 5px 0; background-color: #E7D4B0; height: 0; border: none; border-bottom: 1px solid #FFF;}
 
-#sh-filters { text-decoration:none;}
-#sh-filters:before { content:'показать';}
-#sh-filters.active:before { content:'скрыть';}
-#listview-filters { display:none;}
-#listview-filters .form-group { margin-bottom:10px; }
-#listview-filters .form-group:last-child { margin-bottom:0;}
-#listview-filters .search input { width:200px;display:inline-block;}
-#listview-filters .search button i { margin-right:3px;}
-#listview-filters.active { display:block; border-top: 1px solid #bfbfbf; margin-top: 15px; padding-top:10px;}
+#filters { margin:0 0 10px 0; padding:10px;}
+#filters h4 { font-size:16px;}
+#filters h4 a { text-decoration:none; font-size:14px; color:#666666;}
+
+#filters h4 a:hover, #filters h4 a.active { color:#000;}
+#filters h4 a.active { color:#000;}
+#filters h4 a .fa-eye { display:inline-block;}
+#filters h4 a .fa-eye-slash { display:none;}
+#filters h4 a.active .fa-eye-slash { display:inline-block;}
+#filters h4 a.active .fa-eye { display:none;}
+#filters .fbody { display:none;}
+#filters .fbody .form-group { margin-bottom:10px; }
+#filters .fbody .form-group:last-child { margin-bottom:0;}
+#filters .fbody .search input { width:200px;display:inline-block;}
+#filters .fbody .search button i { margin-right:3px;}
+#filters .fbody.active { display:block; border-top: 1px solid #bfbfbf; margin-top: 15px; padding-top:10px;}
 
 span.highlight { background-color:#ffff00;}
 

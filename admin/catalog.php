@@ -225,11 +225,11 @@ else
 		$query .= ' ORDER BY sort,id';
 	//-----------------------------
 	//echo $query;
-	
-	show_filters($script);
+
+	ActiveFilters();
 	
 	if(!$sitemap){ ?>
-	<div style="padding:5px 0 0 0;">Отобразить <a href="" style="color:#F60" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
+	<div style="padding:5px 0 0 0;">Отобразить <a href="" style="color:#F60" onclick="RegSessionSort(REQUEST_URI,'sitemap');return false;">Sitemap поля</a></div>
   <div class="clear"></div>
   <? } ?>
   

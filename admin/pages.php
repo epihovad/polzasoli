@@ -256,7 +256,7 @@ elseif(isset($_GET['red']))
 else
 {
 	$cur_page = (int)$_GET['page'] ?: 1;
-	$sitemap = isset($_SESSION['ss']['sitemap']);
+	$sitemap = isset($_GET['fl']['sitemap']);
 
 	$navigate = '<span></span>Общий список страниц';
 
@@ -284,10 +284,12 @@ else
 	//echo $query;
 
   show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
-	show_filters($script);
+	ActiveFilters();
+
+	SortColumn('Имя', 'asc', 'name');
 
 	if(!$sitemap){ ?>
-    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort('<?=$script?>','sitemap');return false;">Sitemap поля</a></div>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="changeURI({'fl[sitemap]':''});return false;">Sitemap поля</a></div>
   <? } ?>
 
   <div class="clearfix"></div>

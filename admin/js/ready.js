@@ -289,8 +289,8 @@ function markChangeRow() {
 
 function Filters() {
 
-  var $filters = $('#listview-filters');
-  var $sh = $('#sh-filters');
+  var $filters = $('#filters .fbody');
+  var $sh = $('#filters h4 a');
 
   $sh.click(function () {
     if($filters.hasClass('active')){
@@ -304,16 +304,16 @@ function Filters() {
 
 function Search()
 {
-  var $sblock = $('#listview-filters .search');
+  var $sblock = $('#filters .search');
 	var $field = $sblock.find('input');
 	var $btn = $sblock.find('button');
 	if(!$field.length || !$btn.length) return false;
 
 	$field.keydown(function(e){
 		var code = e.keyCode || e.which;
-		if(code==13) RegSessionSort($('#script').val(),'context='+$field.val());
+		if(code==13) RegSessionSort(REQUEST_URI,'context='+$field.val());
 	});
-	$btn.click(function(){ RegSessionSort($('#script').val(),'context='+$field.val()); return false; });
+	$btn.click(function(){ RegSessionSort(REQUEST_URI,'context='+$field.val()); return false; });
 }
 
 function CKEditor() {

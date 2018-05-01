@@ -174,8 +174,8 @@ else
 	$query .= ' LIMIT '.($count_obj_on_page*$cur_page-$count_obj_on_page).",".$count_obj_on_page;
 	//-----------------------------
 	//echo $query;
-	
-	show_filters($script);
+
+	ActiveFilters();
 	show_navigate_pages($kol_str,$cur_page,$script);
 
 	?>
@@ -200,7 +200,7 @@ else
 		<table class="filter_tab" style="margin:5px 0 0 0;">
 			<tr>
 				<td align="left">Статус заказа</td>
-				<td colspan="2"><?=dllEnum($tbl,'status','style="width:100%" onChange="RegSessionSort(\''.$script.'\',\'order_status=\'+this.value);return false;"',$f_status,array('remove'=>'-- все --'))?></td>
+				<td colspan="2"><?=dllEnum($tbl,'status','style="width:100%" onChange="RegSessionSort(REQUEST_URI,\'order_status=\'+this.value);return false;"',$f_status,array('remove'=>'-- все --'))?></td>
 			</tr>
 			<tr>
 				<td align="left">Дата заказа</td>

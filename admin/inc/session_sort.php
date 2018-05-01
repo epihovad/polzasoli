@@ -66,6 +66,5 @@ foreach($filters as $prm=>$txt)
 
 remove_filters();
 
-preg_match("/&location=(.*)/",$_SERVER['REQUEST_URI'],$mathces);
-$location = $mathces[1];
-?><script>top.location.href = '../<?=$location?>'</script><?
+preg_match("/&location=(.*)/", $_SERVER['REQUEST_URI'], $location);
+?><script>top.location.href = '<?=$location[1]?>'</script><?

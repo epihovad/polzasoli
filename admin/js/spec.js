@@ -1,3 +1,44 @@
+function changeURI(object, URI, returnNewURI)
+{
+	if(URI == undefined) {
+    URI = url();
+  }
+	var NewURI = url('path', URI);
+  var QueryURI = url('?', URI);
+
+  if(QueryURI != undefined){
+
+    // замена
+    $.each(object, function(key, val) {
+      QueryURI[key] = val;
+    });
+    // новый URL
+    var i=0;
+    $.each(QueryURI, function(key, val) {
+      if(val == null){
+        delete QueryURI[key];
+        return true;
+      }
+      NewURI += (!i ? '?' : '&') + key + (val ? '=' + val : '');
+      i++;
+    });
+	} else {
+    var i=0;
+    $.each(object, function(key, val) {
+      NewURI += (!i ? '?' : '&') + key + (val ? '=' + val : '');
+      i++;
+    });
+	}
+
+  //console.log(newURI);
+
+  if(returnNewURI == undefined){
+  	top.document.location = NewURI;
+	} else {
+  	return NewURI;
+	}
+}
+
 function RegSessionSort(url,filter)
 {
 	toajax('inc/session_sort.php?'+filter+'&location='+url);

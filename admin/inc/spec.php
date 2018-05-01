@@ -336,6 +336,20 @@ function show_tr_file($input_name,$path,$fname,$href,$name,$help='',$tr='')
     <?
 	return ob_get_clean();
 }
+
+//
+function SortColumn($column, $sort, $field)
+{
+  $cur_sort = $_GET['fl']['sort'][$field];
+
+  if(!$cur_sort){
+		?><a href="" target="_blank" onclick="changeURI({'fl[sort][<?=$field?>]':'asc'});return false;"><?=$column?></a><?
+  } else {
+		/*?><a href="" target="_blank" onclick="changeURI({'fl[sort][<?=$field?>]':''}REQUEST_URI,'sort=<?=$pole?>:down');return false;"><?=$name?></a><?*/
+  }
+
+}
+
 // ShowSortPole('страница = news.php','Имя столбца = Название','текущая сортировка = up/down/0','имя поля в БД = name');
 function ShowSortPole($page,$cur_pole,$cur_sort,$name,$pole)
 {
@@ -343,20 +357,20 @@ function ShowSortPole($page,$cur_pole,$cur_sort,$name,$pole)
 
 	if(!$cur_pole) // если сессии нет
 	{
-		?><a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:down');return false;"><?=$name?></a><?
+		?><a href="" target="_blank" onclick="RegSessionSort(REQUEST_URI,'sort=<?=$pole?>:down');return false;"><?=$name?></a><?
 	}
 	else
 	{
 		if($pole==$cur_pole)
 		{
 			?>
-      <a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:<?=($cur_sort=="up"?"down":"up")?>');return false;"><?=$name?></a>
+      <a href="" target="_blank" onclick="RegSessionSort(REQUEST_URI,'sort=<?=$pole?>:<?=($cur_sort=="up"?"down":"up")?>');return false;"><?=$name?></a>
       <img src='img/sort_<?=$cur_sort?>.gif' border='0' width='9' height='9' title='сортировка <?=($cur_sort=="up"?"по убыванию (Я-А)":"по возрастанию (А-Я)")?>' align="absmiddle" />
 			<?
 		}
 		else
 		{
-			?><a href="" target="_blank" onclick="RegSessionSort('<?=$page?>','sort=<?=$pole?>:down');return false;"><?=$name?></a><?
+			?><a href="" target="_blank" onclick="RegSessionSort(REQUEST_URI,'sort=<?=$pole?>:down');return false;"><?=$name?></a><?
 		}
 	}
 
@@ -507,28 +521,26 @@ $filters = array(	'page'=>'постраничный вывод объектов'
 									'msg'=>'выбор сообщений по типу',
 									'reviews'=>'выбор отзывов по объекту');
 
-function show_filters($link)
+function ActiveFilters()
 {
 	global $filters;
-	
+
+	if(!sizeof($_GET['fl']))
+	  return;
+
 	$mas = array();
-	foreach($filters as $prm=>$txt)
-	{
-		if($prm=='page') continue;
-		if($_SESSION['ss'][$prm])
-			$mas[$prm] = 'сбросить фильтр «'.$txt.'»';
+	foreach($_GET['fl'] as $prm => $none){
+		$mas[$prm] = 'сбросить фильтр «' . $filters[$prm] . '»';
 	}
-	
-	if(!sizeof($mas)) return;
 
 	?>
 	<div id="listview-clear-filters" class="pull-left bg-warning">
 	  <?=help('здесь вы можете сбросить фильтры,<br>примененные ранее к текущему списку объектов')?>
 	  <? foreach($mas as $k=>$v){
-			?><div class="fltr"><a href="" class="clr-orange" onclick="RegSessionSort('<?=$link?>','<?=$k?>=remove');return false;"><?=$v?></a></div><?
+			?><div class="fltr"><a href="" class="clr-orange" onclick="changeURI({'fl[<?=$k?>]':null});return false;"><?=$v?></a></div><?
 		}?>
 		<hr>
-		<div><a href="" class="clr-orange" onclick="RegSessionSort('<?=$link?>','filters=remove');return false;"><b>сбросить все фильтры</b></a></div>
+		<div><a href="" class="clr-orange" onclick="document.location = url('path');return false;"><b>сбросить все фильтры</b></a></div>
   </div>
   <div class="clearfix"></div>
 	<?

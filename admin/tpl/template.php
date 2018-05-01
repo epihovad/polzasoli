@@ -33,6 +33,7 @@
   <script src="/js/chosen/chosen.jquery.min.js" type="text/javascript"></script>
 
   <script src="/js/jquery.scrollUp.js"></script>
+  <script src="/js/js-url-master/url.min.js"></script>
 
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="js/spec.js"></script>
@@ -60,7 +61,7 @@
 
   <link rel="stylesheet" href="css/style.css" type="text/css" />
   <style>
-    .blackout {
+    /*.blackout {
       position: absolute;
       top: 0;
       left: 0;
@@ -69,7 +70,7 @@
       background: #000;
       opacity: 0.6;
       z-index: 100;
-    }
+    }*/
   </style>
 </head>
 <body>

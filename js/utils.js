@@ -1,4 +1,5 @@
 var zmax = 1001; // стартовая переменная величина
+var REQUEST_URI = url('path') + (url('query') != undefined ? '?' + url('query') : '');
 
 jQuery.browser = {};
 jQuery.browser.mozilla = /mozilla/.test(navigator.userAgent.toLowerCase()) && !/webkit/.test(navigator.userAgent.toLowerCase());

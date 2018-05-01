@@ -151,8 +151,8 @@ else
 	$query .= ' LIMIT '.($count_obj_on_page*$cur_page-$count_obj_on_page).",".$count_obj_on_page;
 	//-----------------------------
 	//echo $query;
-	
-	show_filters($script);
+
+	ActiveFilters();
 	show_navigate_pages($kol_str,$cur_page,$script);
 	
 	?>
