@@ -4,6 +4,7 @@ require('inc/common.php');
 $h1 = 'Тип абонемента';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'tickets_type';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -88,8 +89,6 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else
 {
-	$navigate = '<span></span>Общий список';
-
 	$query = "SELECT * FROM {$prx}{$tbl} ORDER BY name";
 
 	ob_start();
@@ -100,7 +99,6 @@ else
   <div class="clearfix"></div>
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-  <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
   <table class="table-list">
     <thead>
       <tr>

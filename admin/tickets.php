@@ -4,6 +4,7 @@ require('inc/common.php');
 $h1 = 'Абонементы';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'tickets';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -175,15 +176,16 @@ if(isset($_GET['red']))
 else
 {
 	$cur_page = (int)$_GET['page'] ?: 1;
-	$sitemap = isset($_SESSION['ss']['sitemap']);
-	$f_context = stripslashes($_SESSION['ss']['context']);
+	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
+	$fl['sort'] = $_GET['fl']['sort'];
+	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($f_context!='')	$where .= " AND (	name LIKE '%{$f_context}%' OR
-																				text LIKE '%{$f_context}%' )";
+	if($fl['search']!='')	$where .= " AND (	name LIKE '%{$fl['search']}%' OR
+																				  text LIKE '%{$fl['search']}%' )";
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
-	if($sitemap)
+	if($fl['sitemap'])
 	{
 		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
 		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
@@ -193,29 +195,25 @@ else
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
-	$count_obj_on_page = 20; // кол-во объектов на странице
+	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort']) {
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= " ORDER BY {$f} {$t}";
+			break;
+		}
 	} else {
 		$query .= ' ORDER BY A.name';
 	}
-	$query .= ' LIMIT ' . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
-	//-----------------------------
-	//echo $query;
 
-	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	ActiveFilters();
 
-	if(!$sitemap){ ?>
-    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort(REQUEST_URI,'sitemap');return false;">Sitemap поля</a></div>
+	if(!$fl['sitemap']){ ?>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="changeURI({'fl[sitemap]':''});return false;">Sitemap поля</a></div>
 	<? } ?>
 
   <div class="clearfix"></div>
@@ -229,13 +227,13 @@ else
       <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
       <th style="width:1%">№</th>
       <th style="width:1%; text-align:center;"><img src="img/image.png" title="изображение" /></th>
-      <th width="30%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
-			<? if($sitemap){?>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
+      <th nowrap width="30%"><?=SortColumn('Название','A.name')?></th>
+			<? if($fl['sitemap']){?>
+        <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
+        <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
+        <th nowrap><?=SortColumn('priority','S.priority')?></th>
 			<? }?>
-      <th>Цена, руб.</th>
+      <th nowrap><?=SortColumn('Цена, руб.','A.price')?></th>
       <th>Срок действия</th>
       <th>Возраст</th>
       <th>Типы абонемента</th>
@@ -270,7 +268,7 @@ else
           </a>
         </th>
         <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
-				<? if($sitemap){?>
+				<? if($fl['sitemap']){?>
           <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
           <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
           <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>

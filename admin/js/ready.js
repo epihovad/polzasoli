@@ -293,10 +293,12 @@ function Filters() {
   var $sh = $('#filters h4 a');
 
   $sh.click(function () {
-    if($filters.hasClass('active')){
-      $sh.add($filters).removeClass('active');
+    if($sh.hasClass('active')){
+      $sh.removeClass('active');
+      $filters.slideUp('normal');
     } else {
-      $sh.add($filters).addClass('active');
+      $sh.addClass('active');
+      $filters.slideDown('normal');
     }
     return false;
   });
@@ -311,9 +313,11 @@ function Search()
 
 	$field.keydown(function(e){
 		var code = e.keyCode || e.which;
-		if(code==13) RegSessionSort(REQUEST_URI,'context='+$field.val());
+		if(code==13) {
+      changeURI({'fl[search]': $field.val()});
+    }
 	});
-	$btn.click(function(){ RegSessionSort(REQUEST_URI,'context='+$field.val()); return false; });
+	$btn.click(function(){ changeURI({'fl[search]': $field.val()}); return false; });
 }
 
 function CKEditor() {

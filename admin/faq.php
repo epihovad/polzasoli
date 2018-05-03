@@ -115,35 +115,29 @@ else
 	$query = "SELECT * FROM {$prx}{$tbl}";
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort'])
-	{
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
-	}
-	else
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= " ORDER BY {$f} {$t}";
+			break;
+		}
+	} else {
 		$query .= ' ORDER BY sort,id';
-	//-----------------------------
-	//echo $query;
+	}
 
-	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+	show_listview_btns('Добавить::Удалить');
 	ActiveFilters();
   ?>
 
   <div class="clearfix"></div>
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
     <table class="table-list">
       <thead>
       <tr>
         <th><input type="checkbox" name="check_del" id="check_del" /></th>
         <th>№</th>
-	      <? if(!$_SESSION['ss']['sort']){ ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
+	      <? if(!$fl['sort']){ ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
         <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Вопрос','question')?></th>
         <th width="50%">Ответ</th>
         <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
@@ -162,7 +156,7 @@ else
           <tr id="item-<?=$id?>" oid="<?=$id?>" par="0">
             <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
             <th nowrap><?=$i++?></th>
-						<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
+						<? if(!$fl['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
             <td><a href="?red=<?=$id?>"><?=$row['question']?></a></td>
             <td><?=$row['answer']?></td>
             <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
@@ -172,9 +166,12 @@ else
 				}
 			} else {
 				?>
-        <tr>
-          <td colspan="10" align="center">
-            по вашему запросу ничего не найдено. <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+        <tr class="nofind">
+          <td colspan="10">
+            <div class="bg-warning">
+              по вашему запросу ничего не найдено.
+							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+            </div>
           </td>
         </tr>
 				<?

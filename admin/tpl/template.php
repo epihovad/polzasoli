@@ -50,11 +50,11 @@
   <script src="/js/blueimp-gallery/blueimp-gallery.js"></script>
   <script src="/js/blueimp-gallery/blueimp-gallery-indicator.js"></script>
 
-	<? if ($f_context) { ?>
+	<? if ($fl_search) { ?>
     <script type="text/javascript" src="/js/jquery.highlight.js"></script>
     <script>
       $(function () {
-        $('.sp').highlight('<?=$f_context?>')
+        $('.sp').highlight('<?=$fl_search?>')
       });
     </script>
 	<? } ?>

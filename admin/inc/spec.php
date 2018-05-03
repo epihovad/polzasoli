@@ -338,14 +338,18 @@ function show_tr_file($input_name,$path,$fname,$href,$name,$help='',$tr='')
 }
 
 //
-function SortColumn($column, $sort, $field)
+function SortColumn($column, $field)
 {
-  $cur_sort = $_GET['fl']['sort'][$field];
+  $sort = $_GET['fl']['sort'][$field];
+  $title = 'сортировка ' . ($sort == 'asc' ? 'по возрастанию (А-Я)' : 'по убыванию (Я-А)');
 
-  if(!$cur_sort){
+  if(!$sort){
 		?><a href="" target="_blank" onclick="changeURI({'fl[sort][<?=$field?>]':'asc'});return false;"><?=$column?></a><?
   } else {
-		/*?><a href="" target="_blank" onclick="changeURI({'fl[sort][<?=$field?>]':''}REQUEST_URI,'sort=<?=$pole?>:down');return false;"><?=$name?></a><?*/
+    ?>
+    <a href="" target="_blank" onclick="changeURI({'fl[sort][<?=$field?>]':'<?=$sort=='asc'?'desc':'asc'?>'});return false;"><?=$column?></a>
+    <img src='img/sort_<?=$sort?>.gif' border='0' width='9' height='9' title='<?=$title?>' align="absmiddle" />
+    <?
   }
 
 }
@@ -513,7 +517,7 @@ function show_letter_navigate($link,$tab,$pole,$where='')
 $filters = array(	'page'=>'постраничный вывод объектов',
 									'sort'=>'сортировка по колонкам',
 									'letter'=>'выбор объектов по букве',
-									'context'=>'выбор объектов по контекстному поиску',
+									'search'=>'выбор объектов по контекстному поиску',
 									'sitemap'=>'отображать sitemap поля',
 									'catalog'=>'выбор объектов по рубрике каталога',
 									'gallery_catalog'=>'выбор объектов по рубрике каталога',

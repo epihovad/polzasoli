@@ -254,6 +254,9 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 .btn-primary { background-color: #595959; border-color: #595959; color: #ffffff; }
 .btn-primary:hover { color: #ffffff; background-color: #4d4d4d; border: 1px solid #4d4d4d; }
 
+.panel-white { margin-bottom: 20px; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; background: #d9d9d9; padding: 15px; color: #666666; }
+.panel-white h4.heading { margin: 0;}
+
 #listview-btns { float:right; }
 #listview-btns button { margin:0 0 15px 5px;}
 
@@ -271,12 +274,11 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 #filters h4 a .fa-eye-slash { display:none;}
 #filters h4 a.active .fa-eye-slash { display:inline-block;}
 #filters h4 a.active .fa-eye { display:none;}
-#filters .fbody { display:none;}
+#filters .fbody { display:none; border-top: 1px solid #bfbfbf; margin-top: 15px; padding-top:10px;}
 #filters .fbody .form-group { margin-bottom:10px; }
 #filters .fbody .form-group:last-child { margin-bottom:0;}
 #filters .fbody .search input { width:200px;display:inline-block;}
 #filters .fbody .search button i { margin-right:3px;}
-#filters .fbody.active { display:block; border-top: 1px solid #bfbfbf; margin-top: 15px; padding-top:10px;}
 
 span.highlight { background-color:#ffff00;}
 

@@ -4,7 +4,7 @@ require('inc/common.php');
 $h1 = 'Фото-рубрикатор';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
-$navigate = '<span></span>Общий список';
+$navigate = '<span></span>' . $h;
 $tbl = 'gallery_catalog';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -181,57 +181,52 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else {
 
-	$sitemap = isset($_SESSION['ss']['sitemap']);
+	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
+	$fl['sort'] = $_GET['fl']['sort'];
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
-	if($sitemap)
+	if($fl['sitemap'])
 	{
 		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
 		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
 	}	else $query  = sprintf($query,'');
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort'])
-	{
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
-	}
-	else
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= " ORDER BY {$f} {$t}";
+			break;
+		}
+	} else {
 		$query .= ' ORDER BY A.sort,A.id';
-	//-----------------------------
-	//echo $query;
+	}
 
-	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	ActiveFilters();
 
-	if(!$sitemap){ ?>
-    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort(REQUEST_URI,'sitemap');return false;">Sitemap поля</a></div>
+	if(!$fl['sitemap']){ ?>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="changeURI({'fl[sitemap]':''});return false;">Sitemap поля</a></div>
 	<? } ?>
 
   <div class="clearfix"></div>
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
     <table class="table-list">
       <thead>
       <tr>
         <th><input type="checkbox" name="check_del" id="check_del" /></th>
         <th>№</th>
-				<? if(!$_SESSION['ss']['sort']) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
+				<? if(!$fl['sort']) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
         <th style="text-align:center"><img src="img/image.png" title="изображение" /></th>
-        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
-				<? if($sitemap){?>
-          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
-          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
-          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
+        <th width="50%"><?=SortColumn('Название','name')?></th>
+				<? if($fl['sitemap']){?>
+          <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
+          <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
+          <th nowrap><?=SortColumn('priority','S.priority')?></th>
 				<? }?>
-        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
+        <th width="50%"><?=SortColumn('Ссылка','link')?></th>
+        <th nowrap><?=SortColumn('Статус','status')?></th>
         <th style="padding:0 30px;"></th>
       </tr>
       </thead>
@@ -257,7 +252,7 @@ else {
           <tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_parent']?>" class="<?=$has_childs?' has-childs':''?>">
             <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
             <th nowrap><?=$i++?></th>
-						<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
+						<? if(!$fl['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
             <th style="padding:3px 5px;">
 							<?
 							$src = '/uploads/no_photo.jpg';
@@ -272,7 +267,7 @@ else {
               </a>
             </th>
             <td><?=$prfx?><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
-						<? if($sitemap){?>
+						<? if($fl['sitemap']){?>
               <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
               <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
               <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
@@ -289,9 +284,12 @@ else {
 				}
 			} else {
 				?>
-        <tr>
-          <td colspan="10" align="center">
-            по вашему запросу ничего не найдено. <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+        <tr class="nofind">
+          <td colspan="10">
+            <div class="bg-warning">
+              по вашему запросу ничего не найдено.
+							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+            </div>
           </td>
         </tr>
 				<?

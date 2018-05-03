@@ -4,6 +4,7 @@ require('inc/common.php');
 $h1 = 'Отзывы';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'reviews';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -119,33 +120,29 @@ if(isset($_GET['red']))
 else
 {
 	$cur_page = (int)$_GET['page'] ?: 1;
-	$f_context = stripslashes($_SESSION['ss']['context']);
+	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($f_context!='')	$where .= " AND (	name LIKE '%{$f_context}%' OR
-																				text LIKE '%{$f_context}%' )";
+	if($fl['search']!='')	$where .= " AND (	name LIKE '%{$f_context}%' OR
+																				  text LIKE '%{$f_context}%' )";
 
 	$query = "SELECT * FROM {$prx}{$tbl} WHERE 1{$where}";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
-	$count_obj_on_page = 20; // кол-во объектов на странице
+	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort']) {
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= " ORDER BY {$f} {$t}";
+			break;
+		}
 	} else {
 		$query .= ' ORDER BY name';
 	}
-	$query .= ' LIMIT ' . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
-	//-----------------------------
-	//echo $query;
 
 	show_listview_btns('Добавить::Удалить');
 	ActiveFilters();
@@ -154,7 +151,6 @@ else
 
 	<?=pagination($count_page, $cur_page, true, 'padding:0 0 10px;')?>
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
     <table class="table-list">
       <thead>
       <tr>

@@ -4,7 +4,7 @@ require('inc/common.php');
 $h1 = 'Фотогелерея';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
-$navigate = '<span></span>Общий список';
+$navigate = '<span></span>' . $h;
 $tbl = 'gallery';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -38,11 +38,12 @@ if(isset($_GET['action']))
 			$rb = gtv('gallery_catalog','*',$id_catalog);
 			$url = getCatUrl($rb,false,'gallery_catalog','gallery');
 
-			$set = "id_catalog='{$id_catalog}',
-			        url='{$url}',
-							name='{$name}',
-							text=".($text?"'{$text}'":"NULL").",
-							status='{$status}'";
+			$set = "id_catalog = '{$id_catalog}',
+			        url = '{$url}',
+							name = '{$name}',
+							text = ".($text?"'{$text}'":"NULL").",
+							status = '{$status}',
+							`date` = '" . ($date ? formatDateTime($date) : date('Y-m-d')) . "'";
 			if(!$updateLink) $set .= ",link='{$link}'";
 
 			if(!$id = update($tbl,$set,$id))
@@ -71,27 +72,6 @@ if(isset($_GET['action']))
 		// ----------------- статус
 		case 'status':
 			update_flag($tbl,$_GET['action'],$id);
-			break;
-		// ----------------- сортировка
-		case 'sort':
-			header("Access-Control-Allow-Orgin: *");
-			header("Access-Control-Allow-Methods: *");
-			header("Content-Type: application/json");
-
-			$i = 1;
-			$errors = 0;
-			foreach ($_POST['item'] as $id){
-				if(!update($tbl, "`sort`={$i}", $id)){
-					$errors++;
-					continue;
-				}
-				$i++;
-			}
-			if(!$errors){
-				echo json_encode(array('status' => 'ok', 'message' => 'success update ' . sizeof($_POST['item']) . ' items'));
-			} else {
-				echo json_encode(array('status' => 'error', 'message' => 'произошла ошибка'));
-			}
 			break;
 		// ----------------- удаление одной записи
 		case 'del':
@@ -143,6 +123,11 @@ elseif(isset($_GET['red']))
         <td><?=input('text', 'link', $row['link'])?></td>
       </tr>
 			<?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
+      <tr>
+        <th><?=help('При добавлении/изменении объекта, если поле пустое,<br>дата формируется автоматически (присваивается текущая дата).<br>Дата служит для сортировки объектов в клиентской части сайта.')?></th>
+        <th>Дата добавления</th>
+        <td><?=input('date', 'date', isset($row['date']) ? date('d.m.Y', strtotime($row['date'])) : date('d.m.Y'))?></td>
+      </tr>
       <tr>
         <th></th>
         <th>Описание</th>
@@ -230,58 +215,37 @@ elseif(isset($_GET['view']))
 else {
 
 	$cur_page = (int)$_GET['page'] ?: 1;
-	$f_catalog = (int)@$_SESSION['ss']['gallery_catalog'];
-	$f_context = stripslashes($_SESSION['ss']['context']);
-	$show_filters = $f_catalog || $f_context;
+	$fl['catalog'] = (int)$_GET['fl']['gallery_catalog'];
+	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($f_catalog){
-		$ids = getIdChilds("SELECT * FROM {$prx}{$tbl}_catalog",$f_catalog,false);
+	if($fl['catalog']){
+		$ids = getIdChilds("SELECT * FROM {$prx}{$tbl}_catalog",$fl['catalog'],false);
 		$where .= " AND id_catalog IN ({$ids})";
 	}
-	if($f_context!='')	$where .= " AND (	name LIKE '%{$f_context}%' OR
-																				text LIKE '%{$f_context}%' )";
+	if($fl['search'] != '')	$where .= " AND (	name LIKE '%{$fl['search']}%' OR
+																				    text LIKE '%{$fl['search']}%' )";
 
 	$query = "SELECT * FROM {$prx}{$tbl} WHERE 1{$where}";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
-	$count_obj_on_page = 20; // кол-во объектов на странице
+	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort']) {
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
-	} else {
-		$query .= ' ORDER BY sort,id';
-	}
-	$query .= ' LIMIT ' . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
+
+	$query .= ' ORDER BY `date`,id LIMIT ' . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
 	//-----------------------------
 	//echo $query;
 
-	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+	show_listview_btns('Добавить::Удалить');
 	ActiveFilters();
 	?>
 
   <div class="clearfix"></div>
 
-  <style>
-    .panel-white {
-      margin-bottom: 20px;
-      -webkit-border-radius: 2px;
-      -moz-border-radius: 2px;
-      border-radius: 2px;
-      background: #d9d9d9;
-      padding: 15px;
-      color: #666666; }
-    .panel-white h4.heading { margin: 0;}
-  </style>
-
+  <? $show_filters = $fl['catalog'] || $fl['search']; ?>
   <div id="filters" class="panel-white">
     <h4 class="heading">Фильтры
       <a href="#"<?//=$show_filters?' class="active"':''?>>
@@ -292,11 +256,11 @@ else {
     <div class="fbody<?//=$show_filters?' active':''?>">
       <div class="form-group">
         <label>Рубрика <?=help('отображаются объекты выбранной рубрики<br>(вместе с объектами подчинённых рубрик)')?></label>
-				<?=dllTree("SELECT * FROM {$prx}{$tbl}_catalog ORDER BY sort,id",'onChange="RegSessionSort(REQUEST_URI,\'gallery_catalog=\'+this.value);return false;"',$f_catalog,array('remove'=>'-- все --'))?>
+				<?=dllTree("SELECT * FROM {$prx}{$tbl}_catalog ORDER BY sort,id",'onChange="changeURI({\'fl[gallery_catalog]\':this.value});return false;"',$fl['catalog'],array('null'=>'-- все --'))?>
       </div>
       <div class="form-group search">
         <label>Контекстный поиск</label><br>
-        <input class="form-control input-sm" type="text" value="<?=htmlspecialchars($f_context)?>">
+        <input class="form-control input-sm" type="text" value="<?=htmlspecialchars($fl['search'])?>">
         <button type="button" class="btn btn-danger btn-xs"><i class="fas fa-search"></i>найти</button>
       </div>
     </div>
@@ -304,18 +268,17 @@ else {
 
 	<?=pagination($count_page, $cur_page, true, 'padding:0 0 10px;')?>
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
     <table class="table-list">
       <thead>
       <tr>
         <th><input type="checkbox" name="check_del" id="check_del" /></th>
         <th>№</th>
-				<? if(!$_SESSION['ss']['sort'] && $f_catalog) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
-        <th style="text-align:center"><img src="img/image.png" title="Фото" /></th>
-        <th width="<?=$f_catalog?'30':'20'?>%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
-        <th width="<?=$f_catalog?'70':'40'?>%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link')?></th>
-				<? if(!$f_catalog) { ?><th width="40%">Рубрика</th><? }?>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
+				<th style="text-align:center"><img src="img/image.png" title="Фото" /></th>
+        <th width="<?=$fl['catalog']?'30':'20'?>%"><?=SortColumn('Название','name')?></th>
+        <th width="<?=$fl['catalog']?'70':'40'?>%"><?=SortColumn('Ссылка','link')?></th>
+				<? if(!$fl['catalog']) { ?><th width="40%">Рубрика</th><? }?>
+				<? if(!$fl['sort']) { ?><th nowrap><?=SortColumn('Дата','`date`')?> <?=help('с помощью даты можно изменить<br>порядок вывода объектов в клиентской части сайта')?></th><? }?>
+        <th nowrap><?=SortColumn('Статус','status')?></th>
         <th style="padding:0 30px;"></th>
       </tr>
       </thead>
@@ -331,8 +294,7 @@ else {
           <tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_catalog']?>">
             <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
             <th nowrap><?=$i++?></th>
-						<? if(!$_SESSION['ss']['sort'] && $f_catalog) { ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
-            <th style="padding:3px 5px;">
+						<th style="padding:3px 5px;">
 							<?
 							$src = '/uploads/no_photo.jpg';
 							$big_src = '/uploads/no_photo.jpg';
@@ -351,7 +313,7 @@ else {
 								?><?=$row['url']?><a href="<?=$row['url']?><?=$row['link']?>.jpg" class="clr-green" target="_blank"><?=$row['link']?></a>.jpg<?
 							}
             ?></td>
-						<? if(!$f_catalog){
+						<? if(!$fl['catalog']){
 							$tree = '';
 							if ($row['id_catalog']) {
 								$ids_catalog = getArrParents("SELECT id,id_parent FROM {$prx}gallery_catalog WHERE id='%s'", $row['id_catalog']);
@@ -365,6 +327,7 @@ else {
 							}
 							?><td nowrap><?=$tree?></td><?
 						} ?>
+						<? if(!$fl['sort']) { ?><th nowrap align="center"><small><?=date('d.m.Y', strtotime($row['date']))?></small></th><? }?>
             <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
             <th nowrap><?=btn_edit($id)?></th>
           </tr>

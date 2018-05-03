@@ -1,3 +1,4 @@
+// changeURI({'fl[sort][link]':'asc'});
 function changeURI(object, URI, returnNewURI)
 {
 	if(URI == undefined) {
@@ -10,12 +11,32 @@ function changeURI(object, URI, returnNewURI)
 
     // замена
     $.each(object, function(key, val) {
+      // индивидуальная обработка для сортировки
+			if(key == 'fl[sort]'){
+				// удаляем из QueryURI все сортировки
+        $.each(QueryURI, function(k, v) {
+        	if(strpos(k, 'fl[sort]') !== false){
+            delete QueryURI[k];
+					}
+        });
+				return true;
+			}
+    	var m = key.match(/fl\[sort\]\[([^\]]*)/);
+      if(m){
+        // удаляем из QueryURI все сортировки
+        $.each(QueryURI, function(k, v) {
+          if(strpos(k, 'fl[sort]') !== false){
+            delete QueryURI[k];
+          }
+        });
+      	key = 'fl[sort][' + m[1] + ']';
+			}
       QueryURI[key] = val;
     });
     // новый URL
     var i=0;
     $.each(QueryURI, function(key, val) {
-      if(val == null){
+      if(val == null || val == 'null'){
         delete QueryURI[key];
         return true;
       }
@@ -30,7 +51,8 @@ function changeURI(object, URI, returnNewURI)
     });
 	}
 
-  //console.log(newURI);
+  //console.log(NewURI);
+	//return false;
 
   if(returnNewURI == undefined){
   	top.document.location = NewURI;
@@ -41,7 +63,7 @@ function changeURI(object, URI, returnNewURI)
 
 function RegSessionSort(url,filter)
 {
-	toajax('inc/session_sort.php?'+filter+'&location='+url);
+  toajax('inc/session_sort.php?'+filter+'&location='+url);
 }
 
 function saveall($frm)

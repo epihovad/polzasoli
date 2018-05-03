@@ -2,8 +2,9 @@
 require('inc/common.php');
 
 $h1 = 'Страницы';
-$h = 'Общий список страниц';
+$h = 'Общий список';
 $title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'pages';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -255,47 +256,37 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else
 {
-	$cur_page = (int)$_GET['page'] ?: 1;
-	$sitemap = isset($_GET['fl']['sitemap']);
-
-	$navigate = '<span></span>Общий список страниц';
+	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
+	$fl['sort'] = $_GET['fl']['sort'];
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
-	if($sitemap)
+	if($fl['sitemap'])
 	{
 		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
 		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
 	}	else $query  = sprintf($query,'');
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort'])
-	{
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
-	}
-	else
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= " ORDER BY {$f} {$t}";
+		  break;
+    }
+  } else {
 		$query .= ' ORDER BY A.sort,A.id';
-	//-----------------------------
-	//echo $query;
+  }
 
-  show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+  show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	ActiveFilters();
 
-	SortColumn('Имя', 'asc', 'name');
-
-	if(!$sitemap){ ?>
+	if(!$fl['sitemap']){ ?>
     <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="changeURI({'fl[sitemap]':''});return false;">Sitemap поля</a></div>
   <? } ?>
 
   <div class="clearfix"></div>
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-  <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
   <table class="table-list">
     <thead>
       <tr>
@@ -304,84 +295,85 @@ else
 				<? if(!$_SESSION['ss']['sort']) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
         <th><img src="img/image.png" title="изображение" /></th>
         <th width="50%">Название<?//=ShowSortPole($script,$cur_pole,$cur_sort,'Название','name')?></th>
-        <? if($sitemap){?>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
+        <? if($fl['sitemap']){?>
+        <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
+        <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
+        <th nowrap><?=SortColumn('priority','S.priority')?></th>
         <? }?>
-        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Тип','type')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Глав. меню','is_main')?> <?=help('отображать объект в главном меню')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'В слайдер','is_slider')?> <?=help('отображать объект в слайдере<br>на главной странице')?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
+        <th width="50%"><?=SortColumn('Ссылка','link')?></th>
+        <th nowrap><?=SortColumn('Тип','type')?></th>
+        <th nowrap><?=SortColumn('Глав. меню','is_main')?> <?=help('отображать объект в главном меню')?></th>
+        <th nowrap><?=SortColumn('В слайдер','is_slider')?> <?=help('отображать объект в слайдере<br>на главной странице')?></th>
+        <th nowrap><?=SortColumn('Статус','status')?></th>
         <th style="padding:0 30px;"></th>
       </tr>
     </thead>
     <tbody>
-  <?
-	$mas = getTree($query);
-	if(sizeof($mas))
-	{
-		$i=1;
-		?><?
-		foreach($mas as $vetka)
-		{
-			$row = $vetka['row'];
-			$level = $vetka['level'];
-			
-			$id = $row['id'];
-			$locked = $row['locked'];
-			$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
-			$prfx = $prefix===NULL ? getPrefix($level) : str_repeat($prefix, $level);
-			$childs = getIdChilds("SELECT * FROM {$prx}{$tbl}", $id);
-			$has_childs = sizeof($childs) > 1;
-
-			?>
-			<tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_parent']?>" class="<?=$has_childs?' has-childs':''?>">
-				<th><? if(!$locked){ ?><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /><? }?></th>
-				<th nowrap><?=$i++?></th>
-				<? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
-        <th style="padding:3px 5px;">
-					<?
-					$src = '/uploads/no_photo.jpg';
-					$big_src = '/uploads/no_photo.jpg';
-					if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
-						$src = "/{$tbl}/20x20/{$id}.jpg";
-						$big_src = "/{$tbl}/{$id}.jpg";
-					}
-					?>
-          <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
-            <img src="<?=$src?>" align="absmiddle" style="max-height:20px" />
-          </a>
-        </th>
-				<td><?=$prfx?><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
-				<? if($sitemap){?>
-          <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
-          <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
-          <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
-				<? }?>
-				<td><?=$row['type']=='page'?'/':''?><a href="<?=$link?>" class="clr-green" target="_blank"><?=$row['link']?></a><?=$row['type']=='page'?'.htm':''?></td>
-				<th><?=$row['type']=='page'?'страница':'ссылка'?></th>
-				<th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
-        <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
-				<th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
-				<th nowrap><?=btn_edit($id,$locked)?></th>
-			</tr>
-			<?
-		}
-	}
-	else
-	{
-		?>
-    <tr>
-      <td colspan="10" align="center">
-      по вашему запросу ничего не найдено. <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-      </td>
-    </tr>
     <?
-	}
-	?>
-  </tbody>
+    $mas = getTree($query);
+    if(sizeof($mas))
+    {
+      $i=1;
+      ?><?
+      foreach($mas as $vetka)
+      {
+        $row = $vetka['row'];
+        $level = $vetka['level'];
+
+        $id = $row['id'];
+        $locked = $row['locked'];
+        $link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
+        $prfx = $prefix===NULL ? getPrefix($level) : str_repeat($prefix, $level);
+        $childs = getIdChilds("SELECT * FROM {$prx}{$tbl}", $id);
+        $has_childs = sizeof($childs) > 1;
+
+        ?>
+        <tr id="item-<?=$id?>" oid="<?=$id?>" par="<?=$row['id_parent']?>" class="<?=$has_childs?' has-childs':''?>">
+          <th><? if(!$locked){ ?><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>" /><? }?></th>
+          <th nowrap><?=$i++?></th>
+          <? if(!$_SESSION['ss']['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
+          <th style="padding:3px 5px;">
+            <?
+            $src = '/uploads/no_photo.jpg';
+            $big_src = '/uploads/no_photo.jpg';
+            if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
+              $src = "/{$tbl}/20x20/{$id}.jpg";
+              $big_src = "/{$tbl}/{$id}.jpg";
+            }
+            ?>
+            <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
+              <img src="<?=$src?>" align="absmiddle" style="max-height:20px" />
+            </a>
+          </th>
+          <td><?=$prfx?><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+          <? if($fl['sitemap']){?>
+            <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+            <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+            <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
+          <? }?>
+          <td><?=$row['type']=='page'?'/':''?><a href="<?=$link?>" class="clr-green" target="_blank"><?=$row['link']?></a><?=$row['type']=='page'?'.htm':''?></td>
+          <th><?=$row['type']=='page'?'страница':'ссылка'?></th>
+          <th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
+          <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
+          <th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
+          <th nowrap><?=btn_edit($id,$locked)?></th>
+        </tr>
+        <?
+      }
+    } else {
+      ?>
+      <tr class="nofind">
+        <td colspan="10">
+          <div class="bg-warning">
+            по вашему запросу ничего не найдено.
+            <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+          </div>
+        </td>
+      </tr>
+      <?
+    }
+    ?>
+    </tbody>
   </table>
   </form>
   <?

@@ -4,6 +4,7 @@ require('inc/common.php');
 $h1 = 'Тип посетителей';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'tickets_who';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -88,9 +89,7 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else
 {
-	$navigate = '<span></span>Общий список';
-
-	$query = "SELECT * FROM {$prx}{$tbl} ORDER BY name";
+  $query = "SELECT * FROM {$prx}{$tbl} ORDER BY name";
 
 	ob_start();
 
@@ -100,52 +99,51 @@ else
   <div class="clearfix"></div>
 
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
-    <table class="table-list">
-      <thead>
-      <tr>
-        <th><input type="checkbox" name="check_del" id="check_del" /></th>
-        <th>№</th>
-        <th width="100%">Тип</th>
-        <th nowrap>Статус</th>
-        <th style="padding:0 30px;"></th>
-      </tr>
-      </thead>
-      <tbody>
-			<?
-			$res = sql($query);
-			if(mysqli_num_rows($res))
-			{
-				?><?
-				$i=1;
-				while($row = mysqli_fetch_assoc($res))
-				{
-					$id = $row['id'];
-					?>
-          <tr id="item-<?=$id?>">
-            <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
-            <th nowrap><?=$i++?></th>
-            <td><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
-            <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
-            <th nowrap><?=btn_edit($id)?></th>
-          </tr>
-					<?
-				}
-			} else {
-				?>
-        <tr class="nofind">
-          <td colspan="10">
-            <div class="bg-warning">
-              по вашему запросу ничего не найдено.
-							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-            </div>
-          </td>
+  <table class="table-list">
+    <thead>
+    <tr>
+      <th><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th>№</th>
+      <th width="100%">Тип</th>
+      <th nowrap>Статус</th>
+      <th style="padding:0 30px;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?
+    $res = sql($query);
+    if(mysqli_num_rows($res))
+    {
+      ?><?
+      $i=1;
+      while($row = mysqli_fetch_assoc($res))
+      {
+        $id = $row['id'];
+        ?>
+        <tr id="item-<?=$id?>">
+          <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
+          <th nowrap><?=$i++?></th>
+          <td><a href="?red=<?=$id?>" class="link1"><?=$row['name']?></a></td>
+          <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
+          <th nowrap><?=btn_edit($id)?></th>
         </tr>
-				<?
-			}
-			?>
-      </tbody>
-    </table>
+        <?
+      }
+    } else {
+      ?>
+      <tr class="nofind">
+        <td colspan="10">
+          <div class="bg-warning">
+            по вашему запросу ничего не найдено.
+            <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+          </div>
+        </td>
+      </tr>
+      <?
+    }
+    ?>
+    </tbody>
+  </table>
   </form>
 	<?
 	$content = arr($h, ob_get_clean());
