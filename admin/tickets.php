@@ -177,21 +177,36 @@ else
 {
 	$cur_page = (int)$_GET['page'] ?: 1;
 	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
+	$fl['tickets_type'] = $_GET['fl']['tickets_type'];
+	$fl['tickets_who'] = $_GET['fl']['tickets_who'];
 	$fl['sort'] = $_GET['fl']['sort'];
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($fl['search']!='')	$where .= " AND (	name LIKE '%{$fl['search']}%' OR
-																				  text LIKE '%{$fl['search']}%' )";
+	if($fl['tickets_type']){
+	  $where .= "\r\nAND CONCAT(',',ids_type,',') LIKE '%,{$fl['tickets_type']},%'";
+	}
+	if($fl['tickets_who']){
+	  $where .= "\r\nAND CONCAT(',',ids_who,',') LIKE '%,{$fl['tickets_who']},%'";
+	}
+	if($fl['search'] != ''){
+	  $sf = array('name','text','price','old_price','validity','age','h1','title','keywords','description');
+	  $where .= "\r\n AND (";
+	  foreach ($sf as $field){
+	    $where .= "\r\n`{$field}` LIKE '%{$fl['search']}%' OR ";
+    }
+		$where .= "\r\n1=1)";
+	}
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
-	if($fl['sitemap'])
-	{
+	if($fl['sitemap']){
 		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
-		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
-	}	else $query  = sprintf($query,'');
+		$query .= "\r\nLEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
+	}	else {
+	  $query  = sprintf($query,'');
+	}
 
-	$query .= " WHERE 1{$where}";
+	$query .= "\r\nWHERE 1{$where}";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
@@ -202,12 +217,13 @@ else
 	// проверяем текущую сортировку и формируем соответствующий запрос
 	if($fl['sort']){
 		foreach ($fl['sort'] as $f => $t){
-			$query .= " ORDER BY {$f} {$t}";
+			$query .= "\r\nORDER BY {$f} {$t}";
 			break;
 		}
 	} else {
-		$query .= ' ORDER BY A.name';
+		$query .= "\r\nORDER BY A.name";
 	}
+  //pre($query);
 
 	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	ActiveFilters();
@@ -217,6 +233,31 @@ else
 	<? } ?>
 
   <div class="clearfix"></div>
+
+	<? //$show_filters = $fl['catalog'] || $fl['search']; ?>
+  <div id="filters" class="panel-white">
+    <h4 class="heading">Фильтры
+      <a href="#"<?//=$show_filters?' class="active"':''?>>
+        <i class="fas fa-eye" title="показать фильтры">
+        </i><i class="fas fa-eye-slash" title="скрыть фильтры"></i>
+      </a>
+    </h4>
+    <div class="fbody<?//=$show_filters?' active':''?>">
+      <div class="form-group">
+        <label>Тип абонемента</label>
+				<?=dll("SELECT * FROM {$prx}tickets_type ORDER BY name",'onChange="changeURI({\'fl[tickets_type]\':this.value});return false;"',$fl['tickets_type'],array('null'=>'-- все --'))?>
+      </div>
+      <div class="form-group">
+        <label>Тип посетителей</label>
+				<?=dll("SELECT * FROM {$prx}tickets_who ORDER BY name",'onChange="changeURI({\'fl[tickets_who]\':this.value});return false;"',$fl['tickets_who'],array('null'=>'-- все --'))?>
+      </div>
+      <div class="form-group search">
+        <label>Контекстный поиск</label><br>
+        <input class="form-control input-sm" type="text" value="<?=htmlspecialchars($fl['search'])?>">
+        <button type="button" class="btn btn-danger btn-xs"><i class="fas fa-search"></i>найти</button>
+      </div>
+    </div>
+  </div>
 
 	<?=pagination($count_page, $cur_page, true, 'padding:0 0 10px;')?>
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
@@ -273,9 +314,9 @@ else
           <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
           <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
 				<? }?>
-        <th nowrap><?=$row['price'] . ($row['old_price'] ? ' (<s>'.$row['old_price'].'</s>)' : '')?></th>
-        <th nowrap><?=$row['validity']?></th>
-        <th nowrap><?=$row['age']?></th>
+        <th class="sp" nowrap><?=$row['price'] . ($row['old_price'] ? ' (<s>'.$row['old_price'].'</s>)' : '')?></th>
+        <th class="sp" nowrap><?=$row['validity']?></th>
+        <th class="sp" nowrap><?=$row['age']?></th>
         <th><?
           $q = sql("SELECT * FROM {$prx}tickets_type where id IN (" . ($row['ids_type'] ?: '0' ) . ")");
           while ($arr = @mysqli_fetch_assoc($q)){

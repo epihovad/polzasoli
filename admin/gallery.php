@@ -221,12 +221,18 @@ else {
 	$where = '';
 	if($fl['catalog']){
 		$ids = getIdChilds("SELECT * FROM {$prx}{$tbl}_catalog",$fl['catalog'],false);
-		$where .= " AND id_catalog IN ({$ids})";
+		$where .= "\r\nAND id_catalog IN ({$ids})";
 	}
-	if($fl['search'] != '')	$where .= " AND (	name LIKE '%{$fl['search']}%' OR
-																				    text LIKE '%{$fl['search']}%' )";
+	if($fl['search'] != ''){
+		$sf = array('name','text','url','link');
+		$where .= "\r\n AND (";
+		foreach ($sf as $field){
+			$where .= "\r\n`{$field}` LIKE '%{$fl['search']}%' OR ";
+		}
+		$where .= "\r\n1=1)";
+	}
 
-	$query = "SELECT * FROM {$prx}{$tbl} WHERE 1{$where}";
+	$query = "SELECT * FROM {$prx}{$tbl}\r\nWHERE 1{$where}";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
@@ -235,9 +241,9 @@ else {
 
 	ob_start();
 
-	$query .= ' ORDER BY `date`,id LIMIT ' . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
+	$query .= "\r\nORDER BY `date`,id LIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
 	//-----------------------------
-	//echo $query;
+	//pre($query);
 
 	show_listview_btns('Добавить::Удалить');
 	ActiveFilters();
@@ -276,7 +282,7 @@ else {
 				<th style="text-align:center"><img src="img/image.png" title="Фото" /></th>
         <th width="<?=$fl['catalog']?'30':'20'?>%"><?=SortColumn('Название','name')?></th>
         <th width="<?=$fl['catalog']?'70':'40'?>%"><?=SortColumn('Ссылка','link')?></th>
-				<? if(!$fl['catalog']) { ?><th width="40%">Рубрика</th><? }?>
+				<th width="40%">Рубрика</th>
 				<? if(!$fl['sort']) { ?><th nowrap><?=SortColumn('Дата','`date`')?> <?=help('с помощью даты можно изменить<br>порядок вывода объектов в клиентской части сайта')?></th><? }?>
         <th nowrap><?=SortColumn('Статус','status')?></th>
         <th style="padding:0 30px;"></th>
@@ -308,25 +314,23 @@ else {
               </a>
             </th>
             <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
-            <td><?
+            <td class="sp"><?
               if($row['url'] and $row['link']){
 								?><?=$row['url']?><a href="<?=$row['url']?><?=$row['link']?>.jpg" class="clr-green" target="_blank"><?=$row['link']?></a>.jpg<?
 							}
-            ?></td>
-						<? if(!$fl['catalog']){
-							$tree = '';
-							if ($row['id_catalog']) {
-								$ids_catalog = getArrParents("SELECT id,id_parent FROM {$prx}gallery_catalog WHERE id='%s'", $row['id_catalog']);
-								$tree = '';
-								foreach ($ids_catalog as $id_catalog) {
-								  $rb = gtv('gallery_catalog', '*', $id_catalog);
-									ob_start();
-									?><a href="<?=$rb['url'].$rb['link']?>/" class="clr-green" target="_blank"><?=$rb['name']?></a><?
-									$tree .= ($tree ? ' <i class="fas fa-angle-double-right" style="color:#929292"></i> ' : '') . ob_get_clean();
-								}
-							}
-							?><td nowrap><?=$tree?></td><?
-						} ?>
+            ?></td><?
+            $tree = '';
+            if ($row['id_catalog']) {
+              $ids_catalog = getArrParents("SELECT id,id_parent FROM {$prx}gallery_catalog WHERE id='%s'", $row['id_catalog']);
+              $tree = '';
+              foreach ($ids_catalog as $id_catalog) {
+                $rb = gtv('gallery_catalog', '*', $id_catalog);
+                ob_start();
+                ?><a href="<?=$rb['url'].$rb['link']?>/" class="clr-green" target="_blank"><?=$rb['name']?></a><?
+                $tree .= ($tree ? ' <i class="fas fa-angle-double-right" style="color:#929292"></i> ' : '') . ob_get_clean();
+              }
+            }
+            ?><td nowrap><?=$tree?></td>
 						<? if(!$fl['sort']) { ?><th nowrap align="center"><small><?=date('d.m.Y', strtotime($row['date']))?></small></th><? }?>
             <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
             <th nowrap><?=btn_edit($id)?></th>

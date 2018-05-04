@@ -185,21 +185,22 @@ else {
 	$fl['sort'] = $_GET['fl']['sort'];
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
-	if($fl['sitemap'])
-	{
+	if($fl['sitemap']){
 		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
-		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
-	}	else $query  = sprintf($query,'');
+		$query .= "\r\nLEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
+	}	else{
+	  $query  = sprintf($query,'');
+	}
 
 	ob_start();
 	// проверяем текущую сортировку и формируем соответствующий запрос
 	if($fl['sort']){
 		foreach ($fl['sort'] as $f => $t){
-			$query .= " ORDER BY {$f} {$t}";
+			$query .= "\r\nORDER BY {$f} {$t}";
 			break;
 		}
 	} else {
-		$query .= ' ORDER BY A.sort,A.id';
+		$query .= "\r\nORDER BY A.sort,A.id";
 	}
 
 	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');

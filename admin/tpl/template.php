@@ -37,7 +37,6 @@
 
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="js/spec.js"></script>
-  <script type="text/javascript" src="js/ready.js"></script>
 
   <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
   <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
@@ -50,11 +49,11 @@
   <script src="/js/blueimp-gallery/blueimp-gallery.js"></script>
   <script src="/js/blueimp-gallery/blueimp-gallery-indicator.js"></script>
 
-	<? if ($fl_search) { ?>
+	<? if ($fl['search']) { ?>
     <script type="text/javascript" src="/js/jquery.highlight.js"></script>
     <script>
       $(function () {
-        $('.sp').highlight('<?=$fl_search?>')
+        $('.sp').highlight('<?=$fl['search']?>')
       });
     </script>
 	<? } ?>
