@@ -179,6 +179,7 @@ else
 	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
 	$fl['tickets_type'] = $_GET['fl']['tickets_type'];
 	$fl['tickets_who'] = $_GET['fl']['tickets_who'];
+	$fl['disease'] = $_GET['fl']['disease'];
 	$fl['sort'] = $_GET['fl']['sort'];
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 
@@ -189,13 +190,16 @@ else
 	if($fl['tickets_who']){
 	  $where .= "\r\nAND CONCAT(',',ids_who,',') LIKE '%,{$fl['tickets_who']},%'";
 	}
+	if($fl['disease']){
+		$where .= "\r\nAND CONCAT(',',ids_disease,',') LIKE '%,{$fl['disease']},%'";
+	}
 	if($fl['search'] != ''){
 	  $sf = array('name','text','price','old_price','validity','age','h1','title','keywords','description');
-	  $where .= "\r\n AND (";
-	  foreach ($sf as $field){
-	    $where .= "\r\n`{$field}` LIKE '%{$fl['search']}%' OR ";
-    }
-		$where .= "\r\n1=1)";
+		$w = '';
+		foreach ($sf as $field){
+			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
+		}
+		$where .= "\r\n AND ({$w}\r\n)";
 	}
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
@@ -213,8 +217,7 @@ else
 	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
-	ob_start();
-	// проверяем текущую сортировку и формируем соответствующий запрос
+  // проверяем текущую сортировку и формируем соответствующий запрос
 	if($fl['sort']){
 		foreach ($fl['sort'] as $f => $t){
 			$query .= "\r\nORDER BY {$f} {$t}";
@@ -223,6 +226,10 @@ else
 	} else {
 		$query .= "\r\nORDER BY A.name";
 	}
+
+	$query .= "\r\nLIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
+
+	ob_start();
   //pre($query);
 
 	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
@@ -250,6 +257,10 @@ else
       <div class="form-group">
         <label>Тип посетителей</label>
 				<?=dll("SELECT * FROM {$prx}tickets_who ORDER BY name",'onChange="changeURI({\'fl[tickets_who]\':this.value});return false;"',$fl['tickets_who'],array('null'=>'-- все --'))?>
+      </div>
+      <div class="form-group">
+        <label>Спр-к болезней</label>
+				<?=dll("SELECT * FROM {$prx}disease ORDER BY name",'onChange="changeURI({\'fl[disease]\':this.value});return false;"',$fl['disease'],array('null'=>'-- все --'))?>
       </div>
       <div class="form-group search">
         <label>Контекстный поиск</label><br>
@@ -328,7 +339,7 @@ else
 					while ($arr = @mysqli_fetch_assoc($q)){
 						?><div><small><?=$arr['name']?>;</small></div><?
 					}
-					?></th>
+        ?></th>
         <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
         <th nowrap><?=btn_edit($id)?></th>
 			</tr>

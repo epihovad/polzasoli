@@ -225,11 +225,11 @@ else {
 	}
 	if($fl['search'] != ''){
 		$sf = array('name','text','url','link');
-		$where .= "\r\n AND (";
+		$w = '';
 		foreach ($sf as $field){
-			$where .= "\r\n`{$field}` LIKE '%{$fl['search']}%' OR ";
+			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
 		}
-		$where .= "\r\n1=1)";
+		$where .= "\r\n AND ({$w}\r\n)";
 	}
 
 	$query = "SELECT * FROM {$prx}{$tbl}\r\nWHERE 1{$where}";
@@ -239,10 +239,9 @@ else {
 	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
-	ob_start();
+  $query .= "\r\nORDER BY `date`,id LIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
 
-	$query .= "\r\nORDER BY `date`,id LIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
-	//-----------------------------
+  ob_start();
 	//pre($query);
 
 	show_listview_btns('Добавить::Удалить');

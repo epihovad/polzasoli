@@ -4,6 +4,7 @@ require('inc/common.php');
 $h1 = 'Статьи';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'articles';
 $menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
@@ -143,109 +144,140 @@ if(isset($_GET['red']))
 else
 {
 	$cur_page = (int)$_GET['page'] ?: 1;
-	$sitemap = isset($_SESSION['ss']['sitemap']);
-	$f_context = stripslashes($_SESSION['ss']['context']);
+	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
+	$fl['sort'] = $_GET['fl']['sort'];
+	$fl['disease'] = $_GET['fl']['disease'];
+	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($f_context!='')	$where .= " AND (	name LIKE '%{$f_context}%' OR
-																				text LIKE '%{$f_context}%' )";
+	if($fl['disease']){
+		$where .= "\r\nAND CONCAT(',',ids_disease,',') LIKE '%,{$fl['disease']},%'";
+	}
+	if($fl['search'] != ''){
+		$sf = array('name','link','preview','text','title','keywords','description');
+		$w = '';
+		foreach ($sf as $field){
+			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
+		}
+		$where .= "\r\n AND ({$w}\r\n)";
+	}
 
 	$query = "SELECT A.*%s FROM {$prx}{$tbl} A";
-	if($sitemap)
-	{
+	if($fl['sitemap']){
 		$query  = sprintf($query,',S.lastmod,S.changefreq,S.priority');
-		$query .= " LEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
-	}	else $query  = sprintf($query,'');
+		$query .= "\r\nLEFT JOIN (SELECT * FROM {$prx}sitemap WHERE `type`='{$tbl}') S ON A.id=S.id_obj";
+	}	else{
+		$query  = sprintf($query,'');
+	}
 
-	$query .= " WHERE 1{$where}";
+	$query .= "\r\nWHERE 1{$where}";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
 	$count_obj_on_page = 30; // кол-во объектов на странице
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
-	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос
-	if($_SESSION['ss']['sort']) {
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
-		$query .= " ORDER BY {$cur_pole} ".($cur_sort=='up'?'DESC':'ASC');
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= "\r\nORDER BY {$f} {$t}";
+			break;
+		}
 	} else {
-		$query .= ' ORDER BY A.id DESC';
+		$query .= "\r\nORDER BY A.name";
 	}
-	$query .= ' LIMIT ' . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
-	//-----------------------------
-	//echo $query;
 
-	show_listview_btns(($sitemap ? 'Сохранить::' : '') . 'Добавить::Удалить');
+	$query .= "\r\nLIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
+
+	ob_start();
+
+	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	ActiveFilters();
 
-	if(!$sitemap){ ?>
-    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="RegSessionSort(REQUEST_URI,'sitemap');return false;">Sitemap поля</a></div>
+	if(!$fl['sitemap']){ ?>
+    <div style="padding:10px 0 10px 0;">Отобразить <a href="" class="clr-orange" onclick="changeURI({'fl[sitemap]':''});return false;">Sitemap поля</a></div>
 	<? } ?>
 
   <div class="clearfix"></div>
 
+	<? //$show_filters = $fl['catalog'] || $fl['search']; ?>
+  <div id="filters" class="panel-white">
+    <h4 class="heading">Фильтры
+      <a href="#"<?//=$show_filters?' class="active"':''?>>
+        <i class="fas fa-eye" title="показать фильтры">
+        </i><i class="fas fa-eye-slash" title="скрыть фильтры"></i>
+      </a>
+    </h4>
+    <div class="fbody<?//=$show_filters?' active':''?>">
+      <div class="form-group">
+        <label>Спр-к болезней</label>
+				<?=dll("SELECT * FROM {$prx}disease ORDER BY name",'onChange="changeURI({\'fl[disease]\':this.value});return false;"',$fl['disease'],array('null'=>'-- все --'))?>
+      </div>
+      <div class="form-group search">
+        <label>Контекстный поиск</label><br>
+        <input class="form-control input-sm" type="text" value="<?=htmlspecialchars($fl['search'])?>">
+        <button type="button" class="btn btn-danger btn-xs"><i class="fas fa-search"></i>найти</button>
+      </div>
+    </div>
+  </div>
+
 	<?=pagination($count_page, $cur_page, true, 'padding:0 0 10px;')?>
   <form action="?action=multidel" name="red_frm" method="post" target="ajax">
-    <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
-    <table class="table-list">
-      <thead>
-      <tr>
-        <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
-        <th style="width:1%">№</th>
-        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Название','A.name')?></th>
-				<? if($sitemap){?>
-          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'lastmod','S.lastmod')?></th>
-          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'changefreq','S.changefreq')?></th>
-          <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'priority','S.priority')?></th>
-				<? }?>
-        <th nowrap width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Ссылка','link');?></th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status');?></th>
-        <th style="padding:0 30px;"></th>
-      </tr>
-      </thead>
-      <tbody>
-			<?
-			$res = sql($query);
-			if(mysqli_num_rows($res)){
-				$i=1;
-				while($row = mysqli_fetch_assoc($res))
-				{
-					$id = $row['id'];
-					?>
-          <tr id="item-<?=$row['id']?>">
-            <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
-            <th nowrap><?=$i++?></th>
-            <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
-						<? if($sitemap){?>
-              <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
-              <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
-              <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
-						<? }?>
-            <td>/articles/<a href="/articles/<?=$row['link']?>.htm" class="clr-green" target="_blank"><?=$row['link']?></a>.htm</td>
-            <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
-            <th nowrap><?=btn_edit($id)?></th>
-          </tr>
-					<?
-				}
-			} else {
-				?>
-        <tr class="nofind">
-          <td colspan="10">
-            <div class="bg-warning">
-              по вашему запросу ничего не найдено.
-							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-            </div>
-          </td>
+  <table class="table-list">
+    <thead>
+    <tr>
+      <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th style="width:1%">№</th>
+      <th width="50%"><?=SortColumn('Название','A.name')?></th>
+      <? if($sitemap){?>
+        <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
+        <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
+        <th nowrap><?=SortColumn('priority','S.priority')?></th>
+      <? }?>
+      <th nowrap width="50%"><?=SortColumn('Ссылка','link');?></th>
+      <th nowrap><?=SortColumn('Статус','status');?></th>
+      <th style="padding:0 30px;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?
+    $res = sql($query);
+    if(mysqli_num_rows($res)){
+      $i=1;
+      while($row = mysqli_fetch_assoc($res))
+      {
+        $id = $row['id'];
+        ?>
+        <tr id="item-<?=$row['id']?>">
+          <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
+          <th nowrap><?=$i++?></th>
+          <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+          <? if($sitemap){?>
+            <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+            <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+            <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
+          <? }?>
+          <td class="sp">/articles/<a href="/articles/<?=$row['link']?>.htm" class="clr-green" target="_blank"><?=$row['link']?></a>.htm</td>
+          <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
+          <th nowrap><?=btn_edit($id)?></th>
         </tr>
-				<?
-			}
-			?>
-      </tbody>
-    </table>
+        <?
+      }
+    } else {
+      ?>
+      <tr class="nofind">
+        <td colspan="10">
+          <div class="bg-warning">
+            по вашему запросу ничего не найдено.
+            <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+          </div>
+        </td>
+      </tr>
+      <?
+    }
+    ?>
+    </tbody>
+  </table>
   </form>
 	<?=pagination($count_page, $cur_page, true, 'padding:10px 0 0;')?>
 	<?

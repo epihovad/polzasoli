@@ -112,18 +112,21 @@ elseif(isset($_GET['red']))
 // -----------------ПРОСМОТР-------------------
 else
 {
+	$fl['sort'] = $_GET['fl']['sort'];
+
 	$query = "SELECT * FROM {$prx}{$tbl}";
 
-	ob_start();
 	// проверяем текущую сортировку и формируем соответствующий запрос
 	if($fl['sort']){
 		foreach ($fl['sort'] as $f => $t){
-			$query .= " ORDER BY {$f} {$t}";
+			$query .= "\r\nORDER BY {$f} {$t}";
 			break;
 		}
 	} else {
-		$query .= ' ORDER BY sort,id';
+		$query .= "\r\nORDER BY sort,id";
 	}
+
+	ob_start();
 
 	show_listview_btns('Добавить::Удалить');
 	ActiveFilters();
@@ -138,9 +141,9 @@ else
         <th><input type="checkbox" name="check_del" id="check_del" /></th>
         <th>№</th>
 	      <? if(!$fl['sort']){ ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода элементов в клиентской части сайта')?></th><? }?>
-        <th width="50%"><?=ShowSortPole($script,$cur_pole,$cur_sort,'Вопрос','question')?></th>
-        <th width="50%">Ответ</th>
-        <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Статус','status')?></th>
+        <th width="50%"><?=SortColumn('Вопрос','question')?></th>
+        <th width="50%"><?=SortColumn('Ответ','answer')?></th>
+        <th nowrap><?=SortColumn('Статус','status')?></th>
         <th style="padding:0 30px;"></th>
       </tr>
       </thead>

@@ -527,6 +527,7 @@ $filters = array(
   'reviews' => 'выбор отзывов по объекту',
   'tickets_type' => 'выбор абонементов по типу',
 	'tickets_who' => 'выбор абонементов по типу посетителей',
+	'disease' => 'выбор объектов по болезни',
 );
 
 function ActiveFilters()

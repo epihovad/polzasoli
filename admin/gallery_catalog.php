@@ -192,7 +192,6 @@ else {
 	  $query  = sprintf($query,'');
 	}
 
-	ob_start();
 	// проверяем текущую сортировку и формируем соответствующий запрос
 	if($fl['sort']){
 		foreach ($fl['sort'] as $f => $t){
@@ -202,6 +201,8 @@ else {
 	} else {
 		$query .= "\r\nORDER BY A.sort,A.id";
 	}
+
+	ob_start();
 
 	show_listview_btns(($fl['sitemap'] ? 'Сохранить::' : '') . 'Добавить::Удалить');
 	ActiveFilters();
