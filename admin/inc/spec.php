@@ -1,23 +1,30 @@
 <?
 function menu()
 {
-  global $prx, $menu;
+  global $prx, $tbl;
+
+  if(strpos($tbl,'.php') === false){
+    $tbl .= '.php';
+  }
+	$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
   $tree = getTree("SELECT * FROM {$prx}am ORDER BY sort,id");
-	if (sizeof($tree)) {
-		?><div id="menu"><?
-		$i = 0;
-		$old_level = null;
-	  foreach ($tree as $vetka) {
-		$item = $vetka['row'];
-		$level = $vetka['level'];
-		$id = $item['id'];
+	if (!sizeof($tree)) {
+	  return;
+	}
+	?><div id="menu"><?
+  $i = 0;
+  $old_level = null;
+  foreach ($tree as $vetka) {
+    $item = $vetka['row'];
+    $level = $vetka['level'];
+    $id = $item['id'];
 
-		//$parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
-		$childs = getIdChilds("SELECT * FROM {$prx}am", $id);
-		$siblings = getArr("SELECT id FROM {$prx}am WHERE id_parent = '{$item['id_parent']}'");
+    //$parents = getArrParents("SELECT id,id_parent FROM {$prx}am WHERE id='%s'", $id);
+    $childs = getIdChilds("SELECT * FROM {$prx}am", $id);
+    $siblings = getArr("SELECT id FROM {$prx}am WHERE id_parent = '{$item['id_parent']}'");
 
-		$has_childs = sizeof($childs) > 1;
+    $has_childs = sizeof($childs) > 1;
 
     if(!$i || $level > $old_level) {
       $display = !$level ? 'block' : (in_array($menu['id'], $siblings) !== false ? 'block' : 'none');
@@ -30,19 +37,18 @@ function menu()
       if($has_childs) $class .= ' has-sub';
       if(in_array($menu['id'], $childs) !== false) $class .= ' highlight active';
 
-      ?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link'].'.php'?>"><i class="<?=$item['im']?>"></i><span><?=$item['name']?></span></a><?
+      ?><li class="<?=$class?>"><a href="<?=$has_childs?'#':$item['link']?>"><i class="<?=$item['im']?>"></i><span><?=$item['name']?></span></a><?
     } else {
       $class = '';
       if($id == $menu['id']) $class .= ' select';
 
-      ?><li><a class="<?=$class?>" href="<?=$item['link']?>.php"><span><?=$item['name']?></span></a><?
+      ?><li><a class="<?=$class?>" href="<?=$item['link']?>"><span><?=$item['name']?></span></a><?
     }
 
-		$old_level = $level;
-		$i++;
+    $old_level = $level;
+    $i++;
 	}
-		?></li></ul></div><?
-	}
+	?></li></ul></div><?
 }
 
 function arr($head, $body, $custom = null)
@@ -573,5 +579,7 @@ function get_pic_name($prefix,$dir='')
 
 function showCK($name,$text,$toolBar='full',$width="100%",$rows=20)
 {
+	ob_start();
 	?><textarea name="<?=$name?>" toolbar="<?=$toolBar?>" rows="<?=$rows?>" style="width:<?=$width?>"><?=$text?></textarea><?
+  return ob_get_clean();
 }

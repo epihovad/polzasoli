@@ -6,7 +6,6 @@ $h = 'Общий список';
 $title .= ' :: ' . $h1;
 $navigate = '<span></span>' . $h;
 $tbl = 'reviews';
-$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // -------------------СОХРАНЕНИЕ----------------------
 if(isset($_GET['action']))
@@ -123,10 +122,16 @@ else
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($fl['search']!='')	$where .= " AND (	name LIKE '%{$f_context}%' OR
-																				  text LIKE '%{$f_context}%' )";
+	if($fl['search'] != ''){
+		$sf = array('name','text');
+		$w = '';
+		foreach ($sf as $field){
+			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
+		}
+		$where .= "\r\n AND ({$w}\r\n)";
+	}
 
-	$query = "SELECT * FROM {$prx}{$tbl} WHERE 1{$where}";
+	$query = "SELECT * FROM {$prx}{$tbl}\r\nWHERE 1{$where}";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
@@ -157,7 +162,7 @@ else
         <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
         <th style="width:1%">№</th>
         <th style="width:1%; text-align:center;"><img src="img/image.png" title="Фото" /></th>
-        <th><?=ShowSortPole($script,$cur_pole,$cur_sort,'Имя','name')?></th>
+        <th><?=SortColumn('Имя','name')?></th>
         <th width="50%">Отзыв</th>
         <th width="50%">Видео</th>
         <th nowrap>Статус</th>

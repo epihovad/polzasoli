@@ -6,7 +6,6 @@ $h = 'Общий список';
 $title .= ' :: ' . $h1;
 $navigate = '<span></span>' . $h;
 $tbl = 'subscribers';
-$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // ------------------- СОХРАНЕНИЕ ------------------------
 if(isset($_GET['action']))
@@ -162,7 +161,8 @@ else
 	//pre($query);
 
 	$btns = array(
-		'Остановить подписку' => array('js' => "SaveAll('?action=unsubscribe',1,1)", 'class' => 'warning', 'icon' => 'fas fa-stop-circle'),
+		'Экспорт' => array('js' => "alert('в разработке')", 'class' => 'default', 'icon' => 'far fa-file-excel'),
+	  'Остановить подписку' => array('js' => "SaveAll('?action=unsubscribe',1,1)", 'class' => 'warning', 'icon' => 'fas fa-stop-circle'),
 		'Включить подписку' => array('js' => "SaveAll('?action=unsubscribe&flag',1,1)", 'class' => 'success', 'icon' => 'far fa-play-circle'),
 		'В черный список' => array('js' => "SaveAll('?action=black',1,1)", 'class' => 'warning', 'icon' => 'fas fa-ban'),
 		'Удалить из черного списка' => array('js' => "SaveAll('?action=black&flag',1,1)", 'class' => 'success', 'icon' => 'fas fa-undo-alt'),
@@ -215,7 +215,7 @@ else
         $id = $row['id'];
         ?>
         <tr id="item-<?=$row['id']?>"<?=$row['unsubscribe_date']||$row['black']?' class="danger"':''?>>
-          <th><input type="checkbox" name="del[<?=$row['id']?>]" /></th>
+          <th><input type="checkbox" name="del[<?=$id?>]" /></th>
           <th nowrap><?=$i++?></th>
           <td nowrap class="sp"><a href="?red=<?=$id?>"><?=$row['email']?></a></td>
           <th nowrap><?=date('d.m.Y',strtotime($row['date']))?> <?=date('H:i',strtotime($row['date']))?></th>

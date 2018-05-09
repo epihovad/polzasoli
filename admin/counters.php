@@ -1,155 +1,157 @@
 <?
 require('inc/common.php');
 
-$rubric = "Счетчики";
-$tbl = "counters";
+$h1 = 'Счетчики';
+$h = 'Общий список';
+$title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
+$tbl = 'counters';
 
-// -------------------СОХРАНЕНИЕ----------------------
-if(isset($_GET["action"]))
+// ------------------- СОХРАНЕНИЕ ------------------------
+if(isset($_GET['action']))
 {
-	$id = @$_GET['id'] ? (int)@$_GET['id'] : 0;
-	
+	$id = (int)@$_GET['id'];
+
 	switch($_GET['action'])
 	{
 		// ----------------- сохранение
-		case "save":
+		case 'save':
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
 
-			$id = update($tbl,"html='{$html}',notes=".($notes?"'{$notes}'":'NULL').",status='{$status}'",$id);
+			if(!$name) jAlert('Укажите название');
 
-			?><script>top.location.href = "<?=$script?>?id=<?=$id?>";</script><?
+			$set = "name = '{$name}',
+			        html = ".($html ? "'{$html}'" : 'NULL').",
+			        note = ".($note ? "'{$note}'" : 'NULL').",
+			        status = '{$status}'";
+
+			if(!$id = update($tbl, $set, $id))
+				jAlert('Во время сохранения данных произошла ошибка.');
+
+			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
 			break;
-		// ----------------- обновление статуса
-		case "status":
-			update_flag($tbl,'status',$id);
-		break;
-		// ----------------- сортировка вверх
-		case "moveup":
-			sort_moveup($tbl,$id);
-			?><script>top.location.href = "<?=$script?>?id=<?=$id?>";</script><?
-		break;
-		// ----------------- сортировка вниз
-		case "movedown":
-			sort_movedown($tbl,$id);
-			?><script>top.location.href = "<?=$script?>?id=<?=$id?>";</script><?
-		break;
 		// ----------------- удаление одной записи
-		case "del":
+		case 'del':
 			update($tbl,'',$id);
-			?><script>top.location.href = "<?=$script?>";</script><?
-		break;
+			?><script>top.location.href = '<?=$script?>'</script><?
+			break;
 		// ----------------- удаление нескольких записей
-		case "multidel":
-			foreach($_POST['del'] as $k=>$v)
-				update($tbl,'',$k);
-			?><script>top.location.href = "<?=$script?>";</script><?
-		break;
+		case 'multidel':
+			foreach($_POST['del'] as $id => $none)
+				update($tbl, '', $id);
+			?><script>top.location.href = '<?=$script?>'</script><?
+			break;
 	}
 	exit;
 }
-// ------------------РЕДАКТИРОВАНИЕ--------------------
-if(isset($_GET["red"]))
+// ------------------ РЕДАКТИРОВАНИЕ --------------------
+elseif(isset($_GET['red']))
 {
-	$id = @$_GET['red'] ? (int)@$_GET['red'] : 0;
-	
-	$rubric .= " &raquo; ".($id ? "Редактирование" : "Добавление");
-	$page_title .= " :: ".$rubric;
-	
-	$row = getRow("SELECT * FROM {$prx}{$tbl} WHERE id={$id}");
-	
+	$row = gtv($tbl,'*',(int)$_GET['red']);
+	$id = $row['id'];
+
+	$title .= ' :: ' . ($id ? $row['name'] . ' (редактирование)' : 'Добавление');
+	$h = $id ? $row['name'] . ' <small>(редактирование)</small>' : 'Добавление';
+	$navigate = '<span></span><a href="' . $script . '">' . $h1 . '</a><span></span>' . ($id ? $row['name'] : 'Добавление');
+
 	ob_start();
 	?>
-    <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
-    <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
+  <form action="?action=save&id=<?=$id?>" method="post" target="ajax">
+    <table class="table-edit">
       <tr>
-      	<th class="tab_red_th"></th>
-      	<th>Код счетчика</th>
-        <td><?=show_pole('textarea','html',$row['html'])?></td>
+        <th></th>
+        <th>Название</th>
+        <td><?=input('text', 'name', $row['name'])?></td>
       </tr>
       <tr>
-      	<th class="tab_red_th"></th>
-        <th>Примечание</th>
-        <td><?=show_pole('textarea','notes',$row['notes'])?></td>
-      </tr>	
+        <th></th>
+        <th>Счетчик</th>
+        <td><?=input('textarea', 'html', $row['html'])?></td>
+      </tr>
       <tr>
-      	<th class="tab_red_th"></th>
+        <th></th>
+        <th>Примечание</th>
+        <td><?=input('textarea', 'note', $row['note'])?></td>
+      </tr>
+      <tr>
+        <th></th>
         <th>Статус</th>
         <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
       </tr>
-      <tr>
-      	<th class="tab_red_th"></th>
-        <th></th>
-        <td align="center">
-        	<input type="submit" value="<?=($id ? "Сохранить" : "Добавить")?>" class="but1" onclick="loader(true)" />&nbsp;
-        	<input type="button" value="Отмена" class="but1" onclick="location.href='<?=$script?>'" />
-        </td>
-      </tr>
     </table>
-    </form>
-    <?
-	$content = ob_get_clean();
+    <div class="frm-btns">
+      <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
+      <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
+    </div>
+  </form>
+	<?
+	$content = arr($h, ob_get_clean());
 }
 // -----------------ПРОСМОТР-------------------
 else
 {
-	ob_start();
-	
-	$page_title .= " :: ".$rubric; 
-	$rubric .= " &raquo; Общий список"; 
-	
-	$razdel = array("Добавить"=>"?red=0","Удалить"=>"javascript:multidel(document.red_frm,'check_del_','');");
-	$subcontent = show_subcontent($razdel);
-	
-	ob_start();
-	?>
-  <form id="ftl" method="post" target="ajax">
-  <input type="hidden" id="cur_id" value="<?=isset($_GET['id'])?(int)$_GET['id']:""?>" />
-  <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
-    <tr>
-      <th><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th>№</th>
-      <th width="50%">Счетчик</th>
-      <th width="50%">Примечание</th>
-      <th>Статус</th>
-      <th>Порядок</th>
-      <th style="padding:0 30px;"></th>
-    </tr>
-  <?
-	$res = sql("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id");
-	if(@mysqli_num_rows($res)){
-		$i=1;
-		while($row = mysqli_fetch_assoc($res)){
-		  $id = $row['id'];
-		  ?>
-		  <tr id="<?=$row['id']?>">
-        <th><input type="checkbox" name="del[<?=$id?>]"></th>
-        <th nowrap><?=$i++?></th>
-        <td><a href="" class="link1"><?=$row["html"]?></a></td>
-        <td><a href="" class="link1"><?=nl2br($row["notes"])?></a></td>
-        <td nowrap align="center"><?=btn_flag($row['status'],$row['id'],'action=status&id=')?></td>
-        <td nowrap align='center'><?=btn_sort($row['id'])?></td>
-        <td nowrap align="center"><?=btn_edit($row['id'])?></td>
-		  </tr>
-		  <?
-		}
-	}
-	else
-	{
-		?>
-    <tr>
-      <td colspan="10" align="center">
-      по вашему запросу ничего не найдено. <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-      </td>
-    </tr>
-    <?
-	}
-	?>
-  </table>
-  </form>
-  <?
-	$content = $subcontent.ob_get_clean();
-}
+	$query = "SELECT * FROM {$prx}{$tbl}\r\nWHERE 1{$where}\r\nORDER BY sort,id";
 
-require("tpl/tpl.php");
-?>
+	ob_start();
+	//pre($query);
+
+	show_listview_btns('Добавить::Удалить');
+	?>
+
+  <div class="clearfix"></div>
+
+  <form id="ftl" action="?action=multidel" name="red_frm" method="post" target="ajax">
+    <table class="table-list" tbl="<?=$tbl?>">
+      <thead>
+      <tr>
+        <th><input type="checkbox" name="del" /></th>
+        <th>№</th>
+				<th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода объектов в клиентской части сайта')?></th>
+        <th width="33%" nowrap>Название</th>
+        <th width="33%" nowrap>Счетчик</th>
+        <th width="33%" nowrap>Примечание</th>
+        <th>Статус</th>
+        <th style="padding:0 30px;"></th>
+      </tr>
+      </thead>
+      <tbody>
+			<?
+			$res = sql($query);
+			if(@mysqli_num_rows($res)){
+				$i=1;
+				while($row = mysqli_fetch_assoc($res)){
+					$id = $row['id'];
+					?>
+          <tr id="item-<?=$row['id']?>" oid="<?=$id?>" par="0">
+            <th><input type="checkbox" name="del[<?=$id?>]" /></th>
+            <th nowrap><?=$i++?></th>
+            <th nowrap align="center"><i class="fas fa-sort"></i></th>
+            <td><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+            <td><?=$row['html']?></td>
+            <td><?=nl2br($row['note'])?></td>
+            <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
+            <th nowrap><?=btn_edit($id)?></th>
+          </tr>
+					<?
+				}
+			} else {
+				?>
+        <tr class="nofind">
+          <td colspan="10">
+            <div class="bg-warning">
+              по вашему запросу ничего не найдено.
+							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+            </div>
+          </td>
+        </tr>
+				<?
+			}
+			?>
+      </tbody>
+    </table>
+  </form>
+	<?
+	$content = arr($h, ob_get_clean());
+}
+require('tpl/template.php');

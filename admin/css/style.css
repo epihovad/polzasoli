@@ -221,6 +221,8 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 .table-edit th, .table-edit td { padding:5px 0; vertical-align:middle;}
 .table-edit th:nth-child(1) { padding:0 10px 0 5px; white-space:nowrap; width:1%;}
 .table-edit th:nth-child(2) { padding-right:20px; white-space:nowrap; font-weight:600; width:1%;}
+.table-edit th:nth-child(2) span { color:#449d44;}
+.table-edit td { padding-right:5px;}
 .table-edit a.help span { font-size:15px; top:0;}
 .table-edit .chosen-container { width:100% !important; background-color:#ffffff;}
 .table-edit .chosen-container .chosen-choices { border:1px solid #d9d9d9; background:none; box-shadow:none !important;}

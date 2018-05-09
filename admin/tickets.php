@@ -6,7 +6,6 @@ $h = 'Общий список';
 $title .= ' :: ' . $h1;
 $navigate = '<span></span>' . $h;
 $tbl = 'tickets';
-$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // -------------------СОХРАНЕНИЕ----------------------
 if(isset($_GET['action']))
@@ -218,7 +217,7 @@ else
 	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
 
   // проверяем текущую сортировку и формируем соответствующий запрос
-	if($fl['sort']){
+  if($fl['sort']){
 		foreach ($fl['sort'] as $f => $t){
 			$query .= "\r\nORDER BY {$f} {$t}";
 			break;
@@ -275,88 +274,88 @@ else
   <input type="hidden" id="cur_id" value="<?=(int)@$_GET['id']?>" />
   <table class="table-list">
     <thead>
-    <tr>
-      <th width="1%"><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th width="1%">№</th>
-      <th width="1%" style="text-align:center;"><img src="img/image.png" title="изображение" /></th>
-      <th nowrap width="30%"><?=SortColumn('Название','A.name')?></th>
-			<? if($fl['sitemap']){?>
-        <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
-        <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
-        <th nowrap><?=SortColumn('priority','S.priority')?></th>
-			<? }?>
-      <th nowrap><?=SortColumn('Цена, руб.','A.price')?></th>
-      <th>Срок действия</th>
-      <th>Возраст</th>
-      <th>Типы абонемента</th>
-      <th>Типы посетителей</th>
-      <th width="1%">Статус</th>
-      <th width="1%" style="padding:0 30px;"></th>
-    </tr>
+      <tr>
+        <th width="1%"><input type="checkbox" name="check_del" id="check_del" /></th>
+        <th width="1%">№</th>
+        <th width="1%" style="text-align:center;"><img src="img/image.png" title="изображение" /></th>
+        <th nowrap width="30%"><?=SortColumn('Название','A.name')?></th>
+        <? if($fl['sitemap']){?>
+          <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
+          <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
+          <th nowrap><?=SortColumn('priority','S.priority')?></th>
+        <? }?>
+        <th nowrap><?=SortColumn('Цена, руб.','A.price')?></th>
+        <th>Срок действия</th>
+        <th>Возраст</th>
+        <th>Типы абонемента</th>
+        <th>Типы посетителей</th>
+        <th width="1%">Статус</th>
+        <th width="1%" style="padding:0 30px;"></th>
+      </tr>
     </thead>
     <tbody>
-  <?
-	$res = sql($query);
-	if(mysqli_num_rows($res)){
-		$i=1;
-		while($row = mysqli_fetch_assoc($res)){
-			$id = $row['id'];
-			?>
-			<tr id="item-<?=$row['id']?>">
-        <th><input type="checkbox" name="del[<?=$id?>]"></th>
-			  <th nowrap><?=$i++?></th>
-        <th>
-					<?
-					$src = '/uploads/no_photo.jpg';
-					$big_src = '/uploads/no_photo.jpg';
-					if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
-						$src = "/{$tbl}/60x60/{$id}.jpg";
-						$big_src = "/{$tbl}/{$id}.jpg";
-					}
-					?>
-          <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
-            <img src="<?=$src?>" align="absmiddle" style="max-height:60px; max-width:60px;" class="img-rounded">
-          </a>
-        </th>
-        <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
-				<? if($fl['sitemap']){?>
-          <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
-          <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
-          <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
-				<? }?>
-        <th class="sp" nowrap><?=$row['price'] . ($row['old_price'] ? ' (<s>'.$row['old_price'].'</s>)' : '')?></th>
-        <th class="sp" nowrap><?=$row['validity']?></th>
-        <th class="sp" nowrap><?=$row['age']?></th>
-        <th><?
-          $q = sql("SELECT * FROM {$prx}tickets_type where id IN (" . ($row['ids_type'] ?: '0' ) . ")");
-          while ($arr = @mysqli_fetch_assoc($q)){
-            ?><div><small><?=$arr['name']?>;</small></div><?
-          }
-        ?></th>
-        <th><?
-					$q = sql("SELECT * FROM {$prx}tickets_who where id IN (" . ($row['ids_who'] ?: '0' ) . ")");
-					while ($arr = @mysqli_fetch_assoc($q)){
-						?><div><small><?=$arr['name']?>;</small></div><?
-					}
-        ?></th>
-        <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
-        <th nowrap><?=btn_edit($id)?></th>
-			</tr>
-			<?
-		}
-	} else {
-		?>
-    <tr class="nofind">
-      <td colspan="15">
-        <div class="bg-warning">
-          по вашему запросу ничего не найдено.
-					<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-        </div>
-      </td>
-    </tr>
-		<?
-	}
-	?>
+    <?
+    $res = sql($query);
+    if(mysqli_num_rows($res)){
+      $i=1;
+      while($row = mysqli_fetch_assoc($res)){
+        $id = $row['id'];
+        ?>
+        <tr id="item-<?=$row['id']?>">
+          <th><input type="checkbox" name="del[<?=$id?>]"></th>
+          <th nowrap><?=$i++?></th>
+          <th>
+            <?
+            $src = '/uploads/no_photo.jpg';
+            $big_src = '/uploads/no_photo.jpg';
+            if(file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg")){
+              $src = "/{$tbl}/60x60/{$id}.jpg";
+              $big_src = "/{$tbl}/{$id}.jpg";
+            }
+            ?>
+            <a href="<?=$big_src?>" class="blueimp" title="<?=htmlspecialchars($row['name'])?>">
+              <img src="<?=$src?>" align="absmiddle" style="max-height:60px; max-width:60px;" class="img-rounded">
+            </a>
+          </th>
+          <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+          <? if($fl['sitemap']){?>
+            <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
+            <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
+            <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
+          <? }?>
+          <th class="sp" nowrap><?=$row['price'] . ($row['old_price'] ? ' (<s>'.$row['old_price'].'</s>)' : '')?></th>
+          <th class="sp" nowrap><?=$row['validity']?></th>
+          <th class="sp" nowrap><?=$row['age']?></th>
+          <th><?
+            $q = sql("SELECT * FROM {$prx}tickets_type where id IN (" . ($row['ids_type'] ?: '0' ) . ")");
+            while ($arr = @mysqli_fetch_assoc($q)){
+              ?><div><?=$arr['name']?>;</div><?
+            }
+          ?></th>
+          <th><?
+            $q = sql("SELECT * FROM {$prx}tickets_who where id IN (" . ($row['ids_who'] ?: '0' ) . ")");
+            while ($arr = @mysqli_fetch_assoc($q)){
+              ?><div><?=$arr['name']?>;</div><?
+            }
+          ?></th>
+          <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
+          <th nowrap><?=btn_edit($id)?></th>
+        </tr>
+        <?
+      }
+    } else {
+      ?>
+      <tr class="nofind">
+        <td colspan="15">
+          <div class="bg-warning">
+            по вашему запросу ничего не найдено.
+            <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
+          </div>
+        </td>
+      </tr>
+      <?
+    }
+    ?>
     </tbody>
   </table>
   </form>

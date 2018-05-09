@@ -267,6 +267,7 @@ function TableListSortable() {
     update: function (event, ui) {
 
       var $sortable = $(this);
+      var tbl = $sortable.parents('table.table-list').attr('tbl');
 
       var cur = { 'id' : ui.item[0].attributes.oid.value, 'par' : ui.item[0].attributes.par.value, };
       var prev = { 'id' : 0, 'par' : 0, 'has_childs' : false, };
@@ -314,7 +315,8 @@ function TableListSortable() {
       $.ajax({
         data: data,
         type: 'POST',
-        url: window.location.pathname + '?action=sort',
+        //url: window.location.pathname + '?action=sort',
+        url: '/admin/inc/actions.php?action=sort&tbl=' + tbl,
         complete: function(data,status){
           if(data.responseJSON.status != 'ok'){
             $sortable.sortable('cancel');

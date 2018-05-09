@@ -12,6 +12,10 @@ jAlert - собственный плагин (v1.0).
 	/* ----------------------- ПЕРЕМЕННЫЕ ----------------------- */
 	var ie;
 	var body_overflow_y;
+	var StartSrollTop;
+	var handlerScroll = function (e) {
+    $(window).scrollTop(StartSrollTop);
+  }
 	
 	var jA_methods = {
 		/* ---------------- ИНИЦИАЛИЗАЦИЯ -------------------- */
@@ -116,10 +120,12 @@ jAlert - собственный плагин (v1.0).
       $jA_blackout.fadeIn(500);
 			$jA_wind.show('drop', {direction: 'up'}, 200, 'swing');
 
-      body_overflow_y = $('body').css('overflow-y');
+      /*body_overflow_y = $('body').css('overflow-y');
       if(body_overflow_y != 'hidden'){
         $('body').css('overflow-y','hidden');
-			}
+			}*/
+      StartSrollTop = $(window).scrollTop();
+      $(window).bind('scroll touchmove mousewheel',handlerScroll);
 
 			if(ie && $.browser.version<'9.0')
 			{
@@ -140,7 +146,8 @@ jAlert - собственный плагин (v1.0).
       $jA_wind_shadow.hide();
 			$jA_wind.find('.btn_place').html('');
 			$jA_blackout.fadeOut('slow');
-      $('body').css('overflow-y',body_overflow_y);
+      $(window).unbind('scroll touchmove mousewheel',handlerScroll);
+      //$('body').css('overflow-y',body_overflow_y);
 		}
 	};
 	

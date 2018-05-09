@@ -6,7 +6,6 @@ $h = 'Общий список';
 $title .= ' :: ' . $h1;
 $navigate = '<span></span>Общий список';
 $tbl = 'banner_mini';
-$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // -------------------СОХРАНЕНИЕ----------------------
 if(isset($_GET['action']))

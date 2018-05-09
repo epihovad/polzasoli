@@ -6,7 +6,6 @@ $h = 'Общий список';
 $title .= ' :: ' . $h1;
 $navigate = '<span></span>' . $h;
 $tbl = 'articles';
-$menu = getRow("SELECT * FROM {$prx}am WHERE link = '{$tbl}' ORDER BY id_parent DESC LIMIT 1");
 
 // -------------------СОХРАНЕНИЕ----------------------
 if(isset($_GET['action']))
@@ -244,12 +243,11 @@ else
     $res = sql($query);
     if(mysqli_num_rows($res)){
       $i=1;
-      while($row = mysqli_fetch_assoc($res))
-      {
+      while($row = mysqli_fetch_assoc($res)){
         $id = $row['id'];
         ?>
         <tr id="item-<?=$row['id']?>">
-          <th><input type="checkbox" name="del[<?=$row['id']?>]"></th>
+          <th><input type="checkbox" name="del[<?=$id?>]"></th>
           <th nowrap><?=$i++?></th>
           <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
           <? if($sitemap){?>

@@ -8,6 +8,32 @@ if(isset($_GET['action']))
 {
 	switch($_GET['action'])
 	{
+		// ----------------- сортировка
+		case 'sort':
+			header("Access-Control-Allow-Orgin: *");
+			header("Access-Control-Allow-Methods: *");
+			header("Content-Type: application/json");
+
+			if(!$tbl = $_GET['tbl']){
+				echo json_encode(array('status' => 'error', 'message' => 'не определена таблица'));
+				exit;
+			}
+
+			$i = 1;
+			$errors = 0;
+			foreach ($_POST['item'] as $id){
+				if(!update($tbl, "`sort`={$i}", $id)){
+					$errors++;
+					continue;
+				}
+				$i++;
+			}
+			if(!$errors){
+				echo json_encode(array('status' => 'ok', 'message' => 'success update ' . sizeof($_POST['item']) . ' items'));
+			} else {
+				echo json_encode(array('status' => 'error', 'message' => 'произошла ошибка'));
+			}
+			exit;
 		// ---------------- обновление значения в списке
 		case 'update':
 			$id = (int)$_GET['id'];

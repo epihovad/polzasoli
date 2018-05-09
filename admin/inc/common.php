@@ -1,5 +1,7 @@
 <?
 @session_start();
+//ini_set('display_errors',1);
+//error_reporting('E_ALL');
 
 // доступ
 if(!$_SESSION['admin']) { ?><script>top.location.href='login.php?action=loginc&urlback=<?=$_SERVER['REQUEST_URI']?>';</script><? exit; }
