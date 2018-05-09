@@ -276,9 +276,9 @@ else
   <table class="table-list">
     <thead>
     <tr>
-      <th style="width:1%"><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th style="width:1%">№</th>
-      <th style="width:1%; text-align:center;"><img src="img/image.png" title="изображение" /></th>
+      <th width="1%"><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th width="1%">№</th>
+      <th width="1%" style="text-align:center;"><img src="img/image.png" title="изображение" /></th>
       <th nowrap width="30%"><?=SortColumn('Название','A.name')?></th>
 			<? if($fl['sitemap']){?>
         <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
@@ -290,8 +290,8 @@ else
       <th>Возраст</th>
       <th>Типы абонемента</th>
       <th>Типы посетителей</th>
-      <th nowrap>Статус</th>
-      <th style="padding:0 30px;"></th>
+      <th width="1%">Статус</th>
+      <th width="1%" style="padding:0 30px;"></th>
     </tr>
     </thead>
     <tbody>
