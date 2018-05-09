@@ -161,8 +161,8 @@ else
 			<td><a id="searchBtn" href="" class="link">найти</a></td>
 		</tr>
 	</table>
-  
-  <form action="?action=multidel" name="red_frm" method="post" target="ajax">
+
+  <form id="ftl" method="post" target="ajax">
   <input type="hidden" id="cur_id" value="<?=@$_GET['id']?@(int)$_GET['id']:""?>" />
   <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
     <tr>

@@ -238,7 +238,7 @@ else
     });
   </script>
 
-  <form action="?action=multidel" name="red_frm" method="post" target="ajax">
+  <form id="ftl" method="post" target="ajax">
   <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
     <tr>
     	<th><input type="checkbox" name="check_del" id="check_del" /></th>

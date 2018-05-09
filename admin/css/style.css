@@ -41,8 +41,6 @@ div.all { font-size:14px; clear:both; text-align:right; }
 a.back { margin-top:20px; font-size:12px; clear:both; float:left; }
 a.more:after { content:"в†’"; position:absolute; margin-left:5px; }
 
-img.flag { cursor:pointer;}
-
 header { background: #2e2e2e; height: 60px; line-height: 60px; padding: 0 20px; vertical-align: middle;}
 aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 .dashboard-wrapper { padding: 0; margin: 0 auto; text-align: left; margin-left: 210px; min-height: 100% !important; background: #f2f2f2;}
@@ -181,6 +179,11 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 .table-list tbody tr.nofind { background-color:#fff !important;}
 .table-list tbody tr.nofind td { padding:5px; text-align:center;}
 .table-list tbody tr.nofind .bg-warning { padding:7px;}
+
+.table-list .flag { font-size:16px; color:#c9302c; cursor:pointer;}
+.table-list .flag.active { color:#449d44; }
+.table-list .edit button { margin:0 1px;}
+.table-list .edit i { font-size:12px; width:12px;}
 
 .table-list tbody > tr > td.active,
 .table-list tbody > tr > th.active,

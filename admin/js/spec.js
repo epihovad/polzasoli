@@ -12,8 +12,8 @@ $(function(){
   TransformInputs();
 
   //
-  $('#check_del').click(function(){
-    $('input[id^="check_del_"]').not(this).prop('checked',$(this).prop('checked'));
+  $('thead :checkbox[name=del]').click(function(){
+    $('tbody :checkbox[name^=del]').prop('checked',$(this).prop('checked'));
   });
 
   // обновление значения в списке
@@ -211,23 +211,12 @@ function FlagStatus() {
   $('.flag').click(function(){
     loader(true);
 
-    var $obj = $(this);
-    var new_src,new_alt,new_title;
+    var $flag = $(this);
+    var active = $flag.hasClass('active');
+    var new_alt = !active ? 'активно' : 'заблокировано';
+    var new_title = !active ? 'заблокировать' : 'активировать';
 
-    if(strpos($obj.attr('src'),'red'))
-    {
-      new_src = 'img/green-flag.png';
-      new_alt = 'активно';
-      new_title = 'заблокировать';
-    }
-    else
-    {
-      new_src = 'img/red-flag.png';
-      new_alt = 'заблокировано';
-      new_title = 'активировать';
-    }
-
-    var $script = $obj.next('input');
+    var $script = $flag.next('input');
     var _script = $script.val();
     var _link = $script.next('input').val();
 
@@ -245,8 +234,13 @@ function FlagStatus() {
         }
         else
         {
-          $obj.attr({'src':new_src,'alt':new_alt,'title':new_title});
-          $obj.parents('tr:first').find('td,th').effect("highlight", {}, 1000);
+          $flag.attr({'alt':new_alt,'title':new_title});
+          if(!active){
+            $flag.addClass('active');
+          } else {
+            $flag.removeClass('active');
+          }
+          $flag.parents('tr:first').find('td,th').effect("highlight", {}, 1000);
         }
         loader(false);
       }
@@ -455,56 +449,25 @@ function changeURI(object, URI, returnNewURI){
 	}
 }
 
-function saveall($frm){
-	if($frm==undefined) $frm = $('form[name="red_frm"]');
-	if(!$frm.length) return false;
-	$frm.attr('action','?action=saveall').submit();
-}
-
-function multidel(form,name,href){
-	var num = 0;
-	var size = name.length;
-	var elements = document.getElementsByTagName('input');
-	
-	for(var i=0; i<elements.length; i++){
-		if ((elements[i].type=='checkbox')&&(elements[i].id.substr(0,size)==name)&&(elements[i].checked==true)){
-			num++;
-		}
-	}
-	
-	if(num==0) {
-    $(document).jAlert('show', 'alert', 'Для удаления выберите хотя бы один объект');
-  } else {
+function SaveAll(href, confirm, check_checked) {
+  var $frm = $('#ftl');
+  // отмечены ли чекбоксы
+  if(check_checked != undefined){
+    if($frm.find('tbody :checkbox[name^=del]:checked').length == 0){
+      $(document).jAlert('show', 'alert', 'Для действия выберите хотя бы один объект');
+      return false;
+    }
+  }
+  // Уверены?
+  if(confirm != undefined){
     $(document).jAlert('show', 'confirm', 'Уверены?', function () {
-      if(href) {
-        form.action = href + '&action=multidel';
-      } else {
-        form.action = '?action=multidel';
-      }
-      form.submit();
+      $frm.attr('action',href);
+      $frm.submit();
     });
-	}
-}
-
-function multimail(form,name){
-	var num = 0;
-	var size = name.length;
-	var elements = document.getElementsByTagName('input');
-	
-	for(var i=0; i<elements.length; i++){
-		if ((elements[i].type=='checkbox')&&(elements[i].id.substr(0,size)==name)&&(elements[i].checked==true)){
-			num++;
-		}
-	}
-	
-	if(num==0){
-    $(document).jAlert('show','alert','Для рассылки выберите хотя бы один объект');
-	} else {
-		if(confirm('Уверены?')){
-			form.action = '?action=multimail';
-			form.submit();
-		}
-	}
+  } else {
+    $frm.attr('action',href);
+    $frm.submit();
+  }
 }
 
 function check_settings_frm(){

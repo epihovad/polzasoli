@@ -98,7 +98,7 @@ else
 
   <div class="clearfix"></div>
 
-  <form action="?action=multidel" name="red_frm" method="post" target="ajax">
+  <form id="ftl" method="post" target="ajax">
   <table class="table-list">
     <thead>
       <tr>

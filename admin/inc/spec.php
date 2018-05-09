@@ -79,50 +79,6 @@ function updateSitemap()
 	}
 }
 
-// главное меню - навигация
-function ShowNavigate()
-{
-	global $prx,$script,$script_fake;
-	$sc = $script_fake ? $script_fake : $script;
-	
-	?>
-  <div class="nav">
-  <table width="100%" border="0" cellspacing="0" cellpadding="3">
-  <?
-	$mas = getTree("SELECT * FROM {$prx}am WHERE id_parent='%s' ORDER BY sort,id");
-	if(sizeof($mas))
-	{
-		foreach($mas as $vetka)
-		{
-			$row = $vetka['row'];
-			$level = (string)$vetka["level"];
-			
-			if($level=='0')
-			{
-				?>
-				<tr>
-					<td width="20" align="left"><img src="img/navigate/<?=$row['link']?>.png" width="25" height="22"/></td>
-					<td><a href="" target="_blank" onclick="RegSessionSort('<?=$row['link']?>.php','filters=remove');return false;" class="<?=$sc==$row['link'].'.php'?"nav_link2":"nav_link1"?>"><?=$row['name']?></a></td>
-				</tr>
-				<?
-			}
-			else
-			{
-				?>
-				<tr>
-					<td width="20" align="left"></td>
-					<td><a href="" target="_blank" onclick="RegSessionSort('<?=$row['link']?>.php','filters=remove');return false;" class="<?=$sc==$row['link'].'.php'?"nav_link2":"nav_link1"?>"><?=$row['name']?></a></td>
-				</tr>
-				<?
-			}
-		}
-	}
-	?>
-	</table>
-	</div>
-	<?
-}
-
 function input($type, $name, $value = null, $property = null, $class = null)
 {
 	ob_start();
@@ -189,13 +145,13 @@ function btn_flag($flag,$id,$link,$locked=0)
 	
 	if($flag)
 	{
-		?><img class="flag" src="img/green-flag.png" alt="активно" title="заблокировать" width="16" height="16"><?
+		?><i class="flag active fab fa-font-awesome-flag" alt="активно" title="заблокировать"></i><?
 		?><input type="hidden" value="<?=$script?>" /><?
 		?><input type="hidden" value="<?=$link.$id?>" /><?
 	}
 	else
 	{
-		?><img class="flag" src="img/red-flag.png" alt="заблокировано" title="активировать" width="16" height="16"><?
+		?><i class="flag fab fa-font-awesome-flag" alt="заблокировано" title="активировать"></i><?
 		?><input type="hidden" value="<?=$script?>" /><?
 		?><input type="hidden" value="<?=$link.$id?>" /><?
 	}
@@ -205,14 +161,17 @@ function btn_edit($id,$locked=0,$properties='')
 {
 	ob_start();
 	?>
-  <a href="?red=<?=$id?><?=$properties?>"><img src="img/edit.png" width="16" height="16" alt="редактировать" title="редактировать" /></a>
+  <div class="edit">
+    <button type="button" class="btn btn-info btn-xs" alt="редактировать" title="редактировать" onclick="location.href = '?red=<?=$id?><?=$properties?>'">
+      <i class="far fa-edit"></i>
+    </button>
+		<? if(!$locked) { ?>
+      <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить" onclick="$(document).jAlert('show', 'confirm', 'Уверены?', function () {location.href='?action=del&id=<?=$id?><?=$properties?>'})">
+        <i class="far fa-trash-alt"></i>
+      </button>
+		<? }?>
+  </div>
 	<?
-	if(!$locked)
-	{
-		?><a href="javascript:if(confirm('Уверены?')) location.href='?action=del&id=<?=$id?><?=$properties?>'" target="ajax"><?
-		?><img src="img/del.png" width="16" height="16" alt="удалить" title="удалить" /><?
-    ?></a><?
-	}
 	return ob_get_clean();
 }
 
@@ -353,33 +312,6 @@ function SortColumn($column, $field)
   }
 
 }
-
-// ShowSortPole('страница = news.php','Имя столбца = Название','текущая сортировка = up/down/0','имя поля в БД = name');
-function ShowSortPole($page,$cur_pole,$cur_sort,$name,$pole)
-{
-	ob_start();
-
-	if(!$cur_pole) // если сессии нет
-	{
-		?><a href="" target="_blank" onclick="RegSessionSort(REQUEST_URI,'sort=<?=$pole?>:down');return false;"><?=$name?></a><?
-	}
-	else
-	{
-		if($pole==$cur_pole)
-		{
-			?>
-      <a href="" target="_blank" onclick="RegSessionSort(REQUEST_URI,'sort=<?=$pole?>:<?=($cur_sort=="up"?"down":"up")?>');return false;"><?=$name?></a>
-      <img src='img/sort_<?=$cur_sort?>.gif' border='0' width='9' height='9' title='сортировка <?=($cur_sort=="up"?"по убыванию (Я-А)":"по возрастанию (А-Я)")?>' align="absmiddle" />
-			<?
-		}
-		else
-		{
-			?><a href="" target="_blank" onclick="RegSessionSort(REQUEST_URI,'sort=<?=$pole?>:down');return false;"><?=$name?></a><?
-		}
-	}
-
-	return ob_get_clean();
-}
 //
 function help($text)
 {
@@ -388,29 +320,35 @@ function help($text)
 	return ob_get_clean();
 }
 // передача через массив (как $defaults) или строкой, с перечислением требуемых кнопок ('Сохранить::Добавить::Удалить')
-function show_listview_btns($btns = ''){
+function show_listview_btns($btns = '', $individual_btns = array()){
 
   global $script;
 
   $defaults = array(
-      'Сохранить' => array('js' => "saveall()", 'class' => 'warning', 'icon' => 'far fa-save'),
-      'Добавить' => array('link' => '?red=0', 'class' => 'success', 'icon' => 'fa fa-plus'),
-      'Удалить' => array('js' => "multidel(document.red_frm,'check_del_','')", 'class' => 'danger', 'icon' => 'far fa-trash-alt'),
-    );
+    'Сохранить' => array('js' => "SaveAll('?action=saveall')", 'class' => 'warning', 'icon' => 'far fa-save'),
+    'Добавить' => array('link' => '?red=0', 'class' => 'success', 'icon' => 'fa fa-plus'),
+    'Удалить' => array('js' => "SaveAll('?action=multidel',1,1)", 'class' => 'danger', 'icon' => 'far fa-trash-alt'),
+  );
 
-  if($btns){
-    if(is_array($btns) === false){
-      $arr = explode('::',$btns);
-      foreach ($defaults as $k => $none){
-        if(array_search($k, $arr) === false){
-          unset($defaults[$k]);
-        }
-      }
-      $btns = $defaults;
-    }
+  // собственный набор кнопок
+  if(sizeof($individual_btns)){
+    $btns = $individual_btns;
   } else {
-    $btns = $defaults;
-  }
+    // стандартный набор
+		if ($btns) {
+			if (is_array($btns) === false) {
+				$arr = explode('::', $btns);
+				foreach ($defaults as $k => $none) {
+					if (array_search($k, $arr) === false) {
+						unset($defaults[$k]);
+					}
+				}
+				$btns = $defaults;
+			}
+		} else {
+			$btns = $defaults;
+		}
+	}
 
   ?><div id="listview-btns"><?
   foreach ($btns as $name => $prm){

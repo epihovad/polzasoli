@@ -41,7 +41,7 @@ if(isset($_GET["action"]))
 		break;
 		// ----------------- удаление нескольких записей
 		case "multidel":
-			foreach($_POST['check_del_'] as $k=>$v)
+			foreach($_POST['del'] as $k=>$v)
 				update($tbl,'',$k);
 			?><script>top.location.href = "<?=$script?>";</script><?
 		break;
@@ -103,7 +103,7 @@ else
 	
 	ob_start();
 	?>
-  <form action="?action=multidel" name="red_frm" method="post" target="ajax">
+  <form id="ftl" method="post" target="ajax">
   <input type="hidden" id="cur_id" value="<?=isset($_GET['id'])?(int)$_GET['id']:""?>" />
   <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
     <tr>
@@ -117,14 +117,13 @@ else
     </tr>
   <?
 	$res = sql("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id");
-	if(@mysqli_num_rows($res))
-	{
+	if(@mysqli_num_rows($res)){
 		$i=1;
-		while($row = mysqli_fetch_assoc($res))
-		{
+		while($row = mysqli_fetch_assoc($res)){
+		  $id = $row['id'];
 		  ?>
 		  <tr id="<?=$row['id']?>">
-        <th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
+        <th><input type="checkbox" name="del[<?=$id?>]"></th>
         <th nowrap><?=$i++?></th>
         <td><a href="" class="link1"><?=$row["html"]?></a></td>
         <td><a href="" class="link1"><?=nl2br($row["notes"])?></a></td>

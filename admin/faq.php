@@ -64,7 +64,7 @@ if(isset($_GET['action']))
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
-			foreach($_POST['check_del_'] as $id=>$v) {
+			foreach($_POST['del'] as $id=>$v) {
 				remove_object($id);
 			}
 			?><script>top.location.href = '<?=$script?>'</script><?
@@ -134,7 +134,7 @@ else
 
   <div class="clearfix"></div>
 
-  <form action="?action=multidel" name="red_frm" method="post" target="ajax">
+  <form id="ftl" method="post" target="ajax">
     <table class="table-list">
       <thead>
       <tr>
@@ -157,7 +157,7 @@ else
 					$id = $row['id'];
 					?>
           <tr id="item-<?=$id?>" oid="<?=$id?>" par="0">
-            <th><input type="checkbox" name="check_del_[<?=$id?>]" id="check_del_<?=$id?>"></th>
+            <th><input type="checkbox" name="del[<?=$id?>]"></th>
             <th nowrap><?=$i++?></th>
 						<? if(!$fl['sort']){ ?><th nowrap align="center"><i class="fas fa-sort"></i></th><? }?>
             <td><a href="?red=<?=$id?>"><?=$row['question']?></a></td>

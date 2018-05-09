@@ -38,7 +38,7 @@ if(isset($_GET['action']))
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
-			foreach($_POST['check_del_'] as $id=>$v)
+			foreach($_POST['del'] as $id=>$v)
 				update($tbl,'',$id);
 			?><script>top.location.href = '<?=$script?>'</script><?
 			break;
@@ -97,8 +97,8 @@ else
 	$subcontent = show_subcontent($razdel);
 	
 	ob_start();
-	?>	
-	<form action="?action=multidel" name="red_frm" method="post" target="ajax">
+	?>
+  <form id="ftl" method="post" target="ajax">
 	<input type="hidden" id="cur_id" value="<?=@$_GET['id']?@(int)$_GET['id']:""?>" />
 	<table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
 	  <tr>
@@ -124,7 +124,7 @@ else
 			
 			?>
 			<tr id="row<?=$row['id']?>">
-			<th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
+			<th><input type="checkbox" name="del[<?=$row['id']?>]"></th>
 			<th><?=$i++?></th>
       <th><img src="img/navigate/<?=$row['link']?>.png" width="25" height="22" /></th>
 			<td><?=$prfx?><a href="?red=<?=$row['id']?>" class="link1"><?=$row['name']?></a></td>
