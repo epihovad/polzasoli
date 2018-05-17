@@ -8,7 +8,7 @@ php_flag register_globals off
 php_flag display_errors off
 
 #ErrorDocument 403 /errors.php?code=403
-ErrorDocument 404 /errors.php?code=404
+#ErrorDocument 404 /errors.php?code=404
 
 Options -Indexes
 
@@ -33,30 +33,3 @@ RewriteRule ^uploads/(pages|tickets|slider|banner_mini|gallery|gallery_catalog|r
 # -------------- Страницы
 RewriteRule ^([a-zA-Z0-9_-]+).htm$ pages.php?link=$1
 RewriteRule ^([a-zA-Z0-9_-]+).htm&(.*)$ pages.php?link=$1&$2
-
-# -------------- Блог
-RewriteRule ^blog/([0-9-]+)x([0-9-]+)/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/blog/&fname=$3&width=$1&height=$2
-RewriteRule ^blog/([0-9]+)?.jpg$ uploads/blog/$1.jpg
-RewriteRule ^uploads/blog/([0-9-]+)x([0-9-]+)/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/blog/&fname=$3&width=$1&height=$2
-RewriteRule ^uploads/blog/([0-9]+)?.jpg$ inc/im.php?fpath=/uploads/blog/&fname=$1.jpg
-RewriteRule ^blog/([0-9]+)?.jpg$ inc/im_cache.php?fpath=/uploads/blog/&fname=$1.jpg
-
-RewriteRule ^blog/([a-zA-Z0-9_-]+).htm$ blog.php?link=$1
-RewriteRule ^blog/(.*)$ blog.php?link=$1
-
-# -------------- Каталог
-RewriteRule ^catalog/([0-9]+)x([0-9]+)/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/catalog/&width=$1&height=$2&fname=$3.jpg
-RewriteRule ^catalog/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/catalog/&fname=$1.jpg
-RewriteRule ^uploads/catalog/([0-9]+)x([0-9]+)/([0-9]+)?.jpg inc/im_nocache.php?fpath=/uploads/catalog/&width=$1&height=$2&fname=$3.jpg
-RewriteRule ^uploads/catalog/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/catalog/&fname=$1.jpg
-RewriteRule ^catalog/(.*)$ catalog.php?$1 [QSA]
-
-# -------------- Товары
-RewriteRule ^goods/([0-9]+)x([0-9]+)/([0-9_]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/goods/&width=$1&height=$2&fname=$3.jpg
-RewriteRule ^goods/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/goods/&fname=$1.jpg
-RewriteRule ^uploads/goods/([0-9]+)x([0-9]+)/([0-9]+)?.jpg inc/im_nocache.php?fpath=/uploads/goods/&width=$1&height=$2&fname=$3.jpg
-RewriteRule ^uploads/goods/([0-9]+)?.jpg$ inc/im_nocache.php?fpath=/uploads/goods/&fname=$1.jpg
-RewriteRule ^goods/([a-zA-Z0-9_\-]+).htm(.*)$ show_goods.php?link=$1$2
-
-# -------------- Корзина
-RewriteRule ^cart/(.*)$ cart.php?$1 [QSA,NC,L]

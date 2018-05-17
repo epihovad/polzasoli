@@ -73,11 +73,7 @@
   </div>
   <div class="container-fluid">
     <a id="logo" class="pull-left" href="/" title="на главную"><img src="/img/logo.png"></a>
-    <ul id="menu" class="pull-right">
-      <li><a href="">1</a></li>
-      <li><a href="">2</a></li>
-      <li><a href="">3</a></li>
-    </ul>
+    <?=main()?>
   </div>
 </header>
 
@@ -87,7 +83,7 @@
 
 <footer>
   <div class="container-fluid">
-    Place sticky footer content here
+    Footer
   </div>
 </footer>
 

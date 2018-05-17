@@ -5,7 +5,7 @@
 html { position: relative; min-height: 100%;}
 body { margin-bottom: 60px; background-color:#fff; font-family:'Roboto', sans-serif; }
 footer { position:absolute; bottom:0; min-width:1000px; width:100%; height:60px; background-color:#f5f5f5;}
-.container-fluid { /*width: auto; max-width: 680px;*/ width:1000px; padding: 0 18px; }
+.container-fluid { /*width: auto; max-width: 680px;*/ width:1000px; }
 
 .abtn { text-decoration:none !important; border-bottom:1px dashed;}
 
@@ -14,9 +14,9 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 
 .head { padding-top:14px; height:102px; border-bottom:2px solid #5ec5db;}
 .head .hb1 { width:310px !important; padding:0 0 0 18px;}
-.head .hb2 { width:260px !important; padding:0;}
+.head .hb2 { width:269px !important; padding:0;}
 .head .hb3 { padding:0;}
-.head .hb4 { width:155px !important; padding:0 0 0 0;}
+.head .hb4 { width:165px !important; padding:0 0 0 0;}
 .head-phone { font-weight:700; font-size:24px; line-height:1; color:#f4f2b4;}
 .head-address { font-size:15px; color:#fff; line-height:19px; padding-top:12px;}
 .head-wtime { font-weight:900; font-size:22px; color:#fff;}
@@ -35,11 +35,17 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 
 #logo { margin:10px 0 0 7px;}
 
-.btn { border:none; border-radius:50px; font-size:18px;}
-.btn i { padding:0 5px;}
+#menu { margin:39px 0 0; padding:0;}
+#menu > li { list-style:none; display:inline-block;}
+#menu .btn { padding:8px 15px 10px; margin-left:5px; font-size:17px; font-weight:700; line-height:1; background:none; border:1px solid rgba(244,242,180,0); color:#fff;}
+#menu .btn:hover, #menu .btn.active, #menu .btn[aria-expanded=true] { border:1px solid rgba(244,242,180,1);}
+#menu .btn span { margin-left:5px; color:#f3ef86;}
+
+.btn { border:none; border-radius:50px; font-size:18px; padding:8px 18px; box-shadow:none !important;}
+.btn i { padding:0 0 0 5px;}
 .btn-primary { background-color:#145D71; color:#fff;}
 .btn-primary:hover { background-color:#104F7E; color:#fff;}
 .btn-primary i { color:#319bb9;}
-.btn-warning { background-color:#fff15b; color:#000;}
-.btn-warning:hover { background-color:#FFFE4E; color:#000;}
+.btn-warning { background-color:#fff15b !important; color:#000 !important;}
+.btn-warning:hover { background-color:#FFFE4E !important; color:#000;}
 .btn-warning i { color:#b7b332;}
