@@ -65,6 +65,7 @@ function headerSlider()
     $btns = $info = '';
     while($row = mysqli_fetch_assoc($res)){
 
+      $id = $row['id'];
 			$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
 
       ob_start();
@@ -75,24 +76,18 @@ function headerSlider()
 			?>
       <div class="item<?=!$i?' active':''?>">
         <h4><?=$row['name']?></h4>
-        <a href="" class="pull-left"><img src="/pages/360x190/10.jpg" alt="..."></a>
-        <div class="preview pull-right">222<?=$row['preview']?></div>
+        <a href="<?=$link?>" class="pull-left"><img src="/pages/360x190/<?=$id?>.jpg" alt="<?=htmlspecialchars($row['name'])?>" title="<?=htmlspecialchars($row['title']?$row['title']:$row['name'])?>"></a>
+        <div class="preview pull-right"><?=$row['preview']?></div>
         <div class="clearfix"></div>
         <a class="btn btn-warning" data-target="#" href="<?=$link?>" role="button">Узнать больше<i class="fas fa-arrow-right"></i></a>
       </div>
       <?
-			/*?>
-      <div class="item<?=!$i?' active':''?>">
-        <img src="/pages/10.jpg">
-      </div>
-			<?*/
 			$info .= ob_get_clean();
-//break;
 			$i++;
     }
     ?>
     <div class="btns"><?=$btns?></div>
-    <div class="btns-info">
+    <div class="btns-preview">
       <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner">
 					<?=$info?>
@@ -103,6 +98,15 @@ function headerSlider()
   <script>
     $(function () {
       $('.carousel').carousel();
+      $('#header-slider .btns .btn').click(function () {
+        if($(this).hasClass('active')){
+          return false;
+        }
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
+        var ind = $(this).index();
+        $('.carousel').carousel(ind);
+      });
     })
   </script>
   <?
