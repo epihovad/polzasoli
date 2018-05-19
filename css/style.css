@@ -40,6 +40,16 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #menu .btn { padding:8px 15px 10px; margin-left:5px; font-size:17px; font-weight:700; line-height:1; background:none; border:1px solid rgba(244,242,180,0); color:#fff;}
 #menu .btn:hover, #menu .btn.active, #menu .btn[aria-expanded=true] { border:1px solid rgba(244,242,180,1);}
 #menu .btn span { margin-left:5px; color:#f3ef86;}
+#menu ul.dropdown-menu { margin:0;}
+#menu .btn-group:hover > ul.dropdown-menu { display: block; }
+
+#header-slider { text-align:center; margin:0 auto;}
+#header-slider h3 { width:80%; color:#fff; font-size:60px; font-weight:700; line-height:1; margin:9px auto 26px;}
+#header-slider .btns .btn { margin:0 16px 29px; font-size:28px; color:#fff; background:none; border:3px solid #fff; padding:1px 28px 6px;}
+#header-slider .btns .btn.active,
+#header-slider .btns .btn:hover { color:#f4f2b4; border-color:#f4f2b4;}
+#header-slider .carousel .item h4 { color:#f4f2b4; margin:0 0 28px 0; padding:0; font-size:35px;}
+#header-slider .carousel .item a.btn { margin-top:18px;}
 
 .btn { border:none; border-radius:50px; font-size:18px; padding:8px 18px; box-shadow:none !important;}
 .btn i { padding:0 0 0 5px;}

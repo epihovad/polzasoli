@@ -8,22 +8,28 @@
   <meta name="description" content="<?=$description?>"/>
   <title><?=$title?></title>
 
-  <link rel="icon" href="favicon.ico" type="image/x-icon"/>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+  <link href="favicon.ico" rel="icon" type="image/x-icon"/>
+  <link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
 
   <script src="/js/jquery-3.1.1.min.js"></script>
 
-  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <link rel="stylesheet" href="/css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" type="text/css" />
+  <link href="/css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet" type="text/css" />
 
-  <link rel="stylesheet" href="/js/blueimp-gallery/blueimp-gallery.css" type="text/css"/>
-  <link rel="stylesheet" href="/js/blueimp-gallery/blueimp-gallery-indicator.css">
+  <script src="/js/jquery.scrollUp.js"></script>
+  <script src="/js/js-url-master/url.min.js"></script>
+
+  <script type="text/javascript" src="/js/utils.js"></script>
+  <script type="text/javascript" src="/js/spec.js"></script>
+
+  <link href="/js/blueimp-gallery/blueimp-gallery.css" rel="stylesheet" type="text/css"/>
+  <link href="/js/blueimp-gallery/blueimp-gallery-indicator.css" rel="stylesheet">
   <script src="/js/blueimp-gallery/blueimp-gallery.js"></script>
   <script src="/js/blueimp-gallery/blueimp-gallery-indicator.js"></script>
 
-  <link rel="stylesheet" href="/css/style.css" type="text/css" />
+  <link href="/css/style.css" rel="stylesheet" type="text/css" />
 
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -74,6 +80,8 @@
   <div class="container-fluid">
     <a id="logo" class="pull-left" href="/" title="на главную"><img src="/img/logo.png"></a>
     <?=main()?>
+    <div class="clearfix"></div>
+    <?=headerSlider()?>
   </div>
 </header>
 
