@@ -107,6 +107,12 @@ function headerSlider()
         var ind = $(this).index();
         $('.carousel').carousel(ind);
       });
+      //
+      $('.carousel').on('slid.bs.carousel', function () {
+        var ind = $(this).find('.item.active').index();
+        $('#header-slider .btns .btn').removeClass('active');
+        $('#header-slider .btns .btn').eq(ind).addClass('active');
+      })
     })
   </script>
   <?

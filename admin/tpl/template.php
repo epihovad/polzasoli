@@ -75,9 +75,10 @@
 <header>
 
   <div class="logo">
-    <a href="#" data-original-title="" title="">
+    <a href="/" title="<?=$_SERVER['SERVER_NAME']?>" target="_blank">
       MarkerCMS
       <span class="menu-toggle hidden-xs"><i class="fa fa-bars"></i></span>
+      <div><?=$_SERVER['SERVER_NAME']?></div>
     </a>
   </div>
 

@@ -51,7 +51,7 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #header-slider .btns-preview { width:90%; margin:0 auto;}
 #header-slider .carousel .item h4 { color:#f4f2b4; margin:0 0 28px 0; padding:0; font-size:35px;}
 #header-slider .carousel .item a.btn { margin-top:18px;}
-#header-slider .carousel .item .preview { color:#fff; width:55%; font-size:17px; height:190px; overflow:hidden;}
+#header-slider .carousel .item .preview { color:#fff; width:57%; font-size:17px; height:190px; overflow:hidden;}
 
 .btn { border:none; border-radius:50px; font-size:18px; padding:8px 18px; box-shadow:none !important;}
 .btn i { padding:0 0 0 10px;}

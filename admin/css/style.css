@@ -56,7 +56,9 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 
 .spacer { padding: 20px;}
 
-.logo a {color:#fff; text-decoration:none; font-size:24px; display: block; width:170px;}
+.logo a {color:#fff; text-decoration:none; font-size:20px; line-height:46px; display: block; width:170px;}
+.logo div { font-size:12px; line-height:0; position:absolute; margin-top:-5px; color:#a5a5a5; text-shadow:1px 1px 0px #000;}
+.logo span { line-height:60px;}
 .menu-toggle {
 	margin-left: 0px;
 	float: right;
