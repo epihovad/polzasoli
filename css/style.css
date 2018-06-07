@@ -61,3 +61,4 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 .btn-warning { background-color:#fff15b !important; color:#000 !important;}
 .btn-warning:hover { background-color:#FFFE4E !important; color:#000;}
 .btn-warning i { color:#b7b332;}
+.btn.btn-sm { padding:4px 18px 5px;}

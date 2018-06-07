@@ -91,6 +91,7 @@ function MainMenu() {
       $('#sidebar').animate({left: "0px"}, 100);
       $('.dashboard-wrapper').animate({'margin-left': "210px"}, 100);
     }
+    return false;
   });
 }
 
