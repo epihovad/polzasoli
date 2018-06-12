@@ -62,3 +62,114 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 .btn-warning:hover { background-color:#FFFE4E !important; color:#000;}
 .btn-warning i { color:#b7b332;}
 .btn.btn-sm { padding:4px 18px 5px;}
+
+.ch2btn .btn { text-align:left; font-size:32px; margin-bottom:17px; border:1px solid #bababa !important;}
+.ch2btn .btn:nth-child(1) { width:267px; height:71px; overflow:hidden;}
+.ch2btn .btn:nth-child(2) { width:268px; height:71px; overflow:hidden;}
+.ch2btn .btn:focus { background-color:#fff;}
+.ch2btn .btn.active, .ch2btn .btn:hover { background-color:#fbf9e1;}
+.ch2btn .btn span { float:left; background-image:url(/img/ch2btn.png); background-repeat:no-repeat; font-size:0;}
+
+#iabon { text-align:center; padding-bottom:65px;}
+#iabon h3 { font-size:42px; margin:25px 0 27px;}
+#iabon .ch2btn .btn:nth-child(1) span { width:52px; height:43px; background-position:center 0; margin:3px 15px 0 4px;}
+#iabon .ch2btn .btn:nth-child(2) span { width:52px; height:42px; background-position:center -43px; margin:2px 20px 0 16px;}
+#iabon .iabon-list { margin:0;}
+#iabon .iabon-list-item { padding:0 0 2px 0;}
+#iabon .iabon-list-item:nth-child(odd) { padding-right:1px;}
+#iabon .iabon-list-item:nth-child(even) { padding-left:1px;}
+#iabon .iabon-list-item .brd { border:1px solid #e5e5e5; height:272px; overflow:hidden;}
+#iabon .iabon-list-item .in-brd { padding:0 18px;}
+#iabon .iabon-list-item h4 { font-weight:700; font-size:23px; margin:21px 0 7px;}
+#iabon .iabon-list-item .age span { padding:0 65px 7px; border-bottom:2px solid #fff072; display:inline-block;}
+#iabon .iabon-list-item .hblue { font-weight:700; font-size:19px; color:#2292ab; margin:5px 0 7px;}
+#iabon .iabon-list-item .disease { font-size:16px; height: 48px; overflow: hidden; }
+#iabon .iabon-list .bnr {
+	display:inline-block; width:100%; height:272px; overflow:hidden;
+	background-image:url(/img/iabon-banner.png); background-repeat:no-repeat; background-size:100%; background-color:#0ebac5;
+}
+
+#ipromo {text-align:center; color:#fff; background:url(/img/bg-promo.jpg) no-repeat center; background-size:cover; height:702px; overflow:hidden;}
+#ipromo h3 { font-size:42px; margin:30px 0 54px; line-height:50px;}
+#ipromo .ipromo-list .row:nth-child(1) { padding:0 0 56px 0;}
+#ipromo .ipromo-list .row div { font-size:20px; line-height:24px;}
+#ipromo .ipromo-list .row:nth-child(1) span { display:block; font-size:0; margin-bottom:12px; height:73px; overflow:hidden; }
+#ipromo .ipromo-list .row:nth-child(2) span { display:block; font-size:0; margin-bottom:14px; height:82px; overflow:hidden; }
+#ipromo .ipromo-list i { display:block; background-repeat:no-repeat; background-image:url(/img/imcol-promo.png);}
+#ipromo .ipromo-list .row:nth-child(1) div:nth-child(1) i { height:71px; background-position:center 0; margin-top:1px; }
+#ipromo .ipromo-list .row:nth-child(1) div:nth-child(2) i { height:70px; background-position:center -71px; margin-top:1px;}
+#ipromo .ipromo-list .row:nth-child(1) div:nth-child(3) i { height:56px; background-position:center -141px; margin-top:8px; }
+#ipromo .ipromo-list .row:nth-child(1) div:nth-child(4) i { height:73px; background-position:center -197px; margin-top:0px; }
+#ipromo .ipromo-list .row:nth-child(2) div:nth-child(1) i { height:76px; background-position:center -270px; margin-top:0px; }
+#ipromo .ipromo-list .row:nth-child(2) div:nth-child(2) i { height:81px; background-position:center -346px; margin-top:0px;}
+#ipromo .ipromo-list .row:nth-child(2) div:nth-child(3) i { height:82px; background-position:center -427px; margin-top:0px; }
+#ipromo .ipromo-list .row:nth-child(2) div:nth-child(4) i { height:80px; background-position:center -509px; margin-top:0px; }
+#ipromo .btn { margin-top:48px;}
+
+#ireviews { text-align:center; color:#fff; padding-bottom:24px; background:url(/img/bg-reviews.png) #0ebac5 no-repeat center 90%;}
+#ireviews h3 { font-size:42px; margin:25px 0 27px;}
+#ireviews .ch2btn .btn:nth-child(1) span { width:43px; height:42px; background-position:center -85px; margin:3px 15px 0 15px;}
+#ireviews .ch2btn .btn:nth-child(2) span { width:46px; height:31px; background-position:center -127px; margin:8px 17px 0 26px;}
+#ireviews-story .txt { margin:0 auto; width:65%; font-size:17px; line-height:20px; text-align:justify; height: 143px; overflow: hidden;}
+#ireviews-story .txt .item { display:none;}
+#ireviews-story .txt .item.active { display:block;}
+#ireviews .author .row { width:100%; display:table; margin:30px 0 0;}
+#ireviews .author .item { width:20%; display:table-cell; vertical-align:top; padding-top:39px;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+#ireviews .author img { width:65px; cursor:pointer;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+#ireviews .author span {display:none;}
+#ireviews .author .item.active { padding-top:0;}
+#ireviews .author .item.active img { width:104px;}
+#ireviews .author .item.active span { display:table; margin:10px auto 0; padding:5px 20px 0; border:4px solid #fff15b; border-width:4px 0 0 0; font-size:22px;}
+#ireviews button.btn-warning { margin:40px 0 10px;}
+#ireviews-video { display:none;}
+#ireviews-video .video { margin:0 auto;}
+#ireviews-video .video .item { display:none;}
+#ireviews-video .video .item.active { display:block;}
+
+.col-xs-5,
+.col-sm-5,
+.col-md-5,
+.col-lg-5 {
+	position: relative;
+	min-height: 1px;
+	padding-right: 10px;
+	padding-left: 10px;
+}
+
+.col-xs-5 {
+	width: 20%;
+	float: left;
+}
+
+@media (min-width: 768px) {
+	.col-sm-5 {
+		width: 20%;
+		float: left;
+	}
+}
+
+@media (min-width: 992px) {
+	.col-md-5 {
+		width: 20%;
+		float: left;
+	}
+}
+
+@media (min-width: 1200px) {
+	.col-lg-5 {
+		width: 20%;
+		float: left;
+	}
+}

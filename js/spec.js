@@ -1,6 +1,53 @@
-jQuery(document).ready(function( $ ) {
+/*jQuery(document).ready(function( $ ) {
+
+});*/
+
+$(function () {
+
+  Ch2btn();
+  iReviews();
 
 });
+
+function Ch2btn() {
+  $('.ch2btn button').click(function () {
+    if($(this).hasClass('active')){
+      return true;
+    }
+    $(this).siblings().removeClass('active');
+    $(this).addClass('active');
+  });
+}
+
+function iReviews() {
+  var $ireviews = $('#ireviews');
+  var $ireviews_story = $('#ireviews-story');
+  var $ireviews_video = $('#ireviews-video');
+  //
+  $ireviews.find('.author img').click(function () {
+    var $item = $(this).parent('.item:first');
+    if($item.hasClass('active')){
+      return false;
+    }
+    var ind = $item.index();
+    var $par = $item.parents('#ireviews-story').length ? $item.parents('#ireviews-story') : $item.parents('#ireviews-video');
+    var $cont = $item.parents('#ireviews-story').length ? $par.find('.txt') : $par.find('.video');
+    $item.siblings().removeClass('active');
+    $item.addClass('active');
+    $cont.find('.item').hide();
+    $cont.find('.item').eq(ind).show();
+  });
+  //
+  $ireviews.find('.ch2btn button').click(function () {
+    if($(this).attr('for') == 'ireviews-video'){
+      $ireviews_story.hide();
+      $ireviews_video.show();
+    } else {
+      $ireviews_video.hide();
+      $ireviews_story.show();
+    }
+  });
+}
 
 function jPop(url) {
   jQuery.arcticmodal({
