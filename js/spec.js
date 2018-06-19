@@ -16,13 +16,15 @@ function Ch2btn() {
     }
     $(this).siblings().removeClass('active');
     $(this).addClass('active');
+    var $cur = $('#' + $(this).attr('for'));
+    var $sib = $('#' + $(this).siblings(':first').attr('for'));
+    $sib.hide();
+    $cur.show();
   });
 }
 
 function iReviews() {
   var $ireviews = $('#ireviews');
-  var $ireviews_story = $('#ireviews-story');
-  var $ireviews_video = $('#ireviews-video');
   //
   $ireviews.find('.author img').click(function () {
     var $item = $(this).parent('.item:first');
@@ -36,16 +38,6 @@ function iReviews() {
     $item.addClass('active');
     $cont.find('.item').hide();
     $cont.find('.item').eq(ind).show();
-  });
-  //
-  $ireviews.find('.ch2btn button').click(function () {
-    if($(this).attr('for') == 'ireviews-video'){
-      $ireviews_story.hide();
-      $ireviews_video.show();
-    } else {
-      $ireviews_video.hide();
-      $ireviews_story.show();
-    }
   });
 }
 
