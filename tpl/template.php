@@ -46,7 +46,7 @@
   <h3 class="title"></h3>
   <a class="prev">‹</a>
   <a class="next">›</a>
-  <a class="close">?</a>
+  <a class="close"><i class="far fa-times-circle"></i></a>
   <a class="play-pause"></a>
   <ol class="indicator"></ol>
 </div>

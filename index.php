@@ -165,43 +165,6 @@ $index = true;
 
 // --------------------- Блок Абонементов
 ?>
-<style>
-  #igallery { text-align:center; padding-bottom:65px; background:url(/img/bg-igallery.jpg) no-repeat #424151 top center; height:942px; overflow:hidden;}
-  #igallery h3 { color:#fff; font-size:42px; margin:25px 0 27px;}
-  #igallery #igallery-video { display:none;}
-  #igallery .ch2btn .btn:nth-child(1) span { width:45px; height:36px; background-position:center -158px; margin:3px 15px 0 35px;}
-  #igallery .ch2btn .btn:nth-child(2) span { width:46px; height:31px; background-position:center -127px; margin:8px 17px 0 26px;}
-  #igallery .row { margin:0;}
-  #igallery .item { padding:2px; background-color:#5a5a70;}
-  #igallery .item:hover img, #igallery .item.active img { -webkit-filter: brightness(100%); filter: brightness(100%);}
-  #igallery .item img { width:100%; -webkit-filter: brightness(50%); filter: brightness(50%);}
-</style>
-
-<script>
-$(function () {
-  $('#igallery-photo .item a').click(function () {
-    var ind = parseInt($(this).attr('ind'));
-    ind = isNaN(ind) ? 0 : ind;
-    var $im = $('#igallery-photo .item a[ind=' + ind + ']');
-    var link = $im.attr('href'),
-        options = {index: link, index: ind},
-        links = $('#igallery-photo .item a');
-    blueimp.Gallery(links, options);
-    return false;
-  });
-  $('#igallery-video .item a').click(function () {
-    var ind = parseInt($(this).attr('ind'));
-    ind = isNaN(ind) ? 0 : ind;
-    var $im = $('#igallery-photo .item a[ind=' + ind + ']');
-    var link = $im.attr('href'),
-      options = {index: link, index: ind},
-      links = $('#igallery-video .item a');
-    blueimp.Gallery(links, options);
-    return false;
-  });
-})
-</script>
-
 <div id="igallery">
   <div class="container-fluid">
 
@@ -242,6 +205,7 @@ $(function () {
           <?
         }
       ?></div>
+      <a href="/gallery/" class="more">Посмотреть больше фотографий</a>
     </div>
 
     <div id="igallery-video">
@@ -261,11 +225,90 @@ $(function () {
           ><img src="/gallery/500x330/2.jpg"></a>
         </div>
       </div>
+      <a href="/video/" class="more">Посмотреть больше видео</a>
     </div>
 
   </div>
 </div>
 <?
+
+// --------------------- Блок Абонементов
+?>
+<style>
+  #bron { text-align:center;}
+  #bron h3 { font-size:42px; margin:25px 0 27px;}
+  #bron .bron-days { margin:0;}
+  #bron .bron-days .bron-day-arr { margin-bottom:20px;}
+  #bron .bron-day { width:100%; height:150px; overflow:hidden; background-color:#0f74a8; border:1px solid #c7c7c7; cursor:pointer; }
+  #bron .bron-day .ch { height:27px; }
+  #bron .bron-day input { margin:9px 0 0; padding:0; cursor:pointer;}
+  #bron .bron-day .time { font-size:32px; color:#000; font-weight:700; line-height:34px;}
+  #bron .bron-day .place { width:100%; padding:6px 0 3px;}
+  #bron .bron-day .place span { width:17px; height:17px; border:1px solid #c2c2c2; background-color:#fff; display:inline-block; margin:0 2px; font-size:21px; line-height:11px;}
+  #bron .bron-day .btm { height:100px; padding-top:6px;}
+  #bron .bron-day .btm a { color:#2292ab; text-decoration:underline;}
+  #bron .bron-day .btm .note span { font-weight:700; }
+  #bron .bron-day.busy .ch input { display:none;}
+  #bron .bron-day.busy { background-color:#afafaf;}
+  #bron .bron-day.busy .place span { background-color:#bbbbbb; border:1px solid #999999; color:#999999;}
+  #bron .bron-day.busy .btm { background-color:#e9e9e9; }
+  #bron .bron-day.busy .btm .note { color:#c5070a; font-weight:700; }
+  #bron .bron-day.red { background-color:#fcf6f6;}
+  #bron .bron-day.red .place span.bs { border:1px solid #c5070a; background-color:#c5070a;}
+  #bron .bron-day.red .btm .note span { color:#c5070a; }
+  #bron .bron-day.green { background-color:#f1fce9;}
+  #bron .bron-day.green .place span.bs { border:1px solid #62bc01; background-color:#62bc01;}
+  #bron .bron-day.yellow { background-color:#fffdf2;}
+  #bron .bron-day.yellow .place span.bs { border:1px solid #f7de32; background-color:#f7de32;}
+</style>
+
+<script>
+
+</script>
+
+<div id="bron">
+  <div class="container-fluid">
+
+    <h3>Расписание сеансов галотерапии<br>в соляной пещере «Ассоль»</h3>
+
+    <div class="bron-days row">
+      <?
+      $colors = array('busy','red','green','yellow');
+      for($i=0; $i<10; $i++){
+        $color = $colors[array_rand($colors)];
+        ?>
+        <div class="bron-day-arr col-xs-5 col-sm-5 col-md-5">
+          <div class="bron-day <?=$color?>">
+            <div class="ch"><input type="checkbox" day="20180620"></div>
+            <div class="time">9:20</div>
+            <? if($color == 'busy'){ ?>
+              <div class="place">
+                <span class="bs">x</span><span class="bs">x</span><span class="bs">x</span><span class="bs">x</span><span>x</span><span>x</span>
+              </div>
+              <div class="btm">
+                <div class="note">Все места заняты</div>
+                <a href="" rel="nofollow">Выберите другой день</a>
+              </div>
+            <? } else { ?>
+              <div class="place">
+                <span class="bs"> </span><span class="bs"> </span><span class="bs"> </span><span class="bs"> </span><span> </span><span> </span>
+              </div>
+              <div class="btm">
+                <div class="note">Осталось <span>2 места</span></div>
+                <a href="" rel="nofollow">Забронировать</a>
+              </div>
+            <?}?>
+          </div>
+        </div>
+        <?
+      }
+      ?>
+    </div>
+
+  </div>
+</div>
+<?
+
 
 $content = ob_get_clean();
 require('tpl/template.php');

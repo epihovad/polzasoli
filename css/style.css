@@ -143,6 +143,18 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #ireviews-video .video .item { display:none;}
 #ireviews-video .video .item.active { display:block;}
 
+#igallery { text-align:center; background:url(/img/bg-igallery.jpg) no-repeat #424151 top center;}
+#igallery h3 { color:#fff; font-size:42px; margin:25px 0 27px;}
+#igallery #igallery-video { display:none;}
+#igallery .ch2btn .btn:nth-child(1) span { width:45px; height:36px; background-position:center -158px; margin:3px 15px 0 35px;}
+#igallery .ch2btn .btn:nth-child(2) span { width:46px; height:31px; background-position:center -127px; margin:8px 17px 0 26px;}
+#igallery .row { margin:0;}
+#igallery .item { padding:2px; background-color:#5a5a70;}
+#igallery .item:hover img, #igallery .item.active img { -webkit-filter: brightness(100%); filter: brightness(100%);}
+#igallery .item img { width:100%; -webkit-filter: brightness(50%); filter: brightness(50%);}
+#igallery a.more { font-size:18px; color:#6f6f81; display:inline-block; margin:15px auto; text-decoration:underline;}
+#igallery a.more:hover { text-decoration:none;}
+
 .col-xs-5,
 .col-sm-5,
 .col-md-5,

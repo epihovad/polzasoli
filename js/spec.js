@@ -6,6 +6,7 @@ $(function () {
 
   Ch2btn();
   iReviews();
+  iGallery();
 
 });
 
@@ -38,6 +39,20 @@ function iReviews() {
     $item.addClass('active');
     $cont.find('.item').hide();
     $cont.find('.item').eq(ind).show();
+  });
+}
+
+function iGallery(){
+  $('#igallery .item a').click(function () {
+    var $par = $(this).parents('#igallery-photo').length ? $(this).parents('#igallery-photo') : $(this).parents('#igallery-video');
+    var ind = parseInt($(this).attr('ind'));
+    ind = isNaN(ind) ? 0 : ind;
+    var $im = $par.find('.item a[ind=' + ind + ']');
+    var link = $im.attr('href'),
+      options = {index: link, index: ind},
+      links = $par.find('.item a');
+    blueimp.Gallery(links, options);
+    return false;
   });
 }
 
