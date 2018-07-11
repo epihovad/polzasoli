@@ -101,5 +101,7 @@
   </div>
 </footer>
 
+<iframe name="ajax" id="ajax"></iframe>
+
 </body>
 </html>

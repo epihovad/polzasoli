@@ -64,7 +64,7 @@ $index = true;
 </div>
 <?
 
-// --------------------- Блок Абонементов
+// --------------------- Блок Промо
 ?>
 <div id="ipromo">
   <div class="container-fluid">
@@ -105,7 +105,7 @@ $index = true;
 <?
 
 
-// --------------------- Блок Абонементов
+// --------------------- Блок Отзывы
 ?>
 <div id="ireviews">
   <div class="container-fluid">
@@ -163,7 +163,7 @@ $index = true;
 </div>
 <?
 
-// --------------------- Блок Абонементов
+// --------------------- Блок Фото
 ?>
 <div id="igallery">
   <div class="container-fluid">
@@ -232,7 +232,7 @@ $index = true;
 </div>
 <?
 
-// --------------------- Блок Абонементов
+// --------------------- Блок бронирования
 ?>
 <div id="bron">
   <div class="container-fluid">
@@ -291,41 +291,8 @@ $index = true;
 </div>
 <?
 
-// --------------------- Блок Абонементов
+// --------------------- Блок расчета стоимости абонемента
 ?>
-<style>
-#fbron { text-align:center; background-color:#ffb70a; background-image:url(/img/fbron.png); background-repeat:no-repeat; background-position:74% bottom;}
-#fbron h3 { font-size:42px; margin:25px 0 27px; color:#fff;}
-#fbron form { width:300px; margin:0 auto; color:#fff;}
-#fbron form button.btn-primary { margin-top:20px;}
-#fbron .note { font-size:15px; color:#aa8609; line-height: 18px; padding: 10px 0;}
-#fbron form label { display:block; text-align:left; font-size:15px; font-weight:400; padding:15px 0 10px;}
-#fbron form .ch { display:inline-block; width:80px; vertical-align:middle;}
-#fbron form .sign { padding-left:7px; font-size:15px; vertical-align:middle;}
-#fbron form .btn-number { padding:0 7px; font-size:12px; background:none !important; color:#fff;}
-#fbron form .btn-number:hover, #fbron form .btn-number:active { color:#000;}
-#fbron form .input-number {
-  background:none; border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00;
-  background:none; padding:0; text-align:center;
-  font:900 20px 'Roboto', sans-serif; color:#fff; cursor:default;
-  box-shadow:none; -webkit-box-shadow:none;
-}
-#fbron form .ch .input-group .input-group-btn:nth-child(1) {
-  border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-left:2px solid #ffde00; border-radius:50px 0 0 50px;
-}
-#fbron form .ch .input-group input + .input-group-btn {
-   border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-right:2px solid #ffde00; border-radius:0 50px 50px 0;
-}
-#fbron form input[name="fio"], #fbron form input[name="phone"] { font:400 20px 'Roboto', sans-serif; color:#000;}
-#fbron form input[name="phone"] { margin-top:15px;}
-</style>
-
-<script>
-  $(function () {
-    Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
-  });
-</script>
-
 <div id="fbron">
   <div class="container-fluid">
 
@@ -357,6 +324,43 @@ $index = true;
       <button class="btn btn-primary">Расчитать</button>
       <div class="note">Мы вам перезвоним,<br>сообщим точную стоимость<br>и ответим на ваши вопросы</div>
     </form>
+
+  </div>
+</div>
+<?
+
+// --------------------- FAQ
+?>
+<div id="ifaq">
+  <div class="container-fluid">
+
+    <h3>Ответы на часто задаваемые вопросы</h3>
+
+    <?
+    $res = sql("SELECT * FROM {$prx}faq WHERE status = 1 ORDER BY sort,id");
+    while ($row = mysqli_fetch_assoc($res)){
+      ?>
+      <a href="" class="ifaq-q" rel="nofollow"><i>?</i><?=$row['question']?></a>
+      <div class="ifaq-a"><h4>Ответ:</h4><?=$row['answer']?></div>
+      <?
+    }
+    ?>
+
+  </div>
+</div>
+<?
+
+// --------------------- FAQ
+?>
+<style>
+#soc-vidget { text-align:center; min-height:550px;}
+#soc-vidget h3 { font-size:36px; margin:25px 0 27px;}
+</style>
+<div id="soc-vidget">
+  <div class="container-fluid">
+
+    <h3>Оставайтесь с нами в социальных сетях<br>и узнавайте первыми информацию о скидках<br>и специальных предложениях!</h3>
+
 
   </div>
 </div>

@@ -38,6 +38,14 @@
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="js/spec.js"></script>
 
+  <link href="/js/blueimp-gallery/css/blueimp-gallery.css" rel="stylesheet" type="text/css"/>
+  <link href="/js/blueimp-gallery/css/blueimp-gallery-indicator.css" rel="stylesheet">
+  <link href="/js/blueimp-gallery/css/blueimp-gallery-video.css" rel="stylesheet">
+  <script src="/js/blueimp-gallery/js/blueimp-gallery.js"></script>
+  <script src="/js/blueimp-gallery/js/blueimp-gallery-indicator.js"></script>
+  <script src="/js/blueimp-gallery/js/blueimp-gallery-video.js"></script>
+  <script src="/js/blueimp-gallery/js/blueimp-gallery-youtube.js"></script>
+
   <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
   <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
 

@@ -41,6 +41,10 @@ div.all { font-size:14px; clear:both; text-align:right; }
 a.back { margin-top:20px; font-size:12px; clear:both; float:left; }
 a.more:after { content:"в†’"; position:absolute; margin-left:5px; }
 
+.blueimp-gallery { background:rgba(0, 0, 0, 0.7); }
+.blueimp-gallery-display { /*filter: blur(2px) grayscale(100%);*/}
+.blueimp-gallery > .indicator > li { background-size:cover; width:50px; height:50px; border-radius:0;}
+
 header { background: #2e2e2e; height: 60px; line-height: 60px; padding: 0 20px; vertical-align: middle;}
 aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 .dashboard-wrapper { padding: 0; margin: 0 auto; text-align: left; margin-left: 210px; min-height: 100% !important; background: #f2f2f2;}

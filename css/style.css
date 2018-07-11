@@ -9,6 +9,8 @@ footer { position:absolute; bottom:0; min-width:1000px; width:100%; height:60px;
 
 .abtn { text-decoration:none !important; border-bottom:1px dashed;}
 
+#ajax { width:100%; display:none; }
+
 .blueimp-gallery { background:rgba(0, 0, 0, 0.7); }
 .blueimp-gallery-display { /*filter: blur(2px) grayscale(100%);*/}
 .blueimp-gallery > .indicator > li { background-size:cover; width:50px; height:50px; border-radius:0;}
@@ -201,7 +203,55 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #bron .lnks div:nth-child(2) { padding-left:40px;}
 #bron .lnks div:nth-child(2) i { color:#c52424;}
 
+#fbron { text-align:center; background-color:#ffb70a; background-image:url(/img/fbron.png); background-repeat:no-repeat; background-position:74% bottom;}
+#fbron h3 { font-size:42px; margin:25px 0 27px; color:#fff;}
+#fbron form { width:300px; margin:0 auto; color:#fff;}
+#fbron form button.btn-primary { margin-top:20px;}
+#fbron .note { font-size:15px; color:#aa8609; line-height: 18px; padding: 10px 0;}
+#fbron form label { display:block; text-align:left; font-size:15px; font-weight:400; padding:15px 0 10px;}
+#fbron form .ch { display:inline-block; width:80px; vertical-align:middle;}
+#fbron form .sign { padding-left:7px; font-size:15px; vertical-align:middle;}
+#fbron form .btn-number { padding:0 7px; font-size:12px; background:none !important; color:#fff;}
+#fbron form .btn-number:hover, #fbron form .btn-number:active { color:#000;}
+#fbron form .input-number {
+	background:none; border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00;
+	background:none; padding:0; text-align:center;
+	font:900 20px 'Roboto', sans-serif; color:#fff; cursor:default;
+	box-shadow:none; -webkit-box-shadow:none;
+}
+#fbron form .ch .input-group .input-group-btn:nth-child(1) {
+	border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-left:2px solid #ffde00; border-radius:50px 0 0 50px;
+}
+#fbron form .ch .input-group input + .input-group-btn {
+	border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-right:2px solid #ffde00; border-radius:0 50px 50px 0;
+}
+#fbron form input[name="fio"], #fbron form input[name="phone"] { font:400 20px 'Roboto', sans-serif; color:#000;}
+#fbron form input[name="phone"] { margin-top:15px;}
 
+#ifaq { text-align:center; background-color:#f1f6fa; padding-bottom:40px;}
+#ifaq h3 { font-size:36px; margin:25px 0 27px;}
+#ifaq .ifaq-q {
+	display:block; margin-top:10px; padding:10px 10px 10px 60px; min-height:49px;
+	text-align:left; border:1px solid #8dc3e8; border-radius:5px; text-decoration:none; font-size:18px; color:#000; background-color:#fff;
+}
+#ifaq .ifaq-q:hover { background-color:#e9f3fa;}
+#ifaq .ifaq-q.active { background-color:#e9f3fa; font-weight:700; }
+#ifaq .ifaq-q i {
+	position:absolute; width:43px; height:43px; overflow:hidden; margin:-8px 0 0 -58px;
+	border-radius:5px; font-weight:900; font-style:normal; color:#b3cadb; background-color:#e0ecf5; text-align:center; line-height: 42px; font-size: 26px;
+}
+#ifaq .ifaq-a {
+	display:none; text-align:left; padding:10px 10px 10px 60px; margin-top:5px; background-color:#f0fae6;
+	font-size:18px; color:#000;
+	-webkit-transition: all 0.3s ease;
+	-moz-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	-ms-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+}
+#ifaq .ifaq-a.active { display:block;}
+#ifaq .ifaq-a h4 { margin-top:0; color:#699305; font-size:20px; font-weight:700;}
+#ifaq .ifaq-a p:last-child { margin-bottom:0;}
 
 .col-xs-5,
 .col-sm-5,

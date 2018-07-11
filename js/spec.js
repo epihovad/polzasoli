@@ -1,13 +1,12 @@
-/*jQuery(document).ready(function( $ ) {
-
-});*/
-
 $(function () {
 
   Ch2btn();
   iReviews();
   iGallery();
   chQuant();
+  iFAQ();
+
+  Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
 
 });
 
@@ -120,6 +119,16 @@ function chQuant(){
     if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
       e.preventDefault();
     }
+  });
+}
+
+function iFAQ() {
+  $('#ifaq .ifaq-q').click(function () {
+    $('#ifaq .ifaq-q.active').removeClass('active');
+    $('#ifaq .ifaq-a.active').removeClass('active');
+    $(this).addClass('active');
+    $(this).next(':first').addClass('active');
+    return false;
   });
 }
 
