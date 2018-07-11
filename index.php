@@ -29,7 +29,7 @@ $index = true;
                   <a class="btn btn-warning btn-sm" data-target="#" href="#" role="button">Забронировать абонемент</a>
                 </div>
 							<?} else {?>
-                <a href="" class="bnr"></a>
+                <a href="" class="bn"></a>
 							<?}?>
             </div>
           </div>
@@ -234,42 +234,18 @@ $index = true;
 
 // --------------------- Блок Абонементов
 ?>
-<style>
-  #bron { text-align:center;}
-  #bron h3 { font-size:42px; margin:25px 0 27px;}
-  #bron .bron-days { margin:0;}
-  #bron .bron-days .bron-day-arr { margin-bottom:20px;}
-  #bron .bron-day { width:100%; height:150px; overflow:hidden; background-color:#0f74a8; border:1px solid #c7c7c7; cursor:pointer; }
-  #bron .bron-day .ch { height:27px; }
-  #bron .bron-day input { margin:9px 0 0; padding:0; cursor:pointer;}
-  #bron .bron-day .time { font-size:32px; color:#000; font-weight:700; line-height:34px;}
-  #bron .bron-day .place { width:100%; padding:6px 0 3px;}
-  #bron .bron-day .place span { width:17px; height:17px; border:1px solid #c2c2c2; background-color:#fff; display:inline-block; margin:0 2px; font-size:21px; line-height:11px;}
-  #bron .bron-day .btm { height:100px; padding-top:6px;}
-  #bron .bron-day .btm a { color:#2292ab; text-decoration:underline;}
-  #bron .bron-day .btm .note span { font-weight:700; }
-  #bron .bron-day.busy .ch input { display:none;}
-  #bron .bron-day.busy { background-color:#afafaf;}
-  #bron .bron-day.busy .place span { background-color:#bbbbbb; border:1px solid #999999; color:#999999;}
-  #bron .bron-day.busy .btm { background-color:#e9e9e9; }
-  #bron .bron-day.busy .btm .note { color:#c5070a; font-weight:700; }
-  #bron .bron-day.red { background-color:#fcf6f6;}
-  #bron .bron-day.red .place span.bs { border:1px solid #c5070a; background-color:#c5070a;}
-  #bron .bron-day.red .btm .note span { color:#c5070a; }
-  #bron .bron-day.green { background-color:#f1fce9;}
-  #bron .bron-day.green .place span.bs { border:1px solid #62bc01; background-color:#62bc01;}
-  #bron .bron-day.yellow { background-color:#fffdf2;}
-  #bron .bron-day.yellow .place span.bs { border:1px solid #f7de32; background-color:#f7de32;}
-</style>
-
-<script>
-
-</script>
-
 <div id="bron">
   <div class="container-fluid">
 
     <h3>Расписание сеансов галотерапии<br>в соляной пещере «Ассоль»</h3>
+
+    <div class="bron-calendar">
+      <a href="" rel="nofollow">10</a><a href="" rel="nofollow">11</a><a href="" rel="nofollow">12</a><a href="" rel="nofollow">13</a>
+      <a href="" class="prev" rel="nofollow"><i class="fas fa-chevron-left"></i></a>
+      <a href="" class="cur" rel="nofollow"><span>15 июня</span><i class="far fa-calendar-alt"></i></a>
+      <a href="" class="next" rel="nofollow"><i class="fas fa-chevron-right"></i></a>
+      <a href="" rel="nofollow">15</a><a href="" rel="nofollow">16</a><a href="" rel="nofollow">17</a><a href="" rel="nofollow">18</a>
+    </div>
 
     <div class="bron-days row">
       <?
@@ -303,12 +279,88 @@ $index = true;
         <?
       }
       ?>
+      <button class="btn btn-warning">Записаться на сеанс <b>18.04.18 в 15:20</b></button>
+      <div class="note">Мы обязательно предварительно вам перезвоним<br>и уточним время и другие детали проведения сеанса</div>
+      <div class="lnks">
+        <div><i class="fas fa-check-circle"></i><a href="">О пользе галотерапии</a></div>
+        <div><i class="fas fa-ban"></i><a href="">Противопоказания</a></div>
+      </div>
     </div>
 
   </div>
 </div>
 <?
 
+// --------------------- Блок Абонементов
+?>
+<style>
+#fbron { text-align:center; background-color:#ffb70a; background-image:url(/img/fbron.png); background-repeat:no-repeat; background-position:74% bottom;}
+#fbron h3 { font-size:42px; margin:25px 0 27px; color:#fff;}
+#fbron form { width:300px; margin:0 auto; color:#fff;}
+#fbron form button.btn-primary { margin-top:20px;}
+#fbron .note { font-size:15px; color:#aa8609; line-height: 18px; padding: 10px 0;}
+#fbron form label { display:block; text-align:left; font-size:15px; font-weight:400; padding:15px 0 10px;}
+#fbron form .ch { display:inline-block; width:80px; vertical-align:middle;}
+#fbron form .sign { padding-left:7px; font-size:15px; vertical-align:middle;}
+#fbron form .btn-number { padding:0 7px; font-size:12px; background:none !important; color:#fff;}
+#fbron form .btn-number:hover, #fbron form .btn-number:active { color:#000;}
+#fbron form .input-number {
+  background:none; border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00;
+  background:none; padding:0; text-align:center;
+  font:900 20px 'Roboto', sans-serif; color:#fff; cursor:default;
+  box-shadow:none; -webkit-box-shadow:none;
+}
+#fbron form .ch .input-group .input-group-btn:nth-child(1) {
+  border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-left:2px solid #ffde00; border-radius:50px 0 0 50px;
+}
+#fbron form .ch .input-group input + .input-group-btn {
+   border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-right:2px solid #ffde00; border-radius:0 50px 50px 0;
+}
+#fbron form input[name="fio"], #fbron form input[name="phone"] { font:400 20px 'Roboto', sans-serif; color:#000;}
+#fbron form input[name="phone"] { margin-top:15px;}
+</style>
+
+<script>
+  $(function () {
+    Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
+  });
+</script>
+
+<div id="fbron">
+  <div class="container-fluid">
+
+    <h3>Расчитайте примерную стоимость<br>подходящего вам абонемента</h3>
+
+    <form action="/inc/actions.php" method="post" target="ajax">
+      <input type="text" name="fio" class="form-control" placeholder="Фамилия и имя">
+
+      <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6">
+          <label>Дети (до 7 лет)</label>
+          <div class="ch"><?=chQuant('ch7', 0, 0)?></div>
+          <span class="sign">/чел.</span>
+          <label>Взрослые</label>
+          <div class="ch"><?=chQuant('grown', 0, 0)?></div>
+          <span class="sign">/чел.</span>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+          <label>Дети (до 16 лет)</label>
+          <div class="ch"><?=chQuant('ch16', 0, 0)?></div>
+          <span class="sign">/чел.</span>
+          <label>Пенсионеры</label>
+            <div class="ch"><?=chQuant('pensioner', 0, 0)?></div>
+          <span class="sign">/чел.</span>
+        </div>
+      </div>
+
+      <input type="text" name="phone" class="form-control" placeholder="Номер телефона">
+      <button class="btn btn-primary">Расчитать</button>
+      <div class="note">Мы вам перезвоним,<br>сообщим точную стоимость<br>и ответим на ваши вопросы</div>
+    </form>
+
+  </div>
+</div>
+<?
 
 $content = ob_get_clean();
 require('tpl/template.php');

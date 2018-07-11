@@ -118,7 +118,25 @@ function headerSlider()
   <?
 }
 
-
+// ПОЛЕ ДЛЯ ВВОДА КОЛ-ВА
+function chQuant($name = 'quant', $quant = 1, $min = 1, $max = 99)
+{
+	?>
+  <div class="input-group">
+		<span class="input-group-btn">
+			<button type="button" class="btn btn-default btn-number"<?=$quant<=$min?' disabled="disabled"':''?> data-type="minus">
+				<span class="glyphicon glyphicon-minus"></span>
+			</button>
+		</span>
+    <input type="text" name="<?=$name?>" class="form-control input-number" value="<?=$quant?>" min="<?=$min?>" max="<?=$max?>">
+    <span class="input-group-btn">
+			<button type="button" class="btn btn-default btn-number"<?=$quant>=$max?' disabled="disabled"':''?> data-type="plus">
+				<span class="glyphicon glyphicon-plus"></span>
+			</button>
+		</span>
+  </div>
+	<?
+}
 
 
 

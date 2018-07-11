@@ -89,9 +89,9 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #iabon .iabon-list-item .age span { padding:0 65px 7px; border-bottom:2px solid #fff072; display:inline-block;}
 #iabon .iabon-list-item .hblue { font-weight:700; font-size:19px; color:#2292ab; margin:5px 0 7px;}
 #iabon .iabon-list-item .disease { font-size:16px; height: 48px; overflow: hidden; }
-#iabon .iabon-list .bnr {
+#iabon .iabon-list .bn {
 	display:inline-block; width:100%; height:272px; overflow:hidden;
-	background-image:url(/img/iabon-banner.png); background-repeat:no-repeat; background-size:100%; background-color:#0ebac5;
+	background-image:url(/img/iabon-bn.png); background-repeat:no-repeat; background-size:100%; background-color:#0ebac5;
 }
 
 #ipromo {text-align:center; color:#fff; background:url(/img/bg-promo.jpg) no-repeat center; background-size:cover; height:702px; overflow:hidden;}
@@ -154,6 +154,54 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #igallery .item img { width:100%; -webkit-filter: brightness(50%); filter: brightness(50%);}
 #igallery a.more { font-size:18px; color:#6f6f81; display:inline-block; margin:15px auto; text-decoration:underline;}
 #igallery a.more:hover { text-decoration:none;}
+
+#bron { text-align:center;}
+#bron h3 { font-size:42px; margin:25px 0 27px;}
+#bron .bron-calendar { padding:0 0 25px 0;}
+#bron .bron-calendar a { color:#191919; font-weight:700; padding:0 5px; text-decoration:underline; vertical-align: middle;}
+#bron .bron-calendar a:hover { text-decoration:none;}
+#bron .bron-calendar a.prev, #bron .bron-calendar a.next { text-decoration:none; font-size:32px; color:#00a1bd;}
+#bron .bron-calendar a.prev:hover, #bron .bron-calendar a.next:hover {color:#104F7E;}
+#bron .bron-calendar a.prev i, #bron .bron-calendar a.next i {}
+#bron .bron-calendar a.cur { font-size:32px; color:#00a1bd; vertical-align: middle; font-weight:400; text-decoration:none;}
+#bron .bron-calendar a.cur:hover {color:#104F7E;}
+#bron .bron-calendar a.cur span + i { padding:0 5px 0 10px;}
+#bron .bron-calendar a.cur:before { content:"Сегодня"; margin:-15px 0 0 55px; position:absolute; font-size:16px; }
+#bron .bron-days { margin:0;}
+#bron .bron-days .bron-day-arr { margin-bottom:20px;}
+#bron .bron-day { width:100%; height:150px; overflow:hidden; background-color:#0f74a8; border:1px solid #c7c7c7; cursor:pointer; }
+#bron .bron-day .ch { height:27px; }
+#bron .bron-day input { margin:9px 0 0; padding:0; cursor:pointer;}
+#bron .bron-day .time { font-size:32px; color:#000; font-weight:700; line-height:34px;}
+#bron .bron-day .place { width:100%; padding:6px 0 3px;}
+#bron .bron-day .place span { width:17px; height:17px; border:1px solid #c2c2c2; background-color:#fff; display:inline-block; margin:0 2px; font-size:21px; line-height:11px;}
+#bron .bron-day .btm { height:100px; padding-top:6px;}
+#bron .bron-day .btm a { color:#2292ab; text-decoration:underline;}
+#bron .bron-day .btm .note span { font-weight:700; }
+#bron .bron-day.busy .ch input { display:none;}
+#bron .bron-day.busy { background-color:#afafaf;}
+#bron .bron-day.busy .place span { background-color:#bbbbbb; border:1px solid #999999; color:#999999;}
+#bron .bron-day.busy .btm { background-color:#e9e9e9; }
+#bron .bron-day.busy .btm .note { color:#c5070a; font-weight:700; }
+#bron .bron-day.red { background-color:#fcf6f6;}
+#bron .bron-day.red .place span.bs { border:1px solid #c5070a; background-color:#c5070a;}
+#bron .bron-day.red .btm .note span { color:#c5070a; }
+#bron .bron-day.green { background-color:#f1fce9;}
+#bron .bron-day.green .place span.bs { border:1px solid #62bc01; background-color:#62bc01;}
+#bron .bron-day.yellow { background-color:#fffdf2;}
+#bron .bron-day.yellow .place span.bs { border:1px solid #f7de32; background-color:#f7de32;}
+#bron .btn { margin-top:10px;}
+#bron .note { font-size:15px; color:#000; line-height: 18px; padding: 20px 0;}
+#bron .lnks div { display:inline-block; padding-bottom:60px;}
+#bron .lnks div a { font-size:20px; color:#2292ab; text-decoration:underline;}
+#bron .lnks div a:hover { text-decoration:none;}
+#bron .lnks div i { font-size:24px; position:absolute; margin:2px 0 0 -32px;}
+#bron .lnks div:nth-child(1) { padding-right:40px;}
+#bron .lnks div:nth-child(1) i { color:#2ecc71;}
+#bron .lnks div:nth-child(2) { padding-left:40px;}
+#bron .lnks div:nth-child(2) i { color:#c52424;}
+
+
 
 .col-xs-5,
 .col-sm-5,

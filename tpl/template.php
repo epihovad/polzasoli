@@ -32,6 +32,9 @@
   <script src="/js/blueimp-gallery/js/blueimp-gallery-video.js"></script>
   <script src="/js/blueimp-gallery/js/blueimp-gallery-youtube.js"></script>
 
+  <script src="/js/inputmask.min.js"></script>
+  <script src="/js/inputmask.phone.extensions.min.js"></script>
+
   <link href="/css/style.css" rel="stylesheet" type="text/css" />
 
   <!--[if lt IE 9]>
