@@ -3,8 +3,8 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,700,900');
 
 html { position: relative; min-height: 100%;}
-body { margin-bottom: 60px; background-color:#fff; font-family:'Roboto', sans-serif; }
-footer { position:absolute; bottom:0; min-width:1000px; width:100%; height:60px; background-color:#f5f5f5;}
+body { /*margin-bottom: 60px;*/ background-color:#fff; font-family:'Roboto', sans-serif; }
+footer { position:absolute; bottom:0; min-width:1000px; width:100%; /*height:60px;*/ background-color:#f5f5f5;}
 .container-fluid { /*width: auto; max-width: 680px;*/ width:1000px; }
 
 .abtn { text-decoration:none !important; border-bottom:1px dashed;}
@@ -252,6 +252,29 @@ header.index { background-image:url(/img/header.jpg); background-repeat:no-repea
 #ifaq .ifaq-a.active { display:block;}
 #ifaq .ifaq-a h4 { margin-top:0; color:#699305; font-size:20px; font-weight:700;}
 #ifaq .ifaq-a p:last-child { margin-bottom:0;}
+
+#subscribe { text-align:center; padding-bottom:20px; background:url(/img/bg-subscribe.jpg) repeat left top;}
+#subscribe h3 { font-size:24px; margin:25px 0 27px; color:#fff;}
+#subscribe h3 b { font-weight:700; color:#fed472;}
+#subscribe .frm input { width:300px; padding-right:50px; display:inline-block; border-radius:50px; border:2px solid #e8e9ed; color:#000; height:47px; vertical-align:middle;}
+#subscribe .frm i {
+	width:39px; height:39px; overflow:hidden; color:#fff; line-height:42px; font-size:26px; cursor:pointer;
+	background-color:#ffc743;text-align:center; border-radius:50px; margin:0 0 0 -44px; vertical-align:middle;
+}
+#subscribe .frm i:hover { color:#fffe4e;}
+#subscribe .frm i.disabled {cursor: not-allowed; filter: alpha(opacity=65); opacity: .65; color:#fff;}
+#bmain { margin:90px 0 0; color:#fff;}
+#bmain .copy { text-align:left;}
+#bmain .soc { text-align:right; padding-left:0;}
+#bmain .soc a { background-color:#fff; display:inline-block; text-align:center; width:41px; height:41px; overflow:hidden; border-radius:50px; margin-right:12px; }
+#bmain .soc a:hover { background-color:#fff15b;}
+#bmain .soc a:last-child { margin:0;}
+#bmain .soc i { color:#2e99b1; padding-top:7px; font-size:26px; line-height:1;}
+#bmain .col2, #bmain .col3 { text-align:left; padding-left:0;}
+#bmain .col3 { padding-right:0;}
+#bmain .col2 a, #bmain .col3 a { color:#fff; text-decoration:underline;}
+#bmain .col2 a:hover, #bmain .col3 a:hover { text-decoration:none;}
+#bmain a.active {color:#fed472;}
 
 .col-xs-5,
 .col-sm-5,

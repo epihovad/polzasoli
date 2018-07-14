@@ -366,5 +366,8 @@ $index = true;
 </div>
 <?
 
+// --------------------- Мини-баннер
+banner_mini();
+
 $content = ob_get_clean();
 require('tpl/template.php');

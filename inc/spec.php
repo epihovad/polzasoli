@@ -138,9 +138,116 @@ function chQuant($name = 'quant', $quant = 1, $min = 1, $max = 99)
 	<?
 }
 
+// Мини-биннер
+function banner_mini(){
+  global $prx;
+
+  if($_COOKIE['bnr-mini'] == 'hide'){
+    return;
+  }
+
+  if(!$bnr = getRow("SELECT * FROM {$prx}banner_mini ORDER BY is_through DESC, RAND() LIMIT 1")){
+    return;
+  }
+
+  ?>
+  <style>
+    #bnr-mini { background-color:#434350; color:#fff;}
+    #bnr-mini .container-fluid { position:relative;}
+    #bnr-mini i.hdn { color:#8d8da7; font-size:20px; position:absolute; right:7px; top:7px; cursor:pointer;}
+    #bnr-mini i.hdn:hover { color:#FFFE4E;}
+    #bnr-mini .ar { width:70%; margin:0 auto; text-align:left; padding:20px 0;}
+    #bnr-mini img { float:left; margin-right:25px;}
+    #bnr-mini h4 { margin:0 0 5px; }
+    #bnr-mini .btn { margin-top:20px;}
+  </style>
+  <script>
+    $(function () {
+      //$.removeCookie('bnr-mini');
+      $('#bnr-mini i.hdn').click(function () {
+        $('#bnr-mini').slideUp(300,function () {
+          $(this).remove();
+        });
+        $.cookie('bnr-mini', 'hide', { expires: 1 });
+      });
+    })
+  </script>
+  <div id="bnr-mini">
+    <div class="container-fluid">
+      <i class="fas fa-times hdn"></i>
+      <div class="ar">
+        <img src="/banner_mini/1.jpg">
+        <h4><?=$bnr['name']?></h4>
+        <div><?=$bnr['text']?></div>
+        <a class="btn btn-warning btn-sm" data-target="#" href="<?=$bnr['link']?>" role="button">Узнать больше<i class="fas fa-arrow-right"></i></a>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+  <?
+}
+
+// Подписка
+function subscribe() {
+	?>
+  <div id="subscribe">
+    <div class="container-fluid">
+
+      <h3>Получайте советы по улучшению состояния<br>вашего здоровья и схемы дыхательных гимнастик<br><b>абсолютно бесплатно на ваш E-mail прямо сейчас</b></h3>
+
+      <div class="frm">
+        <input type="text" name="email" class="form-control" placeholder="Введите Ваш Email"><i class="fab fa-telegram-plane"></i>
+      </div>
+
+      <?=bmain()?>
+
+    </div>
+  </div>
+	<?
+}
+
+function bmain(){
+  global $prx, $mainID;
+
+  $res = sql("SELECT * FROM {$prx}pages WHERE is_bmain = 1 AND `status` = 1 ORDER BY sort, id");
+  $cnt = mysqli_num_rows($res);
+  $col = array(array(),array());
+  $cnt_in_col  = ceil($cnt/2);
+  $i=1;
+  while ($row = @mysqli_fetch_assoc($res)){
+		$link = $row['type']=='link' ? $row['link'] : ($row['link']=='/' ? '/' : "/{$row['link']}.htm");
+		$cur = $row['id'] == $mainID || ($_SERVER['REQUEST_URI'] == '/' && $link == '/') ? true : false;
+    ob_start();
+    ?><div><a href="<?=$link?>" class="<?=$cur?'active':''?>"><?=$row['name']?></a></div><?
+    $col[$i++ <= $cnt_in_col ? 0 : 1][] = ob_get_clean();
+  }
+  ?>
+
+  <div id="bmain" class="row">
+    <div class="copy col-xs-3 col-sm-3 col-md-3">
+      © 2016 Соляная пещера «Ассоль»
+    </div>
+    <div class="col2 col-xs-3 col-sm-3 col-md-3">
+      <? foreach ($col[0] as $item) { echo $item; }?>
+    </div>
+    <div class="col3 col-xs-3 col-sm-3 col-md-3">
+			<? foreach ($col[1] as $item) { echo $item; }?>
+    </div>
+    <div class="soc col-xs-3 col-sm-3 col-md-3">
+      <a href="#"><i class="fab fa-vk"></i></a>
+      <a href="#"><i class="fab fa-odnoklassniki"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+    </div>
+  </div>
+  <?
+}
+
+// Спр-к болезней
+function diseases(){
+  global $prx;
 
 
-
+}
 
 
 

@@ -103,12 +103,19 @@ jAlert - собственный плагин (v1.0).
 				if($.browser.version<'9.0')
 					$jA_wind.find('.btn_place').width($jA_wind.width());
 			}
-			
+
 			windW = $jA_wind.width();
 			windH = $jA_wind.height();
-			windL = Math.round( ($('body').width()/2) - (windW/2) + $(window).scrollLeft() );
-			windT = Math.round( ($('body').height()/2) - (windH/2) + $(window).scrollTop() );
-			
+
+      var dualScreenLeft = window.screenLeft != undefined ? window.screenLeft : window.screenX;
+      var dualScreenTop = window.screenTop != undefined ? window.screenTop : window.screenY;
+
+      var width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+      var height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+      var windL = ((width / 2) - (windW / 2)) + dualScreenLeft + $(window).scrollLeft();
+      var windT = ((height / 2) - (windH / 2)) + dualScreenTop + $(window).scrollTop();
+
 			$jA_wind.css({
 				'left' : windL,
 				'top' : windT,
@@ -125,7 +132,7 @@ jAlert - собственный плагин (v1.0).
         $('body').css('overflow-y','hidden');
 			}*/
       StartSrollTop = $(window).scrollTop();
-      $(window).bind('scroll touchmove mousewheel',handlerScroll);
+      //$(window).bind('scroll touchmove mousewheel',handlerScroll);
 
 			if(ie && $.browser.version<'9.0')
 			{
@@ -146,7 +153,7 @@ jAlert - собственный плагин (v1.0).
       $jA_wind_shadow.hide();
 			$jA_wind.find('.btn_place').html('');
 			$jA_blackout.fadeOut('slow');
-      $(window).unbind('scroll touchmove mousewheel',handlerScroll);
+      //$(window).unbind('scroll touchmove mousewheel',handlerScroll);
       //$('body').css('overflow-y',body_overflow_y);
 		}
 	};

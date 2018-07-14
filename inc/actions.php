@@ -63,18 +63,29 @@ if(isset($_GET['action']))
 			mailTo(array(set('admin_mail'),'info@estill.ru'), $mailto['theme'], $mailto['text']);
 
 			?><script>top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery.arcticmodal('close')});</script><?
-			break;
+			exit;
 
 		// ------------------- Подписка на рассылку
 		case 'subscribe':
 			foreach($_REQUEST as $k=>$v)
 				$$k = clean($v);
 
-			if($hdn) exit; // спам-боты
+			// защита от спама
+			$refererUrlArr = parse_url($_SERVER['HTTP_REFERER']);
+			if($refererUrlArr['host'] != $_SERVER['HTTP_HOST'])
+			  exit;
+			//if($hdn) exit;
 
-			$jAlert_js = "top.jQuery('.fnews .btn').removeClass('disabled');";
-
-			if(!check_mail($email)) jAlert('Введен некорректный E-mail');
+			if(!check_mail($email)){
+				$alert = 'Введен некорректный Email';
+				?>
+        <script>
+          top.$('#subscribe .frm i').removeClass('disabled');
+          top.$(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.$('#subscribe .frm input').val('')});
+        </script>
+				<?
+        exit;
+      }
 
 			// проверка подписан ли уже email
 			if($subs = getRow("SELECT * FROM {$prx}subscribers WHERE email = '{$email}'")){
@@ -86,6 +97,8 @@ if(isset($_GET['action']))
 						$alert = 'Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.';
 					} else {
 						$alert = 'Вы успешно подписаны на рассылку.<br>Благодарим за проявленный интерес.<br>Вы не пожалеете!';
+						// мылим админу
+						mailTo(array(set('admin_mail')), 'Новый подписчик', 'У нас новый подписчик:<br>'.$email);
 					}
 				}
 			} else {
@@ -94,19 +107,18 @@ if(isset($_GET['action']))
 					$alert = 'Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.';
 				} else {
 					$alert = 'Вы успешно подписаны на рассылку.<br>Благодарим за проявленный интерес.<br>Вы не пожалеете!';
+					// мылим админу
+					mailTo(array(set('admin_mail')), 'Новый подписчик', 'У нас новый подписчик:<br>'.$email);
 				}
 			}
 
-			// мылим админу
-			mailTo(array(set('admin_mail'),'info@estill.ru',$email), 'Новый подписчик', 'У нас новый подписчик:<br>'.$email);
-
 			?>
       <script>
-        top.jQuery('.fnews .btn').removeClass('disabled');
-        top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery('.fnews input').val('')});
+        top.$('#subscribe .frm i').removeClass('disabled');
+        top.$(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.$('#subscribe .frm input').val('')});
       </script>
       <?
-			break;
+			exit;
 	}
 	exit;
 }

@@ -5,9 +5,13 @@ $(function () {
   iGallery();
   chQuant();
   iFAQ();
-
+  //
   Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
-
+  //
+  $('#subscribe .frm i').click(function(){
+    $(this).addClass('disabled');
+    inajax('/inc/actions.php?action=subscribe','email='+$(this).prev().val());
+  });
 });
 
 function Ch2btn() {

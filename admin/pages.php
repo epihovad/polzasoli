@@ -59,6 +59,7 @@ if(isset($_GET['action']))
 							ids_disease=".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
 							type='{$type}',
 							is_main='{$is_main}',
+							is_bmain='{$is_bmain}',
 							is_slider='{$is_slider}',
 							status='{$status}',
 							h1=".($h1?"'{$h1}'":"NULL").",
@@ -92,6 +93,7 @@ if(isset($_GET['action']))
 			break;
 		// ----------------- обновление в меню
 		case 'is_main':
+		case 'is_bmain':
 		case 'is_slider':
 		case 'status':
 			update_flag($tbl,$_GET['action'],$id);
@@ -198,6 +200,11 @@ elseif(isset($_GET['red']))
         <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_main"',$row['is_main'])?></td>
       </tr>
       <tr>
+        <th><?=help('отображать объект в футере сайта')?></th>
+        <th>В футер</th>
+        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_bmain"',$row['is_bmain'])?></td>
+      </tr>
+      <tr>
         <th></th>
         <th>Статус</th>
         <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
@@ -281,6 +288,7 @@ else
         <th width="50%"><?=SortColumn('Ссылка','link')?></th>
         <th nowrap><?=SortColumn('Тип','type')?></th>
         <th nowrap><?=SortColumn('Глав. меню','is_main')?> <?=help('отображать объект в главном меню')?></th>
+        <th nowrap><?=SortColumn('Футер','is_bmain')?> <?=help('отображать объект в футере сайта')?></th>
         <th nowrap><?=SortColumn('В слайдер','is_slider')?> <?=help('отображать объект в слайдере<br>на главной странице')?></th>
         <th nowrap><?=SortColumn('Статус','status')?></th>
         <th style="padding:0 30px;"></th>
@@ -332,6 +340,7 @@ else
           <td><?=$row['type']=='page'?'/':''?><a href="<?=$link?>" class="clr-green" target="_blank"><?=$row['link']?></a><?=$row['type']=='page'?'.htm':''?></td>
           <th><?=$row['type']=='page'?'страница':'ссылка'?></th>
           <th><?=btn_flag($row['is_main'],$id,'action=is_main&id=',$locked)?></th>
+          <th><?=btn_flag($row['is_bmain'],$id,'action=is_bmain&id=',$locked)?></th>
           <th><?=btn_flag($row['is_slider'],$id,'action=is_slider&id=',$locked)?></th>
           <th><?=btn_flag($row['status'],$id,'action=status&id=',$locked)?></th>
           <th nowrap><?=btn_edit($id,$locked)?></th>

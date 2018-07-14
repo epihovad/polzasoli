@@ -18,6 +18,9 @@
 
   <link href="/css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet" type="text/css" />
 
+  <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
+  <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
+
   <script src="/js/jquery.scrollUp.js"></script>
   <script src="/js/js-url-master/url.min.js"></script>
 
@@ -32,8 +35,13 @@
   <script src="/js/blueimp-gallery/js/blueimp-gallery-video.js"></script>
   <script src="/js/blueimp-gallery/js/blueimp-gallery-youtube.js"></script>
 
+  <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
+  <script type="text/javascript" src="/js/jAlert/jquery.jAlert.js"></script>
+
   <script src="/js/inputmask.min.js"></script>
   <script src="/js/inputmask.phone.extensions.min.js"></script>
+
+  <script src="/js/jquery.cookie.js"></script>
 
   <link href="/css/style.css" rel="stylesheet" type="text/css" />
 
@@ -96,9 +104,8 @@
 </div>
 
 <footer>
-  <div class="container-fluid">
-    Footer
-  </div>
+  <?=subscribe()?>
+  <?=diseases()?>
 </footer>
 
 <iframe name="ajax" id="ajax"></iframe>

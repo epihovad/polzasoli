@@ -46,7 +46,7 @@
   <script src="/js/blueimp-gallery/js/blueimp-gallery-video.js"></script>
   <script src="/js/blueimp-gallery/js/blueimp-gallery-youtube.js"></script>
 
-  <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
+  <link rel="stylesheet" href="/js/jAlert/jAlert_admin.css" type="text/css" />
   <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
 
   <link type="text/css" href="/js/tooltip/tooltip.css" rel="stylesheet">
