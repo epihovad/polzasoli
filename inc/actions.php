@@ -127,7 +127,36 @@ if(isset($_GET['show']))
 {
 	switch($_GET['show'])
   {
-		// ------------------- Форма обратной связи
+    // ------------------- Запись на сеанс
+    case 'seance':
+      ?>
+      <style>
+      #frm-seance { width:376px; padding:15px 0 15px 0;}
+      #frm-seance h4 { font-size:30px; font-weight:700; margin:0 0 15px; }
+      #frm-seance .pad { padding:0 29px;}
+      #frm-seance input[name="name"] { margin-bottom:20px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+      #frm-seance input[name="phone"] { margin-bottom:25px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+      </style>
+
+      <form id="frm-seance" action="/inc/actions.php?action=seance" class="frm" target="ajax" method="post">
+        <div class="pad">
+          <h4>Записаться на сеанс</h4>
+            <input type="text" class="form-control" name="name" placeholder="Имя">
+            <input type="text" class="form-control" name="phone" placeholder="Телефон">
+        </div>
+        <div class="sep"></div>
+        <div class="pad">
+
+        </div>
+      </form>
+      <script>
+        $(function () {
+          Inputmask({mask: '+7 (999) 999-99-99',showMaskOnHover: false}).mask($('#frm-seance input[name="phone"]'));
+        });
+      </script>
+      <?
+      break;
+		/*// ------------------- Форма обратной связи
 		case 'feedback':
 			$type = $_GET['type'];
 			$h3 = '';
@@ -199,7 +228,7 @@ if(isset($_GET['show']))
         });
       </script>
       <?}
-			break;
+			break;*/
 	}
 	exit;
 }

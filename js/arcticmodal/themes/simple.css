@@ -1,12 +1,17 @@
+.arcticmodal-overlay { opacity:0.65;}
 .box-modal {
 	position: relative;
-	width: 500px;
-	padding: 16px;
+	/*width: 500px;*/
+	padding: 0;
 	background: #fff;
-	color: #3c3c3c;
-	font: 14px/18px Arial, "Helvetica CY", "Nimbus Sans L", sans-serif;
-	box-shadow: 0 0 0 12px rgba(153, 153, 153, .3);
-	border-radius: 6px;
+	color: #000;
+	font: 14px/18px 'Roboto', sans-serif;
+	/*box-shadow: 0 0 0 12px rgba(153, 153, 153, .3);
+	border-radius: 6px;*/
+	-moz-box-shadow:10px 10px 15px #1b1b1b;
+	-webkit-box-shadow:10px 10px 15px #1b1b1b;
+	-khtml-box-shadow:10px 10px 15px #1b1b1b;
+	box-shadow:10px 10px 15px #1b1b1b;
 }
-.box-modal_close { position: absolute; right: 10px; top: 6px; font-size: 11px; line-height: 15px; color: #999; cursor: pointer; }
-.box-modal_close:hover { color: #666; }
+.box-modal_close { position: absolute; right: 7px; top: 7px; font-size: 15px; line-height:1; color: #538d99; cursor: pointer; }
+.box-modal_close:hover { color: #000; }

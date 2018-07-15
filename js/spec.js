@@ -8,6 +8,10 @@ $(function () {
   //
   Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
   //
+  $('header .hb3 button').click(function(){
+    jPop('/inc/actions.php?show=seance');
+  });
+  //
   $('#subscribe .frm i').click(function(){
     $(this).addClass('disabled');
     inajax('/inc/actions.php?action=subscribe','email='+$(this).prev().val());

@@ -21,6 +21,10 @@
   <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
   <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
 
+  <script src="/js/arcticmodal/jquery.arcticmodal-0.3.min.js"></script>
+  <link rel="stylesheet" href="/js/arcticmodal/jquery.arcticmodal-0.3.css">
+  <link rel="stylesheet" href="/js/arcticmodal/themes/simple.css">
+
   <script src="/js/jquery.scrollUp.js"></script>
   <script src="/js/js-url-master/url.min.js"></script>
 
