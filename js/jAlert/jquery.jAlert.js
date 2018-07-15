@@ -132,7 +132,7 @@ jAlert - собственный плагин (v1.0).
         $('body').css('overflow-y','hidden');
 			}*/
       StartSrollTop = $(window).scrollTop();
-      //$(window).bind('scroll touchmove mousewheel',handlerScroll);
+      $(window).bind('scroll touchmove mousewheel',handlerScroll);
 
 			if(ie && $.browser.version<'9.0')
 			{
@@ -153,7 +153,7 @@ jAlert - собственный плагин (v1.0).
       $jA_wind_shadow.hide();
 			$jA_wind.find('.btn_place').html('');
 			$jA_blackout.fadeOut('slow');
-      //$(window).unbind('scroll touchmove mousewheel',handlerScroll);
+      $(window).unbind('scroll touchmove mousewheel',handlerScroll);
       //$('body').css('overflow-y',body_overflow_y);
 		}
 	};

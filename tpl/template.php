@@ -40,7 +40,7 @@
   <script src="/js/blueimp-gallery/js/blueimp-gallery-youtube.js"></script>
 
   <link rel="stylesheet" href="/js/jAlert/jAlert.css" type="text/css" />
-  <script type="text/javascript" src="/js/jAlert/jquery.jAlert.js"></script>
+  <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
 
   <script src="/js/inputmask.min.js"></script>
   <script src="/js/inputmask.phone.extensions.min.js"></script>
