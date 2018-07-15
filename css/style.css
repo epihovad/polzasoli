@@ -13,7 +13,7 @@ body { /*margin-bottom: 60px;*/ background-color:#fff; font-family:'Roboto', san
 .blueimp-gallery-display { /*filter: blur(2px) grayscale(100%);*/}
 .blueimp-gallery > .indicator > li { background-size:cover; width:50px; height:50px; border-radius:0;}
 
-.form-control { box-shadow:none;}
+.form-control { box-shadow:none; -webkit-box-shadow:none;}
 
 header { padding-bottom:10px; min-width:1000px; background-color:#2e99b1;}
 header.index { background-image:url(/img/header.jpg); background-repeat:no-repeat; background-position: bottom center; background-size:cover; padding-bottom:24px;}
