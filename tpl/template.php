@@ -29,7 +29,7 @@
   <script src="/js/js-url-master/url.min.js"></script>
 
   <script type="text/javascript" src="/js/utils.js"></script>
-  <script type="text/javascript" src="/js/spec.js"></script>
+  <script type="text/javascript" src="/js/spec.js?v=1"></script>
 
   <link href="/js/blueimp-gallery/css/blueimp-gallery.css" rel="stylesheet" type="text/css"/>
   <link href="/js/blueimp-gallery/css/blueimp-gallery-indicator.css" rel="stylesheet">
@@ -47,7 +47,7 @@
 
   <script src="/js/jquery.cookie.js"></script>
 
-  <link href="/css/style.css" rel="stylesheet" type="text/css" />
+  <link href="/css/style.css?v=1" rel="stylesheet" type="text/css" />
 
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
