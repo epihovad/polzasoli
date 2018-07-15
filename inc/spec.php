@@ -154,7 +154,7 @@ function banner_mini(){
   <style>
     #bnr-mini { background-color:#434350; color:#fff;}
     #bnr-mini .container-fluid { position:relative;}
-    #bnr-mini i.hdn { color:#8d8da7; font-size:20px; position:absolute; right:24px; top:7px; cursor:pointer;}
+    #bnr-mini i.hdn { color:#8d8da7; font-size:20px; position:absolute; right:7px; top:7px; cursor:pointer;}
     #bnr-mini i.hdn:hover { color:#FFFE4E;}
     #bnr-mini .ar { width:70%; margin:0 auto; text-align:left; padding:20px 0;}
     #bnr-mini img { float:left; margin-right:25px; max-width:125px;}
