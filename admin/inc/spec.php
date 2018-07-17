@@ -249,7 +249,7 @@ function show_tr_images($mask,$title='Изображения',$help='',$count=3,
 							<div class="im">
 								<div class="i0"><?=$i++?>.</div>
 								<div class="i1"><a href="/uploads/<?=$dir?>/<?=$fname?>" class="blueimp" title=""><img src="/uploads/<?=$dir?>/<?=$size_mini?>/<?=$fname?>" width="16"></a></div>
-								<div class="i2"><a href="?action=img_del&id=<?=$mask?>&dir=<?=$dir?>&fname=<?=$fname?>" target="ajax" title="удалить текущее изображение"><img src="img/del.png"></a></div>
+								<div class="i2"><a href="?action=img_del&id=<?=$mask?>&dir=<?=$dir?>&fname=<?=$fname?>" target="ajax" title="удалить текущее изображение"><i class="far fa-trash-alt"></i></a></div>
 							</div>
 							<?
 						}

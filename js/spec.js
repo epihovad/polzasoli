@@ -64,9 +64,13 @@ function iGallery(){
   });
 }
 
-function chQuant(){
+function chQuant($area){
   //
-  $('.btn-number').click(function(e){
+  if($area == undefined){
+    $area = $(document);
+  }
+  //
+  $area.find('.btn-number').click(function(e){
     e.preventDefault();
     var $block    = $(this).parents('.input-group:first');
     var $input    = $block.find('input[type="text"]');
@@ -92,10 +96,10 @@ function chQuant(){
       $input.val(0);
     }
   });
-  $('.input-number').focusin(function(){
+  $area.find('.input-number').focusin(function(){
     $(this).data('oldValue', $(this).val());
   });
-  $('.input-number').change(function() {
+  $area.find('.input-number').change(function() {
     var $block = $(this).parents('.input-group:first');
     minValue =  parseInt($(this).attr('min'));
     maxValue =  parseInt($(this).attr('max'));
@@ -113,7 +117,7 @@ function chQuant(){
       $(this).val($(this).data('oldValue'));
     }
   });
-  $(".input-number").keydown(function (e) {
+  $area.find('.input-number').keydown(function (e) {
     // Allow: backspace, delete, tab, escape, enter and .
     if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 190]) !== -1 ||
       // Allow: Ctrl+A

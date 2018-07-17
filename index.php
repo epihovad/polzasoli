@@ -14,6 +14,10 @@ $index = true;
       <button type="button" class="btn btn-default" for="iabon-children"><span></span>Детям</button>
     </div>
 
+    <?
+    $tickets = gtv('tickets','*',1);
+    ?>
+
     <div id="iabon-adults">
       <div class="iabon-list row">
 				<? for($i=0; $i<6; $i++) { ?>
@@ -299,9 +303,9 @@ $index = true;
     <h3>Расчитайте примерную стоимость<br>подходящего вам абонемента</h3>
 
     <form action="/inc/actions.php" method="post" target="ajax">
-      <input type="text" name="fio" class="form-control" placeholder="Фамилия и имя">
+      <input type="text" name="fio" class="form-control" placeholder="Ваше Имя">
 
-      <div class="row">
+      <div class="row sguest">
         <div class="col-xs-6 col-sm-6 col-md-6">
           <label>Дети (до 7 лет)</label>
           <div class="ch"><?=chQuant('ch7', 0, 0)?></div>
@@ -320,7 +324,7 @@ $index = true;
         </div>
       </div>
 
-      <input type="text" name="phone" class="form-control" placeholder="Номер телефона">
+      <input type="text" name="phone" class="form-control" placeholder="Контактный телефон">
       <button class="btn btn-primary">Расчитать</button>
       <div class="note">Мы вам перезвоним,<br>сообщим точную стоимость<br>и ответим на ваши вопросы</div>
     </form>

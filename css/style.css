@@ -211,25 +211,26 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #fbron form { width:300px; margin:0 auto; color:#fff;}
 #fbron form button.btn-primary { margin-top:20px;}
 #fbron .note { font-size:15px; color:#aa8609; line-height: 18px; padding: 10px 0;}
-#fbron form label { display:block; text-align:left; font-size:15px; font-weight:400; padding:15px 0 10px;}
-#fbron form .ch { display:inline-block; width:80px; vertical-align:middle;}
-#fbron form .sign { padding-left:7px; font-size:15px; vertical-align:middle;}
-#fbron form .btn-number { padding:0 7px; font-size:12px; background:none !important; color:#fff;}
-#fbron form .btn-number:hover, #fbron form .btn-number:active { color:#000;}
-#fbron form .input-number {
+#fbron form input[name="fio"], #fbron form input[name="phone"] { font:400 20px 'Roboto', sans-serif; color:#000;}
+#fbron form input[name="phone"] { margin-top:15px;}
+
+.sguest label { display:block; text-align:left; font-size:15px; font-weight:400; padding:15px 0 10px;}
+.sguest .ch { display:inline-block; width:80px; vertical-align:middle;}
+.sguest .sign { padding-left:7px; font-size:15px; vertical-align:middle;}
+.sguest .btn-number { padding:0 7px; font-size:12px; background:none !important; color:#fff;}
+.sguest .btn-number:hover, .sguest .btn-number:active { color:#000;}
+.sguest .input-number {
 	background:none; border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00;
 	background:none; padding:0; text-align:center;
 	font:900 20px 'Roboto', sans-serif; color:#fff; cursor:default;
 	box-shadow:none; -webkit-box-shadow:none;
 }
-#fbron form .ch .input-group .input-group-btn:nth-child(1) {
+.sguest .ch .input-group .input-group-btn:nth-child(1) {
 	border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-left:2px solid #ffde00; border-radius:50px 0 0 50px;
 }
-#fbron form .ch .input-group input + .input-group-btn {
+.sguest .ch .input-group input + .input-group-btn {
 	border:none; border-top:2px solid #ffde00; border-bottom:2px solid #ffde00; border-right:2px solid #ffde00; border-radius:0 50px 50px 0;
 }
-#fbron form input[name="fio"], #fbron form input[name="phone"] { font:400 20px 'Roboto', sans-serif; color:#000;}
-#fbron form input[name="phone"] { margin-top:15px;}
 
 #ifaq { text-align:center; background-color:#f1f6fa; padding-bottom:40px;}
 #ifaq h3 { font-size:36px; margin:25px 0 27px;}

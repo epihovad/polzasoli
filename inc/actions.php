@@ -9,6 +9,10 @@ if(isset($_GET['action']))
 {
 	switch($_GET['action'])
 	{
+	  // -------------------
+		case 'seance':
+		  jAlert('привет');
+		  break;
 		// ------------------- Форма обратной связи
 		case 'feedback':
 
@@ -131,22 +135,73 @@ if(isset($_GET['show']))
     case 'seance':
       ?>
       <style>
-      #frm-seance { width:376px; padding:15px 0 15px 0;}
-      #frm-seance h4 { font-size:30px; font-weight:700; margin:0 0 15px; }
-      #frm-seance .pad { padding:0 29px;}
-      #frm-seance input[name="name"] { margin-bottom:20px; font: 400 16px 'Roboto', sans-serif; color: #000;}
-      #frm-seance input[name="phone"] { margin-bottom:25px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+        #frm-seance { width:376px; padding:15px 0 15px 0;}
+        #frm-seance h4 { font-size:30px; font-weight:700; margin:0 0 15px; }
+        #frm-seance .pad { padding:0 29px;}
+        #frm-seance input[name="name"] { margin-bottom:20px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+        #frm-seance input[name="phone"] { margin-bottom:10px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+        #frm-seance .sguest label {font-size:14px; padding:20px 0 5px;}
+        #frm-seance .sguest .sign { color:#939393;}
+        #frm-seance .sguest .btn-number { color:#939393;}
+        #frm-seance .sguest .btn-number:hover, #frm-seance .sguest .btn-number:active { color:#000;}
+        #frm-seance .sguest .input-number { border-color:#419fb9; color:#939393; }
+        #frm-seance .sguest .ch .input-group .input-group-btn { border-color:#419fb9; }
+        #frm-seance .sep { margin-top:25px; height:1px; border-top:2px dotted #419fb9; padding:22px 0 0;}
+        #frm-seance .checkbox { margin:0 0 10px; }
+        #frm-seance .checkbox input { margin-top:0;}
+        #frm-seance .checkbox label { font-size:13px; line-height:14px;}
+        #frm-seance .rules { font-size:13px; line-height:14px; padding-bottom:15px;}
+        #frm-seance .rules + .checkbox label { color:#939393;}
+        #frm-seance .rules + .checkbox a { color:#939393; text-decoration:underline;}
+        #frm-seance .rules + .checkbox a:hover { text-decoration:none;}
+        #frm-seance button { margin-top:10px;}
       </style>
+    <script>
+      $(function () {
+        chQuant($('#frm-seance'));
+      })
+    </script>
 
       <form id="frm-seance" action="/inc/actions.php?action=seance" class="frm" target="ajax" method="post">
         <div class="pad">
           <h4>Записаться на сеанс</h4>
-            <input type="text" class="form-control" name="name" placeholder="Имя">
-            <input type="text" class="form-control" name="phone" placeholder="Телефон">
+          <input type="text" class="form-control" name="name" placeholder="Ваше Имя">
+          <input type="text" class="form-control" name="phone" placeholder="Контактный телефон">
+          <div class="row sguest">
+            <div class="col-xs-6 col-sm-6 col-md-6">
+              <label>Дети (до 7 лет)</label>
+              <div class="ch"><?=chQuant('ch7', 0, 0)?></div>
+              <span class="sign">/чел.</span>
+              <label>Взрослые</label>
+              <div class="ch"><?=chQuant('grown', 0, 0)?></div>
+              <span class="sign">/чел.</span>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6">
+              <label>Дети (до 16 лет)</label>
+              <div class="ch"><?=chQuant('ch16', 0, 0)?></div>
+              <span class="sign">/чел.</span>
+              <label>Пенсионеры</label>
+              <div class="ch"><?=chQuant('pensioner', 0, 0)?></div>
+              <span class="sign">/чел.</span>
+            </div>
+          </div>
         </div>
         <div class="sep"></div>
         <div class="pad">
-
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="first" value="1"> Я иду в первый раз
+            </label>
+          </div>
+          <div class="rules">
+            Пожалуйста, <a href="" target="_blank">ознакомьтесь с правилами посещения соляной пещеры</a>
+          </div>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" name="pdata" value="1" checked> Я согласен(на) на обработку <a href="" target="_blank">моих персональных данных</a>
+            </label>
+          </div>
+          <div class="text-center"><button class="btn btn-warning">Забронировать</button></div>
         </div>
       </form>
       <script>

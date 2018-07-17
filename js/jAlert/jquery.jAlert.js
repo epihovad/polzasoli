@@ -123,6 +123,7 @@ jAlert - собственный плагин (v1.0).
 			});
 
       $jA_blackout = $('<div id="jAlert_shadow" style="display:none"></div>');
+      $jA_blackout.css('z-index',prm.z-1);
       $('body').prepend($jA_blackout);
       $jA_blackout.fadeIn(500);
 			$jA_wind.show('drop', {direction: 'up'}, 200, 'swing');

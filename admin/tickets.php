@@ -32,6 +32,7 @@ if(isset($_GET['action']))
 			        old_price = '{$old_price}',
 			        validity = ".($validity ? "'{$validity}'" : 'NULL').",
 			        age = '{$age}',
+			        /*seance = ".($seance ? "'{$seance}'" : 'NULL').",*/
 			        ids_type = ".(sizeof($_POST['ids_type']) > 0 ? "'".implode(',', $_POST['ids_type'])."'" : 'NULL').",
 			        ids_who = ".(sizeof($_POST['ids_who']) > 0 ? "'".implode(',', $_POST['ids_who'])."'" : 'NULL').",
 			        ids_disease = ".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
@@ -129,7 +130,12 @@ if(isset($_GET['red']))
         <th></th>
         <th>Возрастные ограничения</th>
         <td><?=dllEnum($tbl,'age','name="age" class="form-control input-sm"',$row['age'])?></td>
-      </tr>
+      </tr><?/*
+      <tr>
+        <th><?=help('например «около 30 сеансов»')?></th>
+        <th>Кол-во сеансов</th>
+        <td><?=input('text', 'seance', $row['seance'])?></td>
+      </tr>*/?>
       <tr>
         <th></th>
         <th>Тип абонемента</th>
