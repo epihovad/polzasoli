@@ -47,7 +47,7 @@
 
   <script src="/js/jquery.cookie.js"></script>
 
-  <link href="/css/style.css?v=3" rel="stylesheet" type="text/css" />
+  <link href="/css/style.css?v=5" rel="stylesheet" type="text/css" />
 
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
