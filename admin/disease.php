@@ -208,7 +208,7 @@ else
   <table class="table-list">
     <thead>
     <tr>
-      <th><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th><input type="checkbox" name="del" /></th>
       <th>№</th>
       <th width="50%"><?=SortColumn('Название','A.name')?></th>
 			<? if($fl['sitemap']){?>

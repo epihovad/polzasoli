@@ -175,6 +175,8 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #bron .bron-days { margin:0;}
 #bron .bron-days .bron-day-arr { margin-bottom:20px;}
 #bron .bron-day { width:100%; height:150px; overflow:hidden; background-color:#0f74a8; border:1px solid #c7c7c7; cursor:pointer; }
+#bron .bron-day:hover, #bron .bron-day.active { box-shadow: 0 0 7px #B3B3B3;}
+#bron .bron-day.busy { box-shadow:none; }
 #bron .bron-day .ch { height:27px; }
 #bron .bron-day input { margin:9px 0 0; padding:0; cursor:pointer;}
 #bron .bron-day .time { font-size:32px; color:#000; font-weight:700; line-height:34px;}

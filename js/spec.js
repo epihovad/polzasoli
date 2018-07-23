@@ -6,10 +6,6 @@ $(function () {
   chQuant();
   iFAQ();
   //
-  $('header .hb2 button').click(function(){
-    scrollTo($('#bron'), 0, 700);
-  });
-  //
   Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
   //
   $('header .hb3 button').click(function(){

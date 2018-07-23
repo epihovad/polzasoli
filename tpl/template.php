@@ -76,7 +76,7 @@
         </div>
         <div class="hb2 col-xs-3 col-sm-3 col-md-3">
           <div class="head-wtime"><i class="far fa-clock"></i><?=set('wtime')?></div>
-          <button type="button" class="btn btn-primary">Расписание сеансов <i class="fas fa-arrow-down"></i></button>
+          <button type="button" class="btn btn-primary" onclick="scrollingTo($('#bron'), 0, 700);">Расписание сеансов <i class="fas fa-arrow-down"></i></button>
         </div>
         <div class="hb3 col-xs-3 col-sm-3 col-md-3">
           <button type="button" class="btn btn-warning">Записаться на сеанс</button>

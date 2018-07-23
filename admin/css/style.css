@@ -241,6 +241,7 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 210px; }
 	box-shadow: none;
 	border: 1px solid #d9d9d9;
 }
+.input-xs { padding:2px 5px; height:24px; font-size:12px;}
 
 .btn { -webkit-border-radius: 0; -moz-border-radius: 0; border-radius: 0; }
 .btn:focus { outline: none; box-shadow: none; box-shadow: none; }

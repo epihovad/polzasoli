@@ -102,7 +102,7 @@ else
 	<input type="hidden" id="cur_id" value="<?=@$_GET['id']?@(int)$_GET['id']:""?>" />
 	<table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
 	  <tr>
-		<th><input type="checkbox" name="check_del" id="check_del" /></th>
+      <th><input type="checkbox" name="del" /></th>
 		<th>№</th>
     <th></th>
 		<th width="50%">Название</th>

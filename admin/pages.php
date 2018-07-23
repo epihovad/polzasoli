@@ -275,7 +275,7 @@ else
   <table class="table-list" tbl="<?=$tbl?>">
     <thead>
       <tr>
-        <th><input type="checkbox" name="check_del" id="check_del" /></th>
+        <th><input type="checkbox" name="del" /></th>
         <th>№</th>
 				<? if(!$fl['sort']) { ?><th nowrap><?=help('параметр с помощью которого можно изменить<br>порядок вывода объектов в клиентской части сайта')?></th><? }?>
         <th><img src="img/image.png" title="изображение" /></th>

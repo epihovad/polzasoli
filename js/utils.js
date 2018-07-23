@@ -355,7 +355,7 @@ function update_captcha()
 	$('#captcha').attr('src','/captcha/'+tmp+'/');
 }
 
-function scrollTo($obj, delta, duration) {
+function scrollingTo($obj, delta, duration) {
   duration = duration == undefined ? 500 : duration;
   delta = delta == undefined ? 0 : delta;
   $('html:not(:animated),body:not(:animated)').animate({scrollTop:$obj.offset().top + delta}, duration, function(){});

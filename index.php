@@ -103,7 +103,7 @@ $index = true;
         </div>
       </div>
     </div>
-    <a class="btn btn-warning" data-target="#" href="#" role="button">Выбрать время и записаться на сеанс<i class="fas fa-arrow-down"></i></a>
+    <button class="btn btn-warning" onclick="scrollingTo($('#bron'),0,500);">Выбрать время и записаться на сеанс<i class="fas fa-arrow-down"></i></button>
   </div>
 </div>
 <?

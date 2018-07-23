@@ -678,11 +678,11 @@ function utf2win($text, $iconv=true) // текст (в кодировке UTF-8)
 // m - месяц
 // y - год
 // w - день недели
-function getRusDate($mask,$date='')
+function getRusDate($mask, $date = null)
 {
 	$date = $date ? $date : date('d.m.Y');
-	
-	$mas = explode('.',date('D.d.m.Y',strtotime($date)));	
+
+	$mas = explode('.', date('D.d.m.Y', strtotime($date)));
 	$dayofweek = mb_strtolower($mas[0]);
 	$day = $mas[1];
 	$month = $mas[2];
@@ -695,15 +695,19 @@ function getRusDate($mask,$date='')
 	$masM 			= array('01','02','03','04','05','06','07','08','09','10','11','12');
 	$masM_small 	= array('янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек');
 	$masM_big 		= array('января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря');
-	$month_small 	= $masM_small[array_search($month,$masM)];
-	$month_big 		= $masM_big[array_search($month,$masM)];
-	
-	return strtr($mask,array(	'd'=>$day,
-								'm'=>$month_small,
-								'M'=>$month_big,
-								'y'=>$year,
-								'w'=>$dayofweek
-								));
+	$masM_big_upper		= array('Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь');
+	$month_small 	= $masM_small[array_search($month, $masM)];
+	$month_big 		= $masM_big[array_search($month, $masM)];
+	$month_big_upper	= $masM_big_upper[array_search($month, $masM)];
+
+	return strtr($mask, array(
+	  'd' => $day,
+    'm' => $month_small,
+    'M' => $month_big,
+		'MU' => $month_big_upper,
+    'y' => $year,
+    'w' => $dayofweek
+  ));
 }
 
 function get_nasled_classifer($id_catalog,$tab='classifer')
