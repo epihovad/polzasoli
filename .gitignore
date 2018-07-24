@@ -1,3 +1,10 @@
 /.idea
 /inc/db.php
 /error.log
+!/uploads/banner_mini/.gitkeep
+!/uploads/gallery/.gitkeep
+!/uploads/gallery_catalog/.gitkeep
+!/uploads/pages/.gitkeep
+!/uploads/reviews/.gitkeep
+!/uploads/settings/.gitkeep
+!/uploads/tickets/.gitkeep
