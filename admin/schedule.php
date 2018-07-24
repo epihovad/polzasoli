@@ -1,6 +1,5 @@
 <?
 require('inc/common.php');
-require($_SERVER['DOCUMENT_ROOT'] . '/inc/calendar.php');
 
 $h1 = 'Расписание сеансов';
 $h = 'Расписание сеансов на день';
