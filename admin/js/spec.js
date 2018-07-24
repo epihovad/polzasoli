@@ -490,3 +490,17 @@ function check_settings_frm(){
 	else
 		alert('Ошибка ввода! Поля, указывающие количество элементов отображаемых на странице, должны иметь числовое значение больше 0');
 }
+
+function jPop(url) {
+  jQuery.arcticmodal({
+    type: 'ajax',
+    url: url,
+    ajax: {
+      type:'GET',
+      cache: false,
+      success:function(data, el, responce){
+        data.body.html(jQuery('<div class="box-modal"><div class="box-modal_close arcticmodal-close glyphicon glyphicon-remove"></div>' + responce + '</div>'));
+      }
+    }
+  });
+}
