@@ -8,44 +8,74 @@ $title .= ' :: ' . $h1;
 $navigate = '<span></span>' . $h;
 $tbl = 'schedule';
 
+function SeanseRow($row = array(), $i = 1){
+	?>
+  <tr id="item-0">
+    <th><input type="checkbox" name="del[0]"></th>
+    <th nowrap><?=$i?></th>
+    <td>
+      <select class="form-control input-xs" name="hour[]"><?
+				for($v=0; $v<=23; $v++){
+					$h = ($v < 10 ? '0' : '') . $v;
+					$selected = $v == $row['ihour'] ? ' selected' : '';
+					?><option value="<?=$v?>"<?=$selected?>><?=$h?></option><?
+				}
+				?></select>
+    </td>
+    <td>
+      <select class="form-control input-xs" name="min[]"><?
+				for($v=0; $v<=59; $v++){
+					$m = ($v < 10 ? '0' : '') . $v;
+					$selected = $m == $row['iminute'] ? ' selected' : '';
+					?><option value="<?=$v?>"<?=$selected?>><?=$m?></option><?
+				}
+				?></select>
+    </td>
+    <td><input class="form-control input-xs" name="discount[]" value="<?=$row['discount']?>"></td>
+    <td></td>
+    <td>
+      <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить" onclick="DelRowTime($(this))">
+        <i class="far fa-trash-alt"></i>
+      </button>
+    </td>
+  </tr>
+	<?
+}
+
 if(isset($_GET['action'])){
   switch ($_GET['action']){
-    // добавление сеанса
-    case 'row_time':
-      if(isset($_GET['new'])){
-        ?>
-        <tr id="item-0">
-          <th><input type="checkbox" name="del[0]"></th>
-          <th nowrap></th>
-          <td>
-            <select class="form-control input-xs" name="hour[]"><?
-							for($v=0; $v<=23; $v++){
-								$h = ($v < 10 ? '0' : '') . $v;
-								?><option value="<?=$v?>"><?=$h?></option><?
-							}
-							?></select>
-          </td>
-          <td>
-            <select class="form-control input-xs" name="min[]"><?
-							for($v=0; $v<=59; $v++){
-								$m = ($v < 10 ? '0' : '') . $v;
-								?><option value="<?=$v?>"><?=$m?></option><?
-							}
-							?></select>
-          </td>
-          <td><input class="form-control input-xs" name="discount" value=""></td>
-          <td></td>
-          <td>
-            <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить" onclick="DelRowTime($(this))">
-              <i class="far fa-trash-alt"></i>
-            </button>
-          </td>
-        </tr>
-        <?
-      } else {
+    //
+    case 'save':
+      $day = (int)$_POST['day'];
+      // что-то надо сделать с бронью
 
+      // мочим расписание
+      sql("DELETE FROM {$prx}{$tbl} WHERE iday = {$day}");
+      if(!sizeof($_POST['hour'])){
+				jAlert('Расписание на ' . date('d.m.Y', strtotime($day)) . ' успешно удалено.');
       }
-			exit;
+      // добавляем новое
+      $values = '';
+      foreach ($_POST['hour'] as $i => $h){
+        $h = (int)$h;
+        $m = (int)$_POST['min'][$i];
+        $discount = (int)($_POST['discount'][$i]);
+        $values .= ($values ? ', ' : '') . "('".$day."','".$h.$m."','".$discount."')";
+      }
+      $query = "INSERT INTO {$prx}{$tbl} (iday, itime, discount) VALUES " . $values;
+      if(!$res = sql($query)){
+        jAlert('ошибка при добавлении данных');
+      }
+      if(!$inserted = mysqli_affected_rows($mysqli)){
+				jAlert('ошибка при добавлении данных');
+      } else {
+				jAlert('Данные успешно сохранены.<br>Добавлено сеансов: ' . $inserted);
+      }
+      break;
+    // добавление одного сеанса
+    case 'row_time':
+			SeanseRow();
+			break;
 		// добавление сенасов на весь день по шаблону
 		case 'row_time_standart':
       $day = (int)$_GET['day'];
@@ -74,40 +104,11 @@ if(isset($_GET['action'])){
       }
 
       $r = sql("SELECT * FROM {$prx}time WHERE pktime IN (" . implode(',',$seance) . ")");
-			while ($row = mysqli_fetch_assoc($r)){
-				?>
-        <tr id="item-0">
-          <th><input type="checkbox" name="del[0]"></th>
-          <th nowrap></th>
-          <td>
-            <select class="form-control input-xs" name="hour[]"><?
-							for($v=0; $v<=23; $v++){
-								$h = ($v < 10 ? '0' : '') . $v;
-								$selected = $v == $row['ihour'] ? ' selected' : '';
-								?><option value="<?=$v?>"<?=$selected?>><?=$h?></option><?
-							}
-							?></select>
-          </td>
-          <td>
-            <select class="form-control input-xs" name="min[]"><?
-							for($v=0; $v<=59; $v++){
-								$m = ($v < 10 ? '0' : '') . $v;
-								$selected = $m == $row['iminute'] ? ' selected' : '';
-								?><option value="<?=$v?>"<?=$selected?>><?=$m?></option><?
-							}
-							?></select>
-          </td>
-          <td><input class="form-control input-xs" name="discount" value=""></td>
-          <td></td>
-          <td>
-            <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить" onclick="DelRowTime($(this))">
-              <i class="far fa-trash-alt"></i>
-            </button>
-          </td>
-        </tr>
-				<?
+			$i=1;
+      while ($row = mysqli_fetch_assoc($r)){
+				SeanseRow($row, $i++);
       }
-		  exit;
+			break;
 
   }
   exit;
@@ -147,29 +148,35 @@ ob_start();
   .b-calendar__day { font: 14px/1.2 Arial, sans-serif; padding: 8px 5px; text-align: center;}
   .b-calendar__weekend a { color: red;}
   .b-calendar a { }
-  #chDay .pull-left { margin-right:5px; position:relative; vertical-align:top;}
-  #chDay button { margin-top: 20px; font-size: 12px; height: 24px;}
-  #chDay { padding-bottom:20px;}
+  #chDay label { position:relative; display:inline-block; margin:0 5px 0 0; vertical-align:middle;}
+  #chDay input { text-align:center; width:80px; display:inline-block; vertical-align:middle;}
+  #chDay { padding:10px;}
 </style>
 
 <script>
   $(function () {
-    $('#chDay button').click(function () {
-      var y = $('#chDay select').eq(2).val();
-      var m = $('#chDay select').eq(1).val();
-      var d = $('#chDay select').eq(0).val();
-      $('#chDay input[name="day"]').val(y+m+d);
-      $('#chDay form').submit();
+    $('#chDay input').change(function () {
+      var v = $(this).val();
+      var d = moment(v, 'DD.MM.YYYY');
+      if(!d._isValid){
+        $(document).jAlert('show','alert','Указана некорректная дата');
+        return false;
+      }
+      location.href = 'schedule.php?day=' + d.format('YYYYMMDD');
     });
     //
     $('#time_add').click(function () {
       AddRowTime();
     });
     //
+    $('#time_del').click(function () {
+      DelSelectedRowTime();
+    });
+    //
     $('#time_standart').click(function () {
-      //$(document).jAlert('show', 'confirm', 'Уверены?', function () {
+      $(document).jAlert('show', 'confirm', 'Шаблон перезатрёт все текущие данные. Уверены?', function () {
         StandartRowTime();
-      //});
+      });
     });
   });
   //
@@ -190,7 +197,7 @@ ob_start();
     $.ajax({
       type: 'GET',
       url: 'schedule.php',
-      data: 'action=row_time&new',
+      data: 'action=row_time',
       success: function(data){
         $('.table-list tbody').append(data);
         UpdateRowTimeNum();
@@ -207,6 +214,18 @@ ob_start();
     UpdateRowTimeNum();
   }
   //
+  function DelSelectedRowTime() {
+    var $ch = $('.table-list tbody input[name^=del]:checked');
+    if(!$ch.length){
+      $(document).jAlert('show','alert','Для удаления выберите хотя бы один сеанс');
+      return false;
+    }
+    $ch.each(function () {
+      $(this).parents('tr:first').remove();
+    });
+    $('.table-list thead input[name=del]').prop('checked',false);
+  }
+  //
   function UpdateRowTimeNum(){
     var i = 1;
     $('.table-list tbody tr').each(function () {
@@ -215,51 +234,9 @@ ob_start();
   }
 </script>
 
-<div id="chDay">
-  <form action="schedule.php" method="get" target="_self">
-  <input type="hidden" name="day" value="<?=$day?>">
-    <div class="pull-left">
-      <label>День</label>
-      <select class="form-control input-xs">
-        <?
-        for($d=1; $d<=31; $d++){
-          $selected = $d == $dd ? ' selected' : '';
-          $d = ($d < 10 ? '0' : '') . $d;
-          ?><option value="<?=$d?>"<?=$selected?>><?=$d?></option><?
-        }
-        ?>
-      </select>
-    </div>
-    <div class="pull-left">
-      <label>Месяц</label>
-      <select class="form-control input-xs">
-        <?
-        $r = sql("SELECT DISTINCT imonth, cmonth_big_ru FROM {$prx}day ORDER BY imonth");
-        while ($arr = mysqli_fetch_assoc($r)){
-          $m = $arr['imonth'];
-          $selected = $m == $dm ? ' selected' : '';
-					$m = ($m < 10 ? '0' : '') . $m;
-          ?><option value="<?=$m?>"<?=$selected?>><?=$arr['cmonth_big_ru']?></option><?
-        }
-        ?>
-      </select>
-    </div>
-    <div class="pull-left">
-      <label>Год</label>
-      <select class="form-control input-xs">
-        <?
-        $arr = getArr("SELECT DISTINCT iyear FROM {$prx}day ORDER BY iyear");
-        foreach ($arr as $y){
-          $selected = $y == $dy ? ' selected' : '';
-          ?><option value="<?=$y?>"<?=$selected?>><?=$y?></option><?
-        }
-        ?>
-      </select>
-    </div>
-    <div class="pull-left">
-      <button class="btn btn-info btn-xs">перейти</button>
-    </div>
-  </form>
+<div id="chDay" class="panel-white">
+  <label>Выберите дату</label>
+  <input class="form-control input-xs datepicker" value="<?=date('d.m.Y', strtotime($day))?>">
   <div class="clearfix"></div>
 </div>
 <?
@@ -316,13 +293,13 @@ if(isset($_GET['show'])){
 
 	// ------------------- КАЛЕНДАРЬ НА ДЕНЬ
 	?>
-  <button id="time_standart" type="button" class="btn btn-default btn-xs" onclick=""><i class="fa fa-plus"></i> <span>Шаблон</span></button>
-  <button id="time_add" type="button" class="btn btn-success btn-xs" onclick=""><i class="fa fa-plus"></i> <span>Добавить</span></button>
-  <button id="time_del" type="button" class="btn btn-danger btn-xs" onclick=""><i class="far fa-trash-alt"></i> <span>Удалить</span></button>
+  <button id="time_standart" type="button" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> <span>Шаблон</span></button>
+  <button id="time_add" type="button" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> <span>Добавить</span></button>
+  <button id="time_del" type="button" class="btn btn-danger btn-xs"><i class="far fa-trash-alt"></i> <span>Удалить</span></button>
 
-  <form id="ftl" method="post" target="ajax" style="margin-top:20px">
+  <form id="ftl" action="schedule.php?action=save" method="post" target="ajax" style="margin-top:20px">
     <input type="hidden" name="day" value="<?=$day?>">
-    <table class="table-list" tbl="<?=$tbl?>" style="width:auto">
+    <table class="table-list" style="width:auto">
       <thead>
       <tr>
         <th><input type="checkbox" name="del" /></th>
@@ -334,8 +311,22 @@ if(isset($_GET['show'])){
         <th></th>
       </tr>
       </thead>
-      <tbody></tbody>
+      <tbody>
+      <?
+      $q = "SELECT S.*, T.*
+            FROM {$prx}{$tbl} S
+            JOIN {$prx}time T ON T.PKTIME = S.ITIME
+            WHERE S.iday = {$day}
+            ORDER BY S.itime";
+      $r = sql($q);
+      $i = 1;
+      while ($row = @mysqli_fetch_assoc($r)){
+        SeanseRow($row, $i++);
+      }
+      ?>
+      </tbody>
     </table>
+    <button type="submit" class="btn btn-success" style="margin-top:20px;">Сохранить</button>
   </form>
   <?
 }

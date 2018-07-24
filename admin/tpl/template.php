@@ -38,6 +38,8 @@
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="js/spec.js"></script>
 
+  <script type="text/javascript" src="/js/moment.min.js"></script>
+
   <link href="/js/blueimp-gallery/css/blueimp-gallery.css" rel="stylesheet" type="text/css"/>
   <link href="/js/blueimp-gallery/css/blueimp-gallery-indicator.css" rel="stylesheet">
   <link href="/js/blueimp-gallery/css/blueimp-gallery-video.css" rel="stylesheet">
@@ -51,11 +53,6 @@
 
   <link type="text/css" href="/js/tooltip/tooltip.css" rel="stylesheet">
   <script type="text/javascript" src="/js/tooltip/tooltip.js"></script>
-
-  <link rel="stylesheet" href="/js/blueimp-gallery/blueimp-gallery.css" type="text/css" />
-  <link rel="stylesheet" href="/js/blueimp-gallery/blueimp-gallery-indicator.css">
-  <script src="/js/blueimp-gallery/blueimp-gallery.js"></script>
-  <script src="/js/blueimp-gallery/blueimp-gallery-indicator.js"></script>
 
 	<? if ($fl['search']) { ?>
     <script type="text/javascript" src="/js/jquery.highlight.js"></script>
