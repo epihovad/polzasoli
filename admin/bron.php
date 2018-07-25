@@ -293,11 +293,10 @@ else
       $i=1;
       while($row = mysqli_fetch_assoc($res)){
         $id = $row['id'];
-        $number = $row['iday'] . '/' . $row['itime'] . '-' . $id;
         ?>
         <tr id="item-<?=$row['id']?>">
           <th><input type="checkbox" name="del[<?=$id?>]"></th>
-          <th nowrap><?=$number?></th>
+          <th nowrap><?=$row['number']?></th>
           <th><?=date('d.m.Y',strtotime($row['iday']))?></th>
           <th><?=$row['ihour'].':'.$row['iminute']?></th>
           <td class="sp" nowrap><?=$row['name']?></td>
