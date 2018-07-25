@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-body, html { height:100%; background-color:#454545 !important; }
+body, html { height:100%; background-color:#454545 !important; min-width:970px; }
 body,td,th,input,select,textarea { font: normal 12px Arial, sans-serif; line-height: normal; color: #333;}
 
 html,body,table,th,td,h1,h2,p,form,ol,ul,li { padding:0; margin:0; }

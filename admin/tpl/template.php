@@ -6,6 +6,7 @@
   <meta name="keywords" content="<?=$keywords?>" />
   <meta name="description" content="<?=$description?>" />
   <meta name="viewport" content="user-scalable=no,width=device-width" />
+  <?/*<meta name="viewport" content="width=device-width, initial-scale=1">*/?>
   <title><?=$title?></title>
 
   <link rel="icon" href="favicon.ico" type="image/x-icon" />

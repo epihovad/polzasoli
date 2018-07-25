@@ -2,6 +2,9 @@
 /inc/db.php
 /error.log
 
+/uploads/*
+!/uploads/no_photo.jpg
+
 /uploads/banner_mini/*
 !/uploads/banner_mini/.gitkeep
 
