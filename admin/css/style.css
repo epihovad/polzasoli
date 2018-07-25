@@ -283,10 +283,14 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 230px; }
 #filters h4 a.active .fa-eye-slash { display:inline-block;}
 #filters h4 a.active .fa-eye { display:none;}
 #filters .fbody { display:none; border-top: 1px solid #bfbfbf; margin-top: 15px; padding-top:10px;}
-#filters .fbody .form-group { margin-bottom:10px; }
-#filters .fbody .form-group:last-child { margin-bottom:0;}
-#filters .fbody .search input { width:200px;display:inline-block;}
-#filters .fbody .search button i { margin-right:3px;}
+#filters .fbody .item { margin-bottom:10px; }
+#filters .fbody .item:last-child { margin-bottom:0;}
+#filters .fbody .item select { width:100%; }
+#filters .fbody .item input { width:100%; }
+#filters .fbody .item .datepicker { width: 100px; text-align: center; display: inline-block; margin: 0 5px;}
+#filters .chosen-container { width: 100% !important;}
+#filters .chosen-container-multi .chosen-choices { padding:2px 10px; border:none; line-height:1.5; font-size:12px;}
+#filters .fbody button i { margin-right:5px;}
 
 span.highlight { background-color:#ffff00;}
 

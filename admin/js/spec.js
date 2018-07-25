@@ -390,12 +390,41 @@ function TransformInputs() {
   }
 }
 
+function setFilters(){
+  var $filters = $('#filters');
+  var URI = url();
+
+  $filters.find('select').each(function () {
+    var name = this.name;
+    var obj = {};
+    var vals = '';
+    $(this).find(':selected').each(function () {
+      if(this.value && this.value != 'null'){
+        vals += (vals ? ',' : '') + this.value;
+      }
+    });
+    obj[name] = vals ? vals : 'null';
+    URI = changeURI(obj, URI, 1);
+  });
+
+  $filters.find('input[type=text]').each(function () {
+    var name = this.name;
+    var obj = {};
+    var val = this.value;
+    obj[name] = val ? val : 'null';
+    URI = changeURI(obj, URI, 1);
+  });
+
+  top.location.href = URI;
+}
+
 // changeURI({'fl[sort][link]':'asc'});
-function changeURI(object, URI, returnNewURI){
-	if(URI == undefined) {
+function changeURI(object, URI, returnNewURI)
+{
+  if(URI == undefined) {
     URI = url();
   }
-	var NewURI = url('path', URI);
+  var NewURI = url('path', URI);
   var QueryURI = url('?', URI);
 
   if(QueryURI != undefined){
@@ -403,16 +432,16 @@ function changeURI(object, URI, returnNewURI){
     // замена
     $.each(object, function(key, val) {
       // индивидуальная обработка для сортировки
-			if(key == 'fl[sort]'){
-				// удаляем из QueryURI все сортировки
+      if(key == 'fl[sort]'){
+        // удаляем из QueryURI все сортировки
         $.each(QueryURI, function(k, v) {
-        	if(strpos(k, 'fl[sort]') !== false){
+          if(strpos(k, 'fl[sort]') !== false){
             delete QueryURI[k];
-					}
+          }
         });
-				return true;
-			}
-    	var m = key.match(/fl\[sort\]\[([^\]]*)/);
+        return true;
+      }
+      var m = key.match(/fl\[sort\]\[([^\]]*)/);
       if(m){
         // удаляем из QueryURI все сортировки
         $.each(QueryURI, function(k, v) {
@@ -420,8 +449,8 @@ function changeURI(object, URI, returnNewURI){
             delete QueryURI[k];
           }
         });
-      	key = 'fl[sort][' + m[1] + ']';
-			}
+        key = 'fl[sort][' + m[1] + ']';
+      }
       QueryURI[key] = val;
     });
     // новый URL
@@ -434,22 +463,22 @@ function changeURI(object, URI, returnNewURI){
       NewURI += (!i ? '?' : '&') + key + (val ? '=' + val : '');
       i++;
     });
-	} else {
+  } else {
     var i=0;
     $.each(object, function(key, val) {
       NewURI += (!i ? '?' : '&') + key + (val ? '=' + val : '');
       i++;
     });
-	}
+  }
 
   //console.log(NewURI);
-	//return false;
+  //return false;
 
   if(returnNewURI == undefined){
-  	top.document.location = NewURI;
-	} else {
-  	return NewURI;
-	}
+    top.document.location = NewURI;
+  } else {
+    return NewURI;
+  }
 }
 
 function SaveAll(href, confirm, check_checked) {
