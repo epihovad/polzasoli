@@ -26,7 +26,7 @@ if(isset($_GET['action']))
 			if(!$id = update($tbl,$set,$id))
 				jAlert('Во время сохранения данных произошла ошибка.');
 
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- обновление в меню
 		case 'status':
@@ -65,22 +65,23 @@ elseif(isset($_GET['red']))
 	ob_start();
 	?>
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
-  <table class="table-edit">
-    <tr>
-      <th></th>
-      <th>Название</th>
-      <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Статус</th>
-      <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
-    </tr>
-  </table>
-  <div class="frm-btns">
-    <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
-    <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
-  </div>
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
+    <table class="table-edit">
+      <tr>
+        <th></th>
+        <th>Название</th>
+        <td><input type="text" class="form-control input-sm" name="name" value="<?=htmlspecialchars($row['name'])?>"></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Статус</th>
+        <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
+      </tr>
+    </table>
+    <div class="frm-btns">
+      <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
+      <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
+    </div>
   </form>
 	<?
 	$content = arr($h, ob_get_clean());

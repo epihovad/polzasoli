@@ -73,7 +73,7 @@ function draw_calendar($month, $year, $action = 'none') {
       }
     }
 
-		$calendar.= '<a href="#" day="' . $ymd . '" class="' . $class . '" title="Забронировано мест: ' . $cnt_bron . '">' . $list_day . '</a>';
+		$calendar.= '<a href="#" day="' . $ymd . '" class="help ' . $class . '" title="Забронировано мест: ' . $cnt_bron . '">' . $list_day . '</a>';
 		$calendar.= '</td>';
 
 		// дошли до последнего дня недели

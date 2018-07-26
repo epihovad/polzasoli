@@ -1,4 +1,10 @@
 <?
+/*function checkBron($iday, ){
+  global $prx;
+
+
+}*/
+
 function price($price)
 {
 	//return number_format($price,is_int($price*1)?0:2,',',' ');

@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-body, html { height:100%; background-color:#454545 !important; min-width:970px; }
+body, html { height:100%; background-color:#454545 !important; min-width:970px; max-width:1980px; }
 body,td,th,input,select,textarea { font: normal 12px Arial, sans-serif; line-height: normal; color: #333;}
 
 html,body,table,th,td,h1,h2,p,form,ol,ul,li { padding:0; margin:0; }
@@ -20,15 +20,13 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus { outline
 input { outline:none !important; }
 input.button { display:none; }
 
-a, a:visited { color:#000; text-decoration:none; }
-a:hover { color:#eb0d41; text-decoration:none; }
+a, a:visited { color:#007d71; text-decoration:none; }
+a:hover { opacity:0.6; text-decoration:none; }
 a.help { border:none !important; text-decoration:none; vertical-align:top; font-size:0;}
 a.help span { font-size:13px; color:#007d71;}
 
-a.clr-green { color:#009688;}
+a.clr-green { color:#007d71;}
 a.clr-orange { color:#FF7043;}
-a.clr-green:hover,
-a.clr-orange:hover { opacity:0.7;}
 .fa-sort { cursor:move; font-size:17px; color:#4984b8;}
 
 #ajax { width:100%; display:none; }
@@ -79,7 +77,7 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 230px; }
 
 #menu { margin: 20px 0 10px 0; display: block; width: 100%; }
 #menu ul, #menu li { margin: 0; padding: 0; border: 0; list-style: none; font-weight: normal; text-decoration: none; line-height: 1; position: relative; }
-#menu > ul > li > a { font-size: 14px; display: block; color: #8c8c8c; font-weight: 400; padding: 12px 15px;position: relative; text-decoration: none; }
+#menu > ul > li > a { font-size: 14px; display: block; color: #8c8c8c; font-weight: 400; padding: 12px 15px;position: relative; text-decoration: none; opacity:1 !important; }
 #menu > ul > li > a > i {
 	font-size: 17px; margin: 0 10px 0 0; width: 21px; height:18px; float: left; line-height: 14px; text-align: center;
 	background-repeat:no-repeat; background-position:0;

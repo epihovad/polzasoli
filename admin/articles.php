@@ -54,7 +54,7 @@ if(isset($_GET['action']))
 			if($updateLink)
 				update($tbl,"link='".($link.'_'.$id)."'",$id);
 
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- обновление статуса
 		case 'status':
@@ -87,6 +87,7 @@ if(isset($_GET['red']))
 	ob_start();
 	?>
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
     <table class="table-edit">
       <tr>
         <th></th>

@@ -32,7 +32,7 @@ if(isset($_GET['action']))
 			        old_price = '{$old_price}',
 			        validity = ".($validity ? "'{$validity}'" : 'NULL').",
 			        age = '{$age}',
-			        /*seance = ".($seance ? "'{$seance}'" : 'NULL').",*/
+			        seance = ".($seance ? "'{$seance}'" : 'NULL').",
 			        ids_type = ".(sizeof($_POST['ids_type']) > 0 ? "'".implode(',', $_POST['ids_type'])."'" : 'NULL').",
 			        ids_who = ".(sizeof($_POST['ids_who']) > 0 ? "'".implode(',', $_POST['ids_who'])."'" : 'NULL').",
 			        ids_disease = ".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
@@ -61,7 +61,7 @@ if(isset($_GET['action']))
 				}
 			}
 
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- обновление статуса
 		case 'status':
@@ -99,6 +99,7 @@ if(isset($_GET['red']))
 	ob_start();
 	?>
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
     <table class="table-edit">
       <tr>
         <th></th>
@@ -130,12 +131,12 @@ if(isset($_GET['red']))
         <th></th>
         <th>Возрастные ограничения</th>
         <td><?=dllEnum($tbl,'age','name="age" class="form-control input-sm"',$row['age'])?></td>
-      </tr><?/*
+      </tr>
       <tr>
         <th><?=help('например «около 30 сеансов»')?></th>
         <th>Кол-во сеансов</th>
         <td><?=input('text', 'seance', $row['seance'])?></td>
-      </tr>*/?>
+      </tr>
       <tr>
         <th></th>
         <th>Тип абонемента</th>
@@ -182,18 +183,22 @@ else
 {
 	$cur_page = (int)$_GET['page'] ?: 1;
 	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
-	$fl['tickets_type'] = $_GET['fl']['tickets_type'];
-	$fl['tickets_who'] = $_GET['fl']['tickets_who'];
+	$fl['type'] = $_GET['fl']['type'];
+	$fl['who'] = $_GET['fl']['who'];
 	$fl['disease'] = $_GET['fl']['disease'];
 	$fl['sort'] = $_GET['fl']['sort'];
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 
+	$filters['type'] = "выбор абонементов по типу";
+	$filters['who'] = "выбор абонементов по типу посетителей";
+	$filters['disease'] = 'выбор объектов по спр-ку болезней';
+
 	$where = '';
-	if($fl['tickets_type']){
-	  $where .= "\r\nAND CONCAT(',',ids_type,',') LIKE '%,{$fl['tickets_type']},%'";
+	if($fl['type']){
+	  $where .= "\r\nAND CONCAT(',',ids_type,',') LIKE '%,{$fl['type']},%'";
 	}
-	if($fl['tickets_who']){
-	  $where .= "\r\nAND CONCAT(',',ids_who,',') LIKE '%,{$fl['tickets_who']},%'";
+	if($fl['who']){
+	  $where .= "\r\nAND CONCAT(',',ids_who,',') LIKE '%,{$fl['who']},%'";
 	}
 	if($fl['disease']){
 		$where .= "\r\nAND CONCAT(',',ids_disease,',') LIKE '%,{$fl['disease']},%'";
@@ -255,23 +260,23 @@ else
       </a>
     </h4>
     <div class="fbody<?//=$show_filters?' active':''?>">
-      <div class="form-group">
+      <div class="item">
         <label>Тип абонемента</label>
-				<?=dll("SELECT * FROM {$prx}tickets_type ORDER BY name",'onChange="changeURI({\'fl[tickets_type]\':this.value});return false;"',$fl['tickets_type'],array('null'=>'-- все --'))?>
+				<?=dll("SELECT * FROM {$prx}tickets_type ORDER BY name",'name="fl[type]" multiple data-placeholder="-- неважно --"',$fl['type']?explode(',',$fl['type']):null,null,'chosen')?>
       </div>
-      <div class="form-group">
+      <div class="item">
         <label>Тип посетителей</label>
-				<?=dll("SELECT * FROM {$prx}tickets_who ORDER BY name",'onChange="changeURI({\'fl[tickets_who]\':this.value});return false;"',$fl['tickets_who'],array('null'=>'-- все --'))?>
+				<?=dll("SELECT * FROM {$prx}tickets_who ORDER BY name",'name="fl[who]" multiple data-placeholder="-- неважно --"',$fl['who']?explode(',',$fl['who']):null,null,'chosen')?>
       </div>
-      <div class="form-group">
+      <div class="item">
         <label>Спр-к болезней</label>
-				<?=dll("SELECT * FROM {$prx}disease ORDER BY name",'onChange="changeURI({\'fl[disease]\':this.value});return false;"',$fl['disease'],array('null'=>'-- все --'))?>
+				<?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="fl[disease]" multiple data-placeholder="-- неважно --"',$fl['disease']?explode(',',$fl['disease']):null,null,'chosen')?>
       </div>
-      <div class="form-group search">
+      <div class="item search">
         <label>Контекстный поиск</label><br>
-        <input class="form-control input-sm" type="text" value="<?=htmlspecialchars($fl['search'])?>">
-        <button type="button" class="btn btn-danger btn-xs"><i class="fas fa-search"></i>найти</button>
+        <div><?=input('text', 'fl[search]', $fl['search'])?></div>
       </div>
+      <button class="btn btn-danger" onclick="setFilters()"><i class="fas fa-search"></i>Поиск</button>
     </div>
   </div>
 

@@ -89,7 +89,7 @@ if(isset($_GET['action']))
 					break;
 				}
 			}
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?		
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- обновление в меню
 		case 'is_main':
@@ -150,90 +150,91 @@ elseif(isset($_GET['red']))
   </script>
 
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
-  <input type="hidden" name="locked" value="<?=$locked?>" />
-  <table class="table-edit">
-    <? if(!$locked){ ?>
-    <tr>
-      <th></th>
-      <th>Подчинение</th>
-      <td><?=dllTree("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id",'name="id_parent"',$row['id_parent'],array('0'=>'без подчинения'),$id)?></td>
-    </tr>
-    <? } ?>
-    <tr>
-      <th></th>
-      <th>Название</th>
-      <td><?=input('text', 'name', $row['name'], $readonly)?></td>
-    </tr>
-    <tr>
-      <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
-      <th>Ссылка</th>
-      <td><?=input('text', 'link', $row['link'], $readonly)?></td>
-    </tr>
-		<?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
-    <tr>
-      <th></th>
-      <th>Краткое<br />описание</th>
-      <td><?=showCK('preview',$row['preview'],'basic')?></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Текст</th>
-      <td><?=showCK('text',$row['text'])?></td>
-    </tr>
-    <tr class="for-page">
-      <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
-      <th>Спр-к болезней</th>
-      <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
-    </tr>
-    <?
-    if(!$locked)
-    {
-      ?>
+    <input type="hidden" name="locked" value="<?=$locked?>" />
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
+    <table class="table-edit">
+      <? if(!$locked){ ?>
       <tr>
         <th></th>
-        <th>Тип</th>
-        <td><?=dll(array('page'=>'страница','link'=>'ссылка'),' name="type"',$row['type'])?></td>
+        <th>Подчинение</th>
+        <td><?=dllTree("SELECT * FROM {$prx}{$tbl} ORDER BY sort,id",'name="id_parent"',$row['id_parent'],array('0'=>'без подчинения'),$id)?></td>
+      </tr>
+      <? } ?>
+      <tr>
+        <th></th>
+        <th>Название</th>
+        <td><?=input('text', 'name', $row['name'], $readonly)?></td>
       </tr>
       <tr>
-        <th><?=help('отображать объект в главном меню')?></th>
-        <th>Главное меню</th>
-        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_main"',$row['is_main'])?></td>
+        <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
+        <th>Ссылка</th>
+        <td><?=input('text', 'link', $row['link'], $readonly)?></td>
       </tr>
+      <?=show_tr_images($id,'Фото','',1,$tbl,$tbl)?>
       <tr>
-        <th><?=help('отображать объект в футере сайта')?></th>
-        <th>В футер</th>
-        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_bmain"',$row['is_bmain'])?></td>
+        <th></th>
+        <th>Краткое<br />описание</th>
+        <td><?=showCK('preview',$row['preview'],'basic')?></td>
       </tr>
       <tr>
         <th></th>
-        <th>Статус</th>
-        <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
+        <th>Текст</th>
+        <td><?=showCK('text',$row['text'])?></td>
+      </tr>
+      <tr class="for-page">
+        <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
+        <th>Спр-к болезней</th>
+        <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
       </tr>
       <?
-    }
-    ?>
-    <tr class="for-page">
-      <th><?=help('отображать объект в слайдере<br>на главной странице')?></th>
-      <th>В слайдер</th>
-      <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_slider"',$row['is_slider'])?></td>
-    </tr>
-    <tr>
-      <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
-      <th>Заголовок</th>
-      <td><?=input('text', 'h1', $row['h1'])?></td>
-    </tr>
-		<? foreach (array('title','keywords','description') as $v){?>
-      <tr>
-        <th></th>
-        <th><?=$v?></th>
-        <td><?=input('text', $v, $row[$v])?></td>
+      if(!$locked)
+      {
+        ?>
+        <tr>
+          <th></th>
+          <th>Тип</th>
+          <td><?=dll(array('page'=>'страница','link'=>'ссылка'),' name="type"',$row['type'])?></td>
+        </tr>
+        <tr>
+          <th><?=help('отображать объект в главном меню')?></th>
+          <th>Главное меню</th>
+          <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_main"',$row['is_main'])?></td>
+        </tr>
+        <tr>
+          <th><?=help('отображать объект в футере сайта')?></th>
+          <th>В футер</th>
+          <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_bmain"',$row['is_bmain'])?></td>
+        </tr>
+        <tr>
+          <th></th>
+          <th>Статус</th>
+          <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
+        </tr>
+        <?
+      }
+      ?>
+      <tr class="for-page">
+        <th><?=help('отображать объект в слайдере<br>на главной странице')?></th>
+        <th>В слайдер</th>
+        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="is_slider"',$row['is_slider'])?></td>
       </tr>
-		<?}?>
-  </table>
-  <div class="frm-btns">
-    <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
-    <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
-  </div>
+      <tr>
+        <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
+        <th>Заголовок</th>
+        <td><?=input('text', 'h1', $row['h1'])?></td>
+      </tr>
+      <? foreach (array('title','keywords','description') as $v){?>
+        <tr>
+          <th></th>
+          <th><?=$v?></th>
+          <td><?=input('text', $v, $row[$v])?></td>
+        </tr>
+      <?}?>
+    </table>
+    <div class="frm-btns">
+      <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
+      <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
+    </div>
   </form>
   <?
 	$content = arr($h, ob_get_clean());

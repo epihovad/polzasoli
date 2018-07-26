@@ -28,8 +28,8 @@ if(isset($_GET['action']))
 
 			if(!$id = update($tbl, $set, $id))
 				jAlert('Во время сохранения данных произошла ошибка.');
-			
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
+
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- удаление одной записи
 		case 'black':
@@ -74,50 +74,51 @@ elseif(isset($_GET['red']))
 	ob_start();
 	?>  
   <form action="?action=save&id=<?=$id?>" method="post" target="ajax">
-  <table class="table-edit">
-  	<tr>
-      <th></th>
-      <th>Дата создания подписки</th>
-      <td><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
-    </tr>
-		<tr>
-      <th></th>
-			<th>E-mail</th>
-			<td><?=$row['email']?></td>
-		</tr>
-    <? if(!$row['unsubscribe_date']){?>
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
+    <table class="table-edit">
       <tr>
         <th></th>
-        <th>Завершить подписку</th>
-        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="unsubscribe"',0)?></td>
-      </tr>
-    <?} else {?>
-      <tr>
-        <th></th>
-        <th>Дата завершения подписки</th>
-        <td style="font-size:11px"><?=date('d.m.Y H:i',strtotime($row['unsubscribe_date']))?></td>
+        <th>Дата создания подписки</th>
+        <td><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
       </tr>
       <tr>
         <th></th>
-        <th>Вернуть подписку</th>
-        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="subscribe"',0)?></td>
+        <th>E-mail</th>
+        <td><?=$row['email']?></td>
       </tr>
-    <?}?>
-    <tr>
-      <th></th>
-      <th>В черном списке</th>
-      <td><?=dll(array('0'=>'нет','1'=>'да'),'name="black"',isset($row['black'])?$row['black']:0)?></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Примечание</th>
-      <td><?=input('textarea','note',$row['note'])?></td>
-    </tr>
-  </table>
-  <div class="frm-btns">
-    <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
-    <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
-  </div>
+      <? if(!$row['unsubscribe_date']){?>
+        <tr>
+          <th></th>
+          <th>Завершить подписку</th>
+          <td><?=dll(array('0'=>'нет','1'=>'да'),'name="unsubscribe"',0)?></td>
+        </tr>
+      <?} else {?>
+        <tr>
+          <th></th>
+          <th>Дата завершения подписки</th>
+          <td style="font-size:11px"><?=date('d.m.Y H:i',strtotime($row['unsubscribe_date']))?></td>
+        </tr>
+        <tr>
+          <th></th>
+          <th>Вернуть подписку</th>
+          <td><?=dll(array('0'=>'нет','1'=>'да'),'name="subscribe"',0)?></td>
+        </tr>
+      <?}?>
+      <tr>
+        <th></th>
+        <th>В черном списке</th>
+        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="black"',isset($row['black'])?$row['black']:0)?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Примечание</th>
+        <td><?=input('textarea','note',$row['note'])?></td>
+      </tr>
+    </table>
+    <div class="frm-btns">
+      <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
+      <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
+    </div>
   </form>
   <?
 	$content = arr($h, ob_get_clean());

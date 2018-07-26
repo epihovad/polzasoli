@@ -53,7 +53,7 @@ if(isset($_GET['action']))
 			if($updateLink)
 				update($tbl,"link='".($link.'_'.$id)."'",$id);
 
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?		
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- обновление в меню
 		case 'status':
@@ -87,40 +87,41 @@ elseif(isset($_GET['red']))
 	ob_start();
 	?>
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
-  <table class="table-edit">
-    <tr>
-      <th></th>
-      <th>Название</th>
-      <td><?=input('text', 'name', $row['name'])?></td>
-    </tr>
-    <tr>
-      <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
-      <th>Ссылка</th>
-      <td><?=input('text', 'link', $row['link'])?></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Текст</th>
-      <td><?=showCK('text',$row['text'])?></td>
-    </tr>
-    <tr>
-      <th></th>
-      <th>Статус</th>
-      <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
-    </tr>
-    <tr>
-      <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
-      <th>Заголовок</th>
-      <td><?=input('text', 'h1', $row['h1'])?></td>
-    </tr>
-		<? foreach (array('title','keywords','description') as $v){?>
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
+    <table class="table-edit">
       <tr>
         <th></th>
-        <th><?=$v?></th>
-        <td><?=input('text', $v, $row[$v])?></td>
+        <th>Название</th>
+        <td><?=input('text', 'name', $row['name'])?></td>
       </tr>
-		<?}?>
-  </table>
+      <tr>
+        <th><?=help('при отсутствии значения в данном поле<br>ссылка формируется автоматически')?></th>
+        <th>Ссылка</th>
+        <td><?=input('text', 'link', $row['link'])?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Текст</th>
+        <td><?=showCK('text',$row['text'])?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Статус</th>
+        <td><?=dll(array('0'=>'заблокировано','1'=>'активно'),'name="status"',isset($row['status'])?$row['status']:1)?></td>
+      </tr>
+      <tr>
+        <th><?=help('используется вместо названия в &lt;h1&gt;')?></th>
+        <th>Заголовок</th>
+        <td><?=input('text', 'h1', $row['h1'])?></td>
+      </tr>
+      <? foreach (array('title','keywords','description') as $v){?>
+        <tr>
+          <th></th>
+          <th><?=$v?></th>
+          <td><?=input('text', $v, $row[$v])?></td>
+        </tr>
+      <?}?>
+    </table>
     <div class="frm-btns">
       <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
       <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />

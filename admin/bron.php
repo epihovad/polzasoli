@@ -19,45 +19,80 @@ if(isset($_GET['action']))
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
 
-			if(!$name) jAlert('Укажите название');
+			$phone = substr(preg_replace("/\D/",'',$phone), -10);
+			if(strlen($phone) != 10) jAlert('Некорректный номер телефона');
 
-			$set = "name = '{$name}',
-			        text = ".($text ? "'{$text}'" : 'NULL').",
-			        price = '{$price}',
-			        old_price = '{$old_price}',
-			        validity = ".($validity ? "'{$validity}'" : 'NULL').",
-			        age = '{$age}',
-			        /*seance = ".($seance ? "'{$seance}'" : 'NULL').",*/
-			        ids_type = ".(sizeof($_POST['ids_type']) > 0 ? "'".implode(',', $_POST['ids_type'])."'" : 'NULL').",
-			        ids_who = ".(sizeof($_POST['ids_who']) > 0 ? "'".implode(',', $_POST['ids_who'])."'" : 'NULL').",
-			        ids_disease = ".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
-			        status = '{$status}',
-							h1 = " . ($h1 ? "'{$h1}'" : "NULL") . ",
-							title = " . ($title ? "'{$title}'" : "NULL") . ",
-							keywords = " . ($keywords ? "'{$keywords}'" : "NULL") . ",
-							description = " . ($description ? "'{$description}'" : "NULL");
+      jAlert($stime);
+			//if(!$name) jAlert('Укажите название');
 
-			if(!$id = update($tbl,$set,$id))
-				jAlert('Во время сохранения данных произошла ошибка.');
-
-			// загружаем картинку
-			if(sizeof((array)$_FILES[$tbl]['name']))
-			{
-				foreach($_FILES[$tbl]['name'] as $num=>$null)
-				{
-					if(!$_FILES[$tbl]['name'][$num]) continue;
-
-					remove_img($id, $tbl);
-					$path = $_SERVER['DOCUMENT_ROOT']."/uploads/{$tbl}/{$id}.jpg";
-					@move_uploaded_file($_FILES[$tbl]['tmp_name'][$num],$path);
-					@chmod($path,0644);
-
-					break;
-				}
-			}
-
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
+		// -----------------
+    case 'getSeanse':
+      $date = $_GET['date'];
+			$d = substr($date,0,2);
+			$m = substr($date,3,2);
+			$y = substr($date,6,4);
+			if(checkdate($m, $d, $y) === false){
+				jAlert('Неверная дата');
+			}
+			$iday = preg_replace("/\D/",'',date('Ymd',strtotime($date)));
+
+			$q = "SELECT 	s.itime,
+                    t.ihour,
+                    t.iminute,
+                    IF(b.busy IS NULL, 0, b.busy) as busy,
+                    6 - IF(b.busy IS NULL, 0, b.busy) AS free
+            FROM ps_schedule s
+            JOIN ps_time t ON t.pktime = s.itime
+            LEFT JOIN (
+              SELECT 	iday,
+                      itime,
+                      SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS busy
+              FROM ps_bron
+              WHERE 1=1
+                    AND id <> {$id}
+              GROUP BY 	iday,
+                        itime
+            ) b ON b.iday = s.iday AND b.itime = s.itime
+            WHERE 1=1
+                  AND s.iday = {$iday}
+                  AND (b.busy < 6 OR b.busy IS NULL)
+            ORDER BY s.itime";
+			$r = sql($q);
+			if(!@mysqli_num_rows($r)){
+				?><script>top.$('td.stime').html('');</script><?
+			  jAlert('Расписание на указанную дату отсутствует');
+      }
+
+      ob_start();
+			while ($row = mysqli_fetch_assoc($r)) {
+				$class = '';
+        if($row['free'] <= 2){
+          $class = 'red';
+        } elseif ($row['free'] <= 4){
+          $class = 'yellow';
+        } else {
+          $class = 'green';
+        }
+			  ?>
+        <div class="radio">
+          <label>
+            <input type="radio" name="stime" value="<?=$row['itime']?>">
+						<b><?=$row['ihour'].':'.$row['iminute']?></b> доступно мест: <span class="<?=$class?>"><?=$row['free']?></span>
+          </label>
+        </div>
+        <?
+			}
+      $data = ob_get_clean();
+
+      ?>
+      <script>
+      top.$('td.stime').html('<?=cleanJS($data)?>');
+      </script>
+      <?
+
+      break;
 		// ----------------- удаление банера
 		case 'del':
 			remove_object($id);
@@ -90,38 +125,43 @@ if(isset($_GET['red']))
 	
 	ob_start();
 	?>
+  <script src="/js/inputmask.min.js"></script>
+  <script src="/js/inputmask.phone.extensions.min.js"></script>
+  <script>
+    $(function () {
+      //
+      Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('.table-edit input[name="phone"]'));
+      //
+      $('.table-edit .datepicker').change(function () {
+        var date = $(this).val();
+        var id = $('input[name="bron_id"]').val();
+        inajax('bron.php', 'action=getSeanse&date=' + date + '&id=' + id);
+      });
+    })
+  </script>
+
+  <style>
+    .stime * { vertical-align:middle;}
+    .stime input { margin:1px 0 0;}
+    .stime span { display: inline-block; overflow: hidden; text-align: center; width: 15px; height: 15px; line-height: 15px; border-radius: 20px;}
+    .stime span.green { background-color: green; color: #fff; }
+    .stime span.yellow { background-color: yellow; color: #000; }
+    .stime span.red { background-color: red; color: #fff; }
+  </style>
+
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
+    <input type="hidden" name="bron_id" value="<?=$id?>">
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
     <table class="table-edit">
       <tr>
         <th></th>
         <th>Дата сеанса</th>
-        <td><?=input('date', 'iday', $row['iday'])?></td>
+        <td><?=input('date', 'iday', $row['iday'] ? date('d.m.Y',strtotime($row['iday'])) : date('d.m.Y'))?></td>
       </tr>
       <tr>
         <th></th>
-        <th>Время сеанса, ч.</th>
-        <td>
-          <select class="form-control input-xs" name="hour[<?=$id?>]"><?
-          for($v=0; $v<=23; $v++){
-            $hour = ($v < 10 ? '0' : '') . $v;
-            $selected = $v == $row['ihour'] ? ' selected' : '';
-            ?><option value="<?=$v?>"<?=$selected?>><?=$hour?></option><?
-          }
-          ?></select>
-        </td>
-      </tr>
-      <tr>
-        <th></th>
-        <th>Время сеанса, мин.</th>
-        <td>
-          <select class="form-control input-xs" name="min[<?=$id?>]"><?
-          for($v=0; $v<=59; $v++){
-            $m = ($v < 10 ? '0' : '') . $v;
-            $selected = $m == $row['iminute'] ? ' selected' : '';
-            ?><option value="<?=$v?>"<?=$selected?>><?=$m?></option><?
-          }
-          ?></select>
-        </td>
+        <th>Время сеанса</th>
+        <td class="stime"></td>
       </tr>
       <tr>
         <th></th>
@@ -136,22 +176,22 @@ if(isset($_GET['red']))
       <tr>
         <th></th>
         <th>Дети до 7 лет</th>
-        <td><?=input('text', 'cnt_child7', $row['cnt_child7'])?></td>
+        <td><?=input('text', 'cnt_child7', (int)$row['cnt_child7'])?></td>
       </tr>
       <tr>
         <th></th>
         <th>Дети до 16 лет</th>
-        <td><?=input('text', 'cnt_child16', $row['cnt_child16'])?></td>
+        <td><?=input('text', 'cnt_child16', (int)$row['cnt_child16'])?></td>
       </tr>
       <tr>
         <th></th>
         <th>Взрослые</th>
-        <td><?=input('text', 'cnt_grown', $row['cnt_grown'])?></td>
+        <td><?=input('text', 'cnt_grown', (int)$row['cnt_grown'])?></td>
       </tr>
       <tr>
         <th></th>
         <th>Пенсионеры</th>
-        <td><?=input('text', 'cnt_pensioner', $row['cnt_pensioner'])?></td>
+        <td><?=input('text', 'cnt_pensioner', (int)$row['cnt_pensioner'])?></td>
       </tr>
     </table>
     <div class="frm-btns">
@@ -196,10 +236,15 @@ else
 		$where .= "\r\nAND CONCAT(b.iday <= " . date('Ymd', strtotime($fl['day2']));
 	}
 	if($fl['search'] != ''){
-	  $sf = array('name','phone');
+	  $sf = array('number','name','phone');
 		$w = '';
 		foreach ($sf as $field){
-			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
+		  if($field == 'number'){
+		    $field = "CONCAT(B.iday,'/',B.itime,'-',B.id)";
+      } else {
+		    $field = "`{$field}`";
+      }
+			$w .= ($w ? ' OR' : '') . "\r\n{$field} LIKE '%{$fl['search']}%'";
 		}
 		$where .= "\r\n AND ({$w}\r\n)";
 	}
@@ -296,7 +341,7 @@ else
         ?>
         <tr id="item-<?=$row['id']?>">
           <th><input type="checkbox" name="del[<?=$id?>]"></th>
-          <th nowrap><?=$row['number']?></th>
+          <th class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['number']?></a></th>
           <th><?=date('d.m.Y',strtotime($row['iday']))?></th>
           <th><?=$row['ihour'].':'.$row['iminute']?></th>
           <td class="sp" nowrap><?=$row['name']?></td>

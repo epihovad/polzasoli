@@ -17,8 +17,8 @@ if(isset($_GET['action']))
 			$notes = clean($_POST['notes']);
 			if(!$id = update($tbl,"notes=".($notes?"'{$notes}'":"NULL"),$id))
 				errorAlert('Во время сохранения данных произошла ошибка.');
-			
-			?><script>top.location.href = '<?=$script?>?id=<?=$id?>'</script><?
+
+			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- удаление одной записи
 		case 'del':
@@ -46,58 +46,59 @@ elseif(isset($_GET['red']))
 	ob_start();
 	?>  
   <form action="?action=save&id=<?=$id?>" method="post" target="ajax">
-  <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
-  	<tr>
-    	<th class="tab_red_th"></th>
-      <th>Дата</th>
-      <td style="font-size:12px"><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
-    </tr>
-		<tr>
-			<th class="tab_red_th"></th>
-			<th>Тип</th>
-			<td style="font-size:12px"><?=$row['type']?></td>
-		</tr>
-    <? if($row['type'] == 'Оптовики'){?>
-    <tr>
-      <th class="tab_red_th"></th>
-      <th>Организация</th>
-      <td style="font-size:12px"><?=$row['firma']?></td>
-    </tr>
-    <?}?>
-    <tr>
-      <th class="tab_red_th"></th>
-      <th><?=$row['type'] == 'Оптовики' ? 'Контактное лицо' : 'Имя'?></th>
-      <td style="font-size:12px"><?=$row['name']?></td>
-    </tr>
-    <tr>
-      <th class="tab_red_th"></th>
-      <th>E-mail</th>
-      <td style="font-size:12px"><?=$row['email']?></td>
-    </tr>
-    <tr>
-      <th class="tab_red_th"></th>
-      <th>Телефон</th>
-      <td style="font-size:12px"><?=$row['phone']?'+7'.$row['phone']:''?></td>
-    </tr>
-    <tr>
-    	<th class="tab_red_th"></th>
-      <th>Сообщение</th>
-			<td style="font-size:12px"><?=nl2br($row['text'])?></td>
-    </tr>
-    <tr>
-    	<th class="tab_red_th"></th>
-      <th>Примечание</th>
-      <td><?=show_pole('textarea','notes',$row['notes'])?></td>
-    </tr>
-    <tr>
-    	<th class="tab_red_th"></th>
-      <th></th>
-      <td align="center">
-      	<input type="submit" value="Сохранить" class="but1" onclick="loader(true)" />&nbsp;
-        <input type="button" value="Отмена" class="but1" onclick="location.href='<?=$script?>'" />
-      </td>
-    </tr>
-  </table>
+    <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
+    <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>Дата</th>
+        <td style="font-size:12px"><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
+      </tr>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>Тип</th>
+        <td style="font-size:12px"><?=$row['type']?></td>
+      </tr>
+      <? if($row['type'] == 'Оптовики'){?>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>Организация</th>
+        <td style="font-size:12px"><?=$row['firma']?></td>
+      </tr>
+      <?}?>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th><?=$row['type'] == 'Оптовики' ? 'Контактное лицо' : 'Имя'?></th>
+        <td style="font-size:12px"><?=$row['name']?></td>
+      </tr>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>E-mail</th>
+        <td style="font-size:12px"><?=$row['email']?></td>
+      </tr>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>Телефон</th>
+        <td style="font-size:12px"><?=$row['phone']?'+7'.$row['phone']:''?></td>
+      </tr>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>Сообщение</th>
+        <td style="font-size:12px"><?=nl2br($row['text'])?></td>
+      </tr>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th>Примечание</th>
+        <td><?=show_pole('textarea','notes',$row['notes'])?></td>
+      </tr>
+      <tr>
+        <th class="tab_red_th"></th>
+        <th></th>
+        <td align="center">
+          <input type="submit" value="Сохранить" class="but1" onclick="loader(true)" />&nbsp;
+          <input type="button" value="Отмена" class="but1" onclick="location.href='<?=$script?>'" />
+        </td>
+      </tr>
+    </table>
   </form>
   <?
   $content = ob_get_clean();
