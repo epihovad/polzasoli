@@ -125,8 +125,6 @@ if(isset($_GET['red']))
 	
 	ob_start();
 	?>
-  <script src="/js/inputmask.min.js"></script>
-  <script src="/js/inputmask.phone.extensions.min.js"></script>
   <script>
     $(function () {
       //

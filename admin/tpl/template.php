@@ -52,6 +52,9 @@
   <link rel="stylesheet" href="/js/jAlert/jAlert_admin.css" type="text/css" />
   <script type="text/javascript" src="/js/jAlert/jquery.jAlert.min.js"></script>
 
+  <script src="/js/inputmask.min.js"></script>
+  <script src="/js/inputmask.phone.extensions.min.js"></script>
+
   <link type="text/css" href="/js/tooltip/tooltip.css" rel="stylesheet">
   <script type="text/javascript" src="/js/tooltip/tooltip.js"></script>
 
