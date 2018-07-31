@@ -253,37 +253,57 @@ $index = true;
 
     <div class="bron-days row">
       <?
-      $colors = array('busy','red','green','yellow');
-      for($i=0; $i<10; $i++){
-        $color = $colors[array_rand($colors)];
+      $query = "SELECT 	s.iday,
+                        s.itime,
+                        t.ihour,
+                        t.iminute,
+                        IF(b.busy IS NULL, 0, b.busy) AS busy,
+                        6 - IF(b.busy IS NULL, 0, b.busy) AS free,
+                        IF(b.busy < 6 OR b.busy IS NULL, 1, 0) AS is_avail
+                FROM {$prx}schedule s
+                JOIN {$prx}time t ON t.pktime = s.itime
+                LEFT JOIN (
+                  SELECT 	iday,
+                          itime,
+                          SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS busy
+                  FROM {$prx}bron
+                  GROUP BY 	iday,
+                            itime
+                ) b ON b.iday = s.iday AND b.itime = s.itime
+                WHERE s.iday = 20180724
+                ORDER BY s.itime";
+      $res = sql($query);
+      while ($row = @mysqli_fetch_assoc($res)){
+				if($row['busy'] <= 2) $color = 'green';
+				elseif ($row['busy'] <= 4) $color = 'yellow';
+        elseif ($row['busy'] <= 5) $color = 'red';
+        else $color = 'busy';
         ?>
         <div class="bron-day-arr col-xs-5 col-sm-5 col-md-5">
           <div class="bron-day <?=$color?>">
-            <div class="ch"><input type="checkbox" day="20180620"></div>
-            <div class="time">9:20</div>
-            <? if($color == 'busy'){ ?>
-              <div class="place">
-                <span class="bs">x</span><span class="bs">x</span><span class="bs">x</span><span class="bs">x</span><span>x</span><span>x</span>
-              </div>
+            <div class="ch"><input type="checkbox" day="<?=$row['iday']?>-<?=$row['itime']?>"></div>
+            <div class="time"><?=$row['ihour'].':'.$row['iminute']?></div>
+						<? if($color == 'busy'){ ?>
+              <div class="place"><?=str_repeat('<span class="bs">x</span>',6)?></div>
               <div class="btm">
                 <div class="note">Все места заняты</div>
                 <a href="" rel="nofollow">Выберите другой день</a>
               </div>
-            <? } else { ?>
+						<? } else { ?>
               <div class="place">
-                <span class="bs"> </span><span class="bs"> </span><span class="bs"> </span><span class="bs"> </span><span> </span><span> </span>
+                <?=str_repeat('<span class="bs"> </span>',$row['busy'])?><?=str_repeat('<span> </span>',$row['free'])?>
               </div>
               <div class="btm">
-                <div class="note">Осталось <span>2 места</span></div>
+                <div class="note">Осталось <span><?=$row['free']?> <?=num2str($row['free'],'место')?></span></div>
                 <a href="" rel="nofollow">Забронировать</a>
               </div>
-            <?}?>
+						<?}?>
           </div>
         </div>
-        <?
+				<?
       }
       ?>
-      <button class="btn btn-warning">Записаться на сеанс <b>18.04.18 в 15:20</b></button>
+      <button class="btn btn-warning">Записаться на сеанс<b></b></button>
       <div class="note">Мы обязательно предварительно вам перезвоним<br>и уточним время и другие детали проведения сеанса</div>
       <div class="lnks">
         <div><i class="fas fa-check-circle"></i><a href="">О пользе галотерапии</a></div>

@@ -32,7 +32,7 @@ if(isset($_GET['action']))
 		case 'multidel':
 			foreach($_POST['check_del_'] as $k=>$v)
 				update($tbl,'',$k);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		//
 		case 'status':
@@ -59,7 +59,7 @@ if(isset($_GET['action']))
 		// ----------------- удаление одной записи
 		case 'del':
 			update($tbl,'',$id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 	}
 	exit;

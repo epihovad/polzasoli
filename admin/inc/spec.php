@@ -168,11 +168,13 @@ function btn_edit($id,$locked=0,$properties='')
 	ob_start();
 	?>
   <div class="edit">
-    <button type="button" class="btn btn-info btn-xs" alt="редактировать" title="редактировать" onclick="location.href = '?red=<?=$id?><?=$properties?>'">
+    <button type="button" class="btn btn-info btn-xs" alt="редактировать" title="редактировать"
+      onclick="location.href = '?red=<?=$id?><?=$properties?>'">
       <i class="far fa-edit"></i>
     </button>
 		<? if(!$locked) { ?>
-      <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить" onclick="$(document).jAlert('show', 'confirm', 'Уверены?', function () {location.href='?action=del&id=<?=$id?><?=$properties?>'})">
+      <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить"
+        onclick="$(document).jAlert('show', 'confirm', 'Уверены?', function () { toajax(url('file') + '?action=del&id=<?=$id?><?=$properties?>'); })">
         <i class="far fa-trash-alt"></i>
       </button>
 		<? }?>

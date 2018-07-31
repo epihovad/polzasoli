@@ -34,13 +34,13 @@ if(isset($_GET['action']))
 		// ----------------- удаление одной записи
 		case 'del':
 			update($tbl,'',$id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
 			foreach($_POST['del'] as $id=>$v)
 				update($tbl,'',$id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 	}
 	exit;

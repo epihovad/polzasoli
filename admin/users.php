@@ -25,7 +25,7 @@ if(isset($_GET['action']))
 			  jAlert('Некорректный номер телефона');
 			}
 			//
-			if(!check_mail($email)){
+			if($email && !check_mail($email)){
 				jAlert('Некорректный Email');
       }
       //
@@ -33,18 +33,28 @@ if(isset($_GET['action']))
 				jAlert('Клиент с данным номером телефона уже зарегистрирован в системе');
       }
 
+      $set = "phone = '{$phone}',
+              name = '{$name}',
+              email = '{$email}',
+              notes=".($notes?"'{$notes}'":"NULL").",
+              status = '{$status}'";
+
+			if(!$id = update($tbl,$set,$id))
+				jAlert('Во время сохранения данных произошла ошибка.');
+
 			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
 		// ----------------- удаление банера
 		case 'del':
-			remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			remove_object($id, array('bron'=>'id_user'));
+			?><script>top.location.href = top.url()</script><?
 		break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
-			foreach($_POST['del'] as $id=>$v)
-				remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			foreach($_POST['del'] as $id=>$v) {
+				remove_object($id, array('bron' => 'id_user'));
+			}
+			?><script>top.location.href = top.url()</script><?
 		break;
 	}
 	exit;
@@ -231,9 +241,9 @@ else
           <th class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['phone']?></a></th>
           <th class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></th>
           <th class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['email']?></a></th>
-          <th style="text-align:center"><?=$row['cnt_day']?></th>
-          <th style="text-align:center"><?=$row['cnt_seans']?></th>
-          <th style="text-align:center"><?=$row['cnt_guest']?></th>
+          <th style="text-align:center"><?=$row['cnt_day']?:'-'?></th>
+          <th style="text-align:center"><?=$row['cnt_seans']?:'-'?></th>
+          <th style="text-align:center"><?=$row['cnt_guest']?:'-'?></th>
           <th nowrap><?=btn_edit($id)?></th>
         </tr>
         <?

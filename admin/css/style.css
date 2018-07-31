@@ -22,7 +22,7 @@ input.button { display:none; }
 
 a, a:visited { color:#007d71; text-decoration:none; }
 a:hover { opacity:0.6; text-decoration:none; }
-a.help { border:none !important; text-decoration:none; vertical-align:top; font-size:0;}
+a.help { border:none !important; text-decoration:none; vertical-align:top;}
 a.help span { font-size:13px; color:#007d71;}
 
 a.clr-green { color:#007d71;}
@@ -188,6 +188,7 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 230px; }
 .table-list .flag.active { color:#449d44; }
 .table-list .edit button { margin:0 1px;}
 .table-list .edit i { font-size:12px; width:12px;}
+.table-list thead a.help { font-size:0;}
 
 .table-list tbody > tr > td.active,
 .table-list tbody > tr > th.active,
@@ -231,6 +232,7 @@ aside#sidebar { position: absolute; left: 0; top: 60px; width: 230px; }
 .table-edit .chosen-container { width:100% !important; background-color:#ffffff;}
 .table-edit .chosen-container .chosen-choices { border:1px solid #d9d9d9; background:none; box-shadow:none !important;}
 .table-edit .chosen-search-input { width:auto !important;}
+.table-edit th a.help { font-size:0;}
 
 .frm-btns { position:fixed; bottom: 117px; right: 35px;}
 

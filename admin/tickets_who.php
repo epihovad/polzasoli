@@ -35,14 +35,14 @@ if(isset($_GET['action']))
 		// ----------------- удаление одной записи
 		case 'del':
 			remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
 			foreach($_POST['del'] as $id=>$v) {
 				remove_object($id);
 			}
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление изображения
 		case 'img_del':

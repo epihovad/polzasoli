@@ -131,6 +131,9 @@ if(isset($_GET['show']))
 {
 	switch($_GET['show'])
   {
+    case 'schedule_on_day':
+
+      break;
     // ------------------- Запись на сеанс
     case 'seance':
       ?>

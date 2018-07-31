@@ -19,11 +19,54 @@ if(isset($_GET['action']))
 			foreach($_POST as $key=>$val)
 				$$key = clean($val);
 
-			$phone = substr(preg_replace("/\D/",'',$phone), -10);
-			if(strlen($phone) != 10) jAlert('Некорректный номер телефона');
+			// проверка даты
+			$d = substr($date,0,2);
+			$m = substr($date,3,2);
+			$y = substr($date,6,4);
+			if(checkdate($m, $d, $y) === false){
+				jAlert('Неверная дата');
+			}
+			$iday = preg_replace("/\D/",'',date('Ymd',strtotime($date)));
 
-      jAlert($stime);
-			//if(!$name) jAlert('Укажите название');
+			// проверка возможности брони
+      if(!$itime){
+				jAlert('Пожалуйста, выберите сеанс');
+      }
+      $cnt = $cnt_child7 + $cnt_child16 + $cnt_grown + $cnt_pensioner;
+      $q = "SELECT SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner)
+            FROM {$prx}bron
+            WHERE 1=1
+                  AND iday = {$iday}
+                  AND itime = {$itime}
+                  AND id <> '{$id}'
+            ";
+      $cnt_busy = (int)getField($q);
+      if($cnt_busy + $cnt > 6){
+        jAlert('Для выбранного сеанса превышен лимит по кол-ву мест.<br>Доступно мест: ' . (6 - $cnt_busy) . '<br>' . 'Запрошено мест: ' . $cnt);
+      }
+      // проверка имени клиента
+      if(!$name){
+        jAlert('Пожалуйста, укажите «Имя клиента»');
+      }
+			// проверка телефона
+			$phone = substr(preg_replace("/\D/",'',$phone), -10);
+			if(strlen($phone) != 10){
+			  jAlert('Некорректный номер телефона');
+			}
+
+			$set = "iday = '{$iday}',
+			        itime = '{$itime}',
+			        id_user = '{$id_user}',
+			        name = '{$name}',
+			        phone = '{$phone}',
+			        first = '{$first}',
+			        cnt_child7 = '{$cnt_child7}',
+			        cnt_child16 = '{$cnt_child16}',
+			        cnt_grown = '{$cnt_grown}',
+			        cnt_pensioner = '{$cnt_pensioner}'
+			        ";
+			if(!$id = update($tbl,$set,$id))
+				jAlert('Во время сохранения данных произошла ошибка.');
 
 			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
@@ -42,14 +85,15 @@ if(isset($_GET['action']))
                     t.ihour,
                     t.iminute,
                     IF(b.busy IS NULL, 0, b.busy) as busy,
-                    6 - IF(b.busy IS NULL, 0, b.busy) AS free
-            FROM ps_schedule s
-            JOIN ps_time t ON t.pktime = s.itime
+                    6 - IF(b.busy IS NULL, 0, b.busy) AS free,
+                    IF(b.busy < 6 OR b.busy IS NULL, 1, 0) as is_avail
+            FROM {$prx}schedule s
+            JOIN {$prx}time t ON t.pktime = s.itime
             LEFT JOIN (
               SELECT 	iday,
                       itime,
                       SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS busy
-              FROM ps_bron
+              FROM {$prx}bron
               WHERE 1=1
                     AND id <> {$id}
               GROUP BY 	iday,
@@ -57,29 +101,34 @@ if(isset($_GET['action']))
             ) b ON b.iday = s.iday AND b.itime = s.itime
             WHERE 1=1
                   AND s.iday = {$iday}
-                  AND (b.busy < 6 OR b.busy IS NULL)
             ORDER BY s.itime";
 			$r = sql($q);
 			if(!@mysqli_num_rows($r)){
-				?><script>top.$('td.stime').html('');</script><?
+				?><script>top.$('td.itime').html('');</script><?
 			  jAlert('Расписание на указанную дату отсутствует');
       }
+
+      $bron = gtv('bron','*',$id);
 
       ob_start();
 			while ($row = mysqli_fetch_assoc($r)) {
 				$class = '';
-        if($row['free'] <= 2){
-          $class = 'red';
+				if(!$row['free']){
+					$class = ' busy';
+        } elseif($row['free'] <= 2){
+          $class = ' red';
         } elseif ($row['free'] <= 4){
-          $class = 'yellow';
+          $class = ' yellow';
         } else {
-          $class = 'green';
+          $class = ' green';
         }
+        $disabled = !$row['is_avail'] ? ' disabled' : '';
+        $checked = $bron['iday'] == $iday && $bron['itime'] == $row['itime'] ? ' checked' : '';
 			  ?>
-        <div class="radio">
+        <div class="radio<?=$class?>">
           <label>
-            <input type="radio" name="stime" value="<?=$row['itime']?>">
-						<b><?=$row['ihour'].':'.$row['iminute']?></b> доступно мест: <span class="<?=$class?>"><?=$row['free']?></span>
+            <input type="radio" name="itime" value="<?=$row['itime']?>"<?=$disabled?><?=$checked?>>
+            <b><?=$row['ihour'].':'.$row['iminute']?></b><i>доступно мест:</i><span><?=$row['free']?></span>
           </label>
         </div>
         <?
@@ -88,7 +137,7 @@ if(isset($_GET['action']))
 
       ?>
       <script>
-      top.$('td.stime').html('<?=cleanJS($data)?>');
+      top.$('td.itime').html('<?=cleanJS($data)?>');
       </script>
       <?
 
@@ -96,13 +145,25 @@ if(isset($_GET['action']))
 		// ----------------- удаление банера
 		case 'del':
 			remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+      // удаление брони из календаря
+      if(isset($_GET['from_calendar'])){
+        ?><script>
+          top.$('#bron-detail tbody #item-<?=$id?>').remove();
+          var i = 1;
+          top.$('#bron-detail tbody tr').each(function () {
+            $(this).find('th').eq(0).html(i++);
+          });
+        </script><?
+      } else {
+				?><script>top.location.href = top.url()</script><?
+      }
 		break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
-			foreach($_POST['del'] as $id=>$v)
+			foreach($_POST['del'] as $id=>$v) {
 				remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			}
+			?><script>top.location.href = top.url()</script><?
 		break;
 	}
 	exit;
@@ -127,24 +188,34 @@ if(isset($_GET['red']))
 	?>
   <script>
     $(function () {
+      var id = $('input[name="bron_id"]').val();
       //
       Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('.table-edit input[name="phone"]'));
       //
+      getSeanse();
+      //
       $('.table-edit .datepicker').change(function () {
-        var date = $(this).val();
-        var id = $('input[name="bron_id"]').val();
-        inajax('bron.php', 'action=getSeanse&date=' + date + '&id=' + id);
+        getSeanse();
       });
+      //
+      function getSeanse() {
+        var date = $('.table-edit .datepicker').val();
+        inajax('bron.php', 'action=getSeanse&date=' + date + '&id=' + id);
+      }
     })
   </script>
 
   <style>
-    .stime * { vertical-align:middle;}
-    .stime input { margin:1px 0 0;}
-    .stime span { display: inline-block; overflow: hidden; text-align: center; width: 15px; height: 15px; line-height: 15px; border-radius: 20px;}
-    .stime span.green { background-color: green; color: #fff; }
-    .stime span.yellow { background-color: yellow; color: #000; }
-    .stime span.red { background-color: red; color: #fff; }
+    .itime * { vertical-align:middle;}
+    .itime input { margin:1px 0 0;}
+    .itime b { width:40px; display:inline-block;}
+    .itime i { width:90px; display:inline-block; font-style:normal;}
+    .itime span { display: inline-block; overflow: hidden; text-align: center; width: 15px; height: 15px; line-height: 15px; border-radius: 20px;}
+    .itime .green span { background-color: green; color: #fff; }
+    .itime .yellow span { background-color: yellow; color: #000; }
+    .itime .red span { background-color: red; color: #fff; }
+    .itime .busy { color:#999;}
+    .itime .busy span { background-color: #6b6b6b; color: #fff; }
   </style>
 
   <form action="?action=save&id=<?=$id?>" method="post" enctype="multipart/form-data" target="ajax">
@@ -154,12 +225,12 @@ if(isset($_GET['red']))
       <tr>
         <th></th>
         <th>Дата сеанса</th>
-        <td><?=input('date', 'iday', $row['iday'] ? date('d.m.Y',strtotime($row['iday'])) : date('d.m.Y'))?></td>
+        <td><?=input('date', 'date', $row['iday'] ? date('d.m.Y',strtotime($row['iday'])) : date('d.m.Y'))?></td>
       </tr>
       <tr>
         <th></th>
         <th>Время сеанса</th>
-        <td class="stime"></td>
+        <td class="itime"></td>
       </tr>
       <tr>
         <th></th>
@@ -170,6 +241,11 @@ if(isset($_GET['red']))
         <th></th>
         <th>Телефон клиента</th>
         <td><?=input('text', 'phone', $row['phone'])?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Впервые?</th>
+        <td><?=dll(array('0'=>'нет','1'=>'да'),'name="first"',isset($row['first'])?$row['first']:0)?></td>
       </tr>
       <tr>
         <th></th>
@@ -206,12 +282,13 @@ else
 	$cur_page = (int)$_GET['page'] ?: 1;
 	$fl['day1'] = $_GET['fl']['day1'];
 	$fl['day2'] = $_GET['fl']['day2'];
-	$fl['number'] = $_GET['fl']['number'];
+	$fl['user'] = $_GET['fl']['user'];
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 	$fl['sort'] = $_GET['fl']['sort'];
 
 	$filters['day1'] = "выбор объектов по Дате сеанса (С даты)";
 	$filters['day2'] = "выбор объектов по Дате сеанса (ПО дату)";
+	$filters['user'] = "выбор объектов по Клиенту";
 
 	// проверка дат
 	for($i=1; $i<=2; $i++){
@@ -230,8 +307,8 @@ else
 	if($fl['day2']){
 		$where .= "\r\nAND b.iday <= " . date('Ymd', strtotime($fl['day2']));
 	}
-	if($fl['number']){
-		$where .= "\r\nAND CONCAT(b.iday <= " . date('Ymd', strtotime($fl['day2']));
+	if($fl['user']){
+		$where .= "\r\nAND b.id_user = '{$fl['user']}'";
 	}
 	if($fl['search'] != ''){
 	  $sf = array('number','name','phone');
@@ -247,16 +324,16 @@ else
 		$where .= "\r\n AND ({$w}\r\n)";
 	}
 
-	$query = "SELECT 	B.*,
-                    CONCAT(B.iday,'/',B.itime,'-',B.id) AS number,
-                    T.*,
+	$query = "SELECT 	b.*,
+                    CONCAT(b.iday,'/',b.itime,'-',b.id) AS number,
+                    t.*,
                     SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS cnt
-            FROM ps_bron B
-            JOIN ps_time T ON B.itime = T.pktime
+            FROM {$prx}bron b
+            JOIN {$prx}time t ON b.itime = t.pktime
             ";
 
 	$query .= "\r\nWHERE 1{$where}";
-	$query .= "\r\nGROUP BY B.id";
+	$query .= "\r\nGROUP BY b.id";
 
 	$r = sql($query);
 	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
@@ -270,7 +347,7 @@ else
 			break;
 		}
 	} else {
-		$query .= "\r\nORDER BY B.iday, B.itime";
+		$query .= "\r\nORDER BY b.iday, b.itime";
 	}
 
 	$query .= "\r\nLIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
@@ -300,6 +377,10 @@ else
           по <?=input('date', 'fl[day2]', $fl['day2'])?>
         </div>
       </div>
+      <div class="item">
+        <label>Клиент</label>
+				<?=dll("SELECT id, CONCAT(phone,' (',name,')') as name FROM {$prx}users ORDER BY name",'name="fl[user]" multiple data-placeholder="-- неважно --"',$fl['user']?explode(',',$fl['user']):null,null,'chosen')?>
+      </div>
       <div class="item search">
         <label>Контекстный поиск</label><br>
         <div><?=input('text', 'fl[search]', $fl['search'])?></div>
@@ -316,16 +397,16 @@ else
       <tr>
         <th width="1%"><input type="checkbox" name="del" /></th>
         <th width="1%"><?=SortColumn('Номер','number')?></th>
-        <th nowrap width="1%"><?=SortColumn('Дата сеанса','B.iday')?></th>
-        <th nowrap width="1%"><?=SortColumn('Время сеанса','B.itime')?></th>
-        <th nowrap width="50%"><?=SortColumn('Имя клиента','B.name')?></th>
-        <th nowrap width="50%"><?=SortColumn('Телефон клиента','B.phone')?></th>
-        <th nowrap><?=SortColumn('Впервые','B.first')?></th>
+        <th nowrap width="1%"><?=SortColumn('Дата сеанса','b.iday')?></th>
+        <th nowrap width="1%"><?=SortColumn('Время сеанса','b.itime')?></th>
+        <th nowrap width="50%"><?=SortColumn('Имя клиента','b.name')?></th>
+        <th nowrap width="50%"><?=SortColumn('Телефон клиента','b.phone')?></th>
+        <th nowrap><?=SortColumn('Впервые','b.first')?></th>
         <th nowrap><?=SortColumn('Забронировано всего','cnt')?></th>
-        <th nowrap><?=SortColumn('Дети до 7 лет','B.cnt_child7')?></th>
-        <th nowrap><?=SortColumn('Дети до 16 лет','B.cnt_child16')?></th>
-        <th nowrap><?=SortColumn('Взрослые','B.cnt_grown')?></th>
-        <th nowrap><?=SortColumn('Пенсионеры','B.cnt_pensioner')?></th>
+        <th nowrap><?=SortColumn('Дети до 7 лет','b.cnt_child7')?></th>
+        <th nowrap><?=SortColumn('Дети до 16 лет','b.cnt_child16')?></th>
+        <th nowrap><?=SortColumn('Взрослые','b.cnt_grown')?></th>
+        <th nowrap><?=SortColumn('Пенсионеры','b.cnt_pensioner')?></th>
         <th width="1%" style="padding:0 30px;"></th>
       </tr>
     </thead>
@@ -342,8 +423,12 @@ else
           <th class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['number']?></a></th>
           <th><?=date('d.m.Y',strtotime($row['iday']))?></th>
           <th><?=$row['ihour'].':'.$row['iminute']?></th>
-          <td class="sp" nowrap><?=$row['name']?></td>
-          <td class="sp" nowrap><?=$row['phone']?></td>
+          <td class="sp" nowrap>
+            <a class="help" href="users.php?red=<?=$row['id_user']?>" title="перейти в редактирование карточки клиента" target="_blank"><?=$row['name']?>
+          </td>
+          <td class="sp" nowrap>
+            <a class="help" href="users.php?red=<?=$row['id_user']?>" title="перейти в редактирование карточки клиента" target="_blank"><?=$row['phone']?></a>
+          </td>
           <td style="text-align:center;<?=$row['first']?' color:green':''?>"><?=$row['first']?'<b>ДА</b>':'нет'?></td>
           <th style="text-align:center"><?=$row['cnt']?></th>
           <th style="text-align:center"><?=$row['cnt_child7']?></th>

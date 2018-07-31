@@ -104,14 +104,14 @@ if(isset($_GET['action']))
 				jAlert("данная страница защищена от удаления!");
 			else
 				remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
 			foreach($_POST['del'] as $id=>$v)
 				if(!gtv($tbl,'locked',$id))
 					remove_object($id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление изображения
 		case 'img_del':

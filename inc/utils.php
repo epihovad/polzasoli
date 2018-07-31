@@ -796,14 +796,14 @@ function sgp($url, $varname, $value, $add = false)
 			$v = (is_array($value))
 				? ( isset($value[$i]) ? $value[$i] : null )
 				: $value;
-			$url = sgp($url, $n, $v);
+			$url = sgp($url, $n, $v, $add);
 		}
 		return $url;
 	}
 
 	preg_match('/^([^?]+)(\?.*?)?(#.*)?$/', $url, $matches);
 	$gp = (isset($matches[2])) ? $matches[2] : ''; // GET-parameters
-	if (!$gp) return $url;
+	if (!$gp && !$add) return $url;
 
 	$pattern = "/([?&])$varname=.*?(?=&|#|\z)/";
 	if (preg_match($pattern, $gp)) {

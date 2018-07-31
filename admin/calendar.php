@@ -59,21 +59,24 @@ function draw_calendar($month, $year, $action = 'none') {
 
 		// пишем номер в ячейку
 		$ymd = $year . ($month < 10 ? '0' : '') . $month . ($list_day < 10 ? '0' : '') . $list_day;
-		$cnt_bron = $bron[$ymd];
+		$per_load = (float)$bron[$ymd]['per_load'];
 		$class = '';
-		if($cnt_bron){
-			if($cnt_bron <= 2){
+		if($per_load){
+			if($per_load <= 40){
 				$class = 'green';
-			} elseif ($cnt_bron <= 4){
+			} elseif ($per_load <= 80){
 			  $class = 'yellow';
-      } elseif ($cnt_bron == 5){
+      } elseif ($per_load < 100){
 			  $class = 'red';
 		  } else {
 				$class = 'busy';
       }
     }
+    $ttl  = 'Загрузка дня: ' . (float)$bron[$ymd]['per_load'] . '%:<br>';
+		$ttl .= 'Доступно мест: ' . (int)$bron[$ymd]['cnt_avail'] . '<br>';
+		$ttl .= 'Забронировано мест: ' . (int)$bron[$ymd]['cnt_busy'];
 
-		$calendar.= '<a href="#" day="' . $ymd . '" class="help ' . $class . '" title="Забронировано мест: ' . $cnt_bron . '">' . $list_day . '</a>';
+		$calendar.= '<a href="#" day="' . $ymd . '" class="help ' . $class . '" title="' . htmlspecialchars($ttl) . '">' . $list_day . '</a>';
 		$calendar.= '</td>';
 
 		// дошли до последнего дня недели
@@ -117,51 +120,47 @@ if(isset($_GET['action'])){
     //
     case 'bron_info':
       $day = (int)$_GET['day'];
-      $q = "SELECT b.*, t.*
+			$date = date('d.m.Y', strtotime($day));
+      $q = "SELECT  b.*,
+                    b.cnt_child7 + b.cnt_child16 + b.cnt_grown + b.cnt_pensioner as cnt,
+                    t.*
             FROM {$prx}bron b
             JOIN {$prx}time t on b.itime = t.pktime
             WHERE b.iday = {$day}
-            ORDER BY b.itime";
+            ORDER BY b.itime, b.id_user";
       $r = sql($q);
       ?>
       <style>
         #bron-detail { padding:15px;}
         #bron-detail h3 {margin: 0 0 20px 0; font-size: 22px; color:#eb0d41;}
-        #bron-detail .cnt-input input { width:95px; text-align:center;}
-        #bron-detail .datepicker { text-align:center; width:95px;}
+        #bron-detail .table-list tbody th, #bron-detail .table-list tbody td { text-align:center;}
+        #bron-detail .slt { background-color: #d8f2df !important; font-weight:700;}
       </style>
 
       <script>
         $(function () {
-          //
-          $('#bron-detail .datepicker').datepicker();
-          //
-          $('#bron-detail tbody tr .btn').click(function () {
-            $(this).parents('tr:first').remove();
-            UpdateBronNum();
+          $('#bron-detail a.help').tooltip({
+            track: true,
+            delay: 0,
+            showURL: false,
+            showBody: " - ",
+            fade: 300
           });
-        });
-        //
-        function UpdateBronNum(){
-          var i = 1;
-          $('#bron-detail tbody tr').each(function () {
-            $(this).find('th').eq(1).html(i++);
-          });
-        }
+        })
       </script>
 
       <form id="bron-detail" action="calendar.php?action=save" method="post" target="ajax">
-        <h3>Информация о бронировании на <?=date('d.m.Y', strtotime($day))?></h3>
+        <h3>Информация о бронировании на <?=$date?></h3>
         <table class="table-list" style="width:auto">
           <thead>
             <tr>
               <th>№</th>
               <th>Дата сеанса</th>
-              <th>Время сеанса, ч.</th>
-              <th>Время сеанса, мин.</th>
+              <th>Время сеанса</th>
               <th>Имя клиента</th>
               <th>Телефон клиента</th>
               <th>Впервые</th>
+              <th class="slt">Всего гостей</th>
               <th>Дети до 7 лет</th>
               <th>Дети до 16 лет</th>
               <th>Взрослые</th>
@@ -178,36 +177,28 @@ if(isset($_GET['action'])){
 							?>
               <tr id="item-<?=$id?>">
                 <th><?=$i++?></th>
-                <td><input class="form-control input-xs datepicker" name="date[<?=$id?>]" value="<?=date('d.m.Y', strtotime($day))?>"></td>
+                <td><a class="help" href="bron.php?fl[day1]=<?=$date?>&fl[day2]=<?=$date?>" title="вывести список забронированных на дату мест" target="_blank"><?=$date?></a></td>
+                <td><?=$row['ihour'].':'.$row['iminute']?></td>
+                <td><a class="help" href="users.php?red=<?=$row['id_user']?>" title="перейти в редактирование карточки клиента" target="_blank"><?=$row['name']?></a></td>
+                <td><a class="help" href="users.php?red=<?=$row['id_user']?>" title="перейти в редактирование карточки клиента" target="_blank"><?=$row['phone']?></a></td>
+                <td><?=$row['first']?'<b>ДА</b>':'нет'?></td>
+                <td class="slt"><?=$row['cnt']?></td>
+                <td><?=$row['cnt_child7']?></td>
+                <td><?=$row['cnt_child16']?></td>
+                <td><?=$row['cnt_grown']?></td>
+                <td><?=$row['cnt_pensioner']?></td>
                 <td>
-                  <select class="form-control input-xs" name="hour[<?=$id?>]"><?
-										for($v=0; $v<=23; $v++){
-											$h = ($v < 10 ? '0' : '') . $v;
-											$selected = $v == $row['ihour'] ? ' selected' : '';
-											?><option value="<?=$v?>"<?=$selected?>><?=$h?></option><?
-										}
-										?></select>
-                </td>
-                <td>
-                  <select class="form-control input-xs" name="min[<?=$id?>]"><?
-										for($v=0; $v<=59; $v++){
-											$m = ($v < 10 ? '0' : '') . $v;
-											$selected = $m == $row['iminute'] ? ' selected' : '';
-											?><option value="<?=$v?>"<?=$selected?>><?=$m?></option><?
-										}
-										?></select>
-                </td>
-                <td><?=input('text', 'name['.$id.']', $row['name'])?></td>
-                <td><?=input('text', 'phone['.$id.']', $row['phone'])?></td>
-                <td style="text-align:center;<?=$row['first']?' color:green':''?>"><?=$row['first']?'<b>ДА</b>':'нет'?></td>
-                <td class="cnt-input"><?=input('text', 'cnt_child7['.$id.']', $row['cnt_child7'])?></td>
-                <td class="cnt-input"><?=input('text', 'cnt_child16['.$id.']', $row['cnt_child16'])?></td>
-                <td class="cnt-input"><?=input('text', 'cnt_grown['.$id.']', $row['cnt_grown'])?></td>
-                <td class="cnt-input"><?=input('text', 'cnt_pensioner['.$id.']', $row['cnt_pensioner'])?></td>
-                <td>
-                  <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить">
-                    <i class="far fa-trash-alt"></i>
-                  </button>
+                  <a href="bron.php?red=<?=$id?>" class="help" title="редактировать бронь" target="_blank">
+                    <button type="button" class="btn btn-info btn-xs">
+                      <i class="far fa-edit"></i>
+                    </button>
+                  </a>
+                  <a href="" class="help" title="удалить текущую бронь"
+                    onclick="$(document).jAlert('show', 'confirm', 'Уверены?', function(){inajax('bron.php','action=del&id=<?=$id?>&from_calendar')}); return false;">
+                    <button type="button" class="btn btn-danger btn-xs">
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  </a>
                 </td>
               </tr>
 							<?
@@ -224,7 +215,6 @@ if(isset($_GET['action'])){
           ?>
           </tbody>
         </table>
-        <button type="submit" class="btn btn-success" style="margin-top:20px;">Сохранить</button>
       </form>
       <?
       break;
@@ -316,16 +306,24 @@ ob_start();
 <?
 // массив бронек на год
 $bron = array();
-$q = "SELECT 	b.iday,
-              SUM(b.cnt_child7 + b.cnt_child16 + b.cnt_grown + b.cnt_pensioner) AS cnt
-      FROM {$prx}bron b
-      JOIN {$prx}day d on d.pkday = b.iday
+$q = "SELECT 	s.iday,
+              COUNT(s.itime) * 6 AS cnt_avail, -- общая вместимость дня для всех сеансов
+              b.cnt_busy, -- занято всего по дню
+              ROUND(b.cnt_busy / (COUNT(s.itime) * 6) * 100, 2) AS per_load -- процент загрузки дня
+      FROM {$prx}schedule s
+      JOIN {$prx}day d ON d.pkday = s.iday
+      LEFT JOIN (
+        SELECT 	b.iday,
+                SUM(b.cnt_child7 + b.cnt_child16 + b.cnt_grown + b.cnt_pensioner) AS cnt_busy
+        FROM {$prx}bron b
+        GROUP BY b.iday
+      ) b ON b.iday = s.iday
       WHERE d.iyear = {$year}
-      GROUP BY b.iday
+      GROUP BY s.iday
       ORDER BY 1";
 $r = sql($q);
 while($arr = @mysqli_fetch_assoc($r)){
-  $bron[$arr['iday']] = $arr['cnt'];
+  $bron[$arr['iday']] = $arr;
 }
 
 ?><div class="b-calendar-row row"><?

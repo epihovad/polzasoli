@@ -12,10 +12,8 @@ function remove_object($id, $childs = array())
 
 	// обнуляем связки с текущей записью
 	if(sizeof($childs)){
-		foreach ($childs as $child) {
-			foreach ($child as $ch_tbl => $ch_filed) {
-				sql("UPDATE {$prx}{$ch_tbl} SET {$ch_filed} = 0 WHERE {$ch_filed} = '{$id}'");
-			}
+		foreach ($childs as $ch_tbl => $ch_filed) {
+			sql("UPDATE {$prx}{$ch_tbl} SET {$ch_filed} = 0 WHERE {$ch_filed} = '{$id}'");
 		}
 	}
 	// чистим sitemap

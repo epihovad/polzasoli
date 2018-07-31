@@ -37,7 +37,7 @@ if(isset($_GET['action']))
 			foreach($_POST['del'] as $id => $none){
 				update($tbl,"black = {$flag}",$id);
       }
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление одной записи
 		case 'unsubscribe':
@@ -45,18 +45,18 @@ if(isset($_GET['action']))
 			foreach($_POST['del'] as $id => $none){
 				update($tbl,"unsubscribe_date = {$flag}",$id);
 			}
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 			break;
 		// ----------------- удаление одной записи
 		case 'del':
 			update($tbl,'',$id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 		break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
 			foreach($_POST['del'] as $id => $none)
 				update($tbl, '', $id);
-			?><script>top.location.href = '<?=$script?>'</script><?
+			?><script>top.location.href = top.url()</script><?
 		break;
 	}
 	exit;
