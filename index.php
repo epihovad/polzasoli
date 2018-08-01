@@ -253,6 +253,7 @@ $index = true;
 
     <div class="bron-days row">
       <div id="seanse-list"></div>
+      <div class="clearfix"></div>
       <button class="btn btn-warning">Записаться на сеанс<b></b></button>
       <div class="bron-bonus">Забронируйте даный сеанс с выгодой <b></b>%</div>
       <div class="note">Мы обязательно предварительно вам перезвоним<br>и уточним время и другие детали проведения сеанса</div>
