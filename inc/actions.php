@@ -132,7 +132,83 @@ if(isset($_GET['show']))
 	switch($_GET['show'])
   {
     case 'schedule_on_day':
+			$iday = (int)$_GET['day'];
+			$y = substr($iday,0,4);
+			$m = substr($iday,4,2);
+			$d = substr($iday,6,2);
+			if(checkdate($m, $d, $y) === false){
+				errorAlert($iday);
+			  exit;
+			}
 
+			ob_start();
+			$query = "SELECT 	s.iday,
+                        s.itime,
+                        s.discount,
+                        t.ihour,
+                        t.iminute,
+                        IF(b.busy IS NULL, 0, b.busy) AS busy,
+                        6 - IF(b.busy IS NULL, 0, b.busy) AS free,
+                        IF(b.busy < 6 OR b.busy IS NULL, 1, 0) AS is_avail
+                FROM {$prx}schedule s
+                JOIN {$prx}time t ON t.pktime = s.itime
+                LEFT JOIN (
+                  SELECT 	iday,
+                          itime,
+                          SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS busy
+                  FROM {$prx}bron
+                  GROUP BY 	iday,
+                            itime
+                ) b ON b.iday = s.iday AND b.itime = s.itime
+                WHERE s.iday = {$iday}
+                ORDER BY s.itime";
+
+			$res = sql($query);
+			while ($row = @mysqli_fetch_assoc($res)){
+				if($row['busy'] <= 2) $color = 'green';
+        elseif ($row['busy'] <= 4) $color = 'yellow';
+        elseif ($row['busy'] <= 5) $color = 'red';
+				else $color = 'busy';
+				?>
+        <div class="bron-day-arr col-xs-5 col-sm-5 col-md-5">
+          <div class="bron-day <?=$color?>">
+            <? if($row['discount']){ ?>
+            <div class="discount">-<?=$row['discount']?>%</div>
+            <?}?>
+            <div class="ch">
+              <input type="checkbox"
+                day="<?=$row['iday']?>-<?=$row['itime']?>"
+                time="<?=date('d.m.y')?> в <?=$row['ihour']?>:<?=$row['iminute']?>"
+                discount="<?=$row['discount']?>"
+              >
+            </div>
+            <div class="time"><?=$row['ihour'].':'.$row['iminute']?></div>
+						<? if($color == 'busy'){ ?>
+              <div class="place"><?=str_repeat('<span class="bs">x</span>',6)?></div>
+              <div class="btm">
+                <div class="note">Все места заняты</div>
+                <a href="" rel="nofollow">Выберите другой день</a>
+              </div>
+						<? } else { ?>
+              <div class="place">
+								<?=str_repeat('<span class="bs"> </span>',$row['busy'])?><?=str_repeat('<span> </span>',$row['free'])?>
+              </div>
+              <div class="btm">
+                <div class="note">Осталось <span><?=$row['free']?> <?=num2str($row['free'],'место')?></span></div>
+                <a href="" rel="nofollow">Забронировать</a>
+              </div>
+						<?}?>
+          </div>
+        </div>
+				<?
+			}
+			$data = ob_get_clean();
+
+			?>
+      <script>
+        top.$('#seanse-list').html('<?=cleanJS($data)?>');
+      </script>
+			<?
       break;
     // ------------------- Запись на сеанс
     case 'seance':

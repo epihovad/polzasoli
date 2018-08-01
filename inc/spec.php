@@ -237,6 +237,8 @@ function bmain(){
       <a href="#"><i class="fab fa-vk"></i></a>
       <a href="#"><i class="fab fa-odnoklassniki"></i></a>
       <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-youtube"></i></a>
     </div>
   </div>
   <?

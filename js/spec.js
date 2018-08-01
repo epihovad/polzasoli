@@ -3,6 +3,8 @@ $(function () {
   Ch2btn();
   iReviews();
   iGallery();
+  SeanseCalendar();
+  SelectSeanse();
   chQuant();
   iFAQ();
   //
@@ -61,6 +63,47 @@ function iGallery(){
       links = $par.find('.item a');
     blueimp.Gallery(links, options);
     return false;
+  });
+}
+
+function SeanseCalendar(day) {
+  var $block = $('#bron .bron-days');
+  if(!$block.length){
+    return false;
+  }
+  if(day == undefined){
+    day = moment().format('YYYYMMDD');
+    day = 20180724; // убрать потом
+  }
+  inajax('/inc/actions.php', 'show=schedule_on_day&day=' + day);
+}
+
+function SelectSeanse() {
+  var $bonus = $('#bron .bron-bonus');
+  //
+  $('#seanse-list').on('click', '.bron-day', function () {
+    var $ss = $(this);
+    var $ch = $ss.find(':checkbox');
+    if($ss.hasClass('busy')){
+      $ch.prop('checked',false);
+      return false;
+    }
+    if($ss.hasClass('active')){
+      return false;
+    }
+    $('#seanse-list .bron-day').removeClass('active');
+    $('#seanse-list .bron-day :checkbox').prop('checked',false);
+    $ss.addClass('active');
+    $ch.prop('checked',true);
+    $('#bron button b').html(' ' + $ch.attr('time'));
+    var discount = parseInt($ch.attr('discount'));
+    if(discount > 0){
+      $bonus.find('b').html(discount);
+      $bonus.addClass('active');
+    } else {
+      $bonus.removeClass('active');
+      $bonus.find('b').html('');
+    }
   });
 }
 

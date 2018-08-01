@@ -14,6 +14,7 @@ body { /*margin-bottom: 60px;*/ background-color:#fff; font-family:'Roboto', san
 .blueimp-gallery > .indicator > li { background-size:cover; width:50px; height:50px; border-radius:0;}
 
 .form-control { box-shadow:none; -webkit-box-shadow:none; -webkit-appearance: none;}
+button:focus { outline:0 !important; }
 
 header { padding-bottom:10px; min-width:1000px; background-color:#2e99b1;}
 header.index { background-image:url(/img/header.jpg); background-repeat:no-repeat; background-position: bottom center; background-size:cover; padding-bottom:24px;}
@@ -22,10 +23,10 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 .container-fluid { /*width: auto; max-width: 680px;*/ width:1000px; }
 
 .head { padding-top:14px; height:102px; border-bottom:2px solid #5ec5db;}
-.head .hb1 { width:310px !important; padding:0 0 0 18px;}
-.head .hb2 { width:269px !important; padding:0;}
-.head .hb3 { padding:0;}
-.head .hb4 { width:165px !important; padding:0 0 0 0;}
+.head .hb1 { width:290px !important; padding:0 0 0 18px;}
+.head .hb2 { width:260px !important; padding:0;}
+.head .hb3 { width:228px !important; padding:0;}
+.head .hb4 { width:206px !important; padding:0 0 0 0;}
 .head-phone { font-weight:700; font-size:24px; line-height:1; color:#f4f2b4;}
 .head-address { font-size:15px; color:#fff; line-height:19px; padding-top:12px;}
 .head-wtime { font-weight:900; font-size:22px; color:#fff;}
@@ -36,11 +37,11 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 .head .callme i { color:#f4f2b4; position:absolute; font-size:18px;}
 .head .callme .abtn { display:inline-block; color:#fff; margin-left:25px;}
 .head .callme .abtn:hover { color:#fff15b;}
-.head .soc .h { color:#fff; padding:0 0 10px 0; }
-.head .soc a { background-color:#fff; display:inline-block; text-align:center; width:41px; height:41px; overflow:hidden; border-radius:50px; margin-right:12px; }
+.head .soc .h { color:#fff; padding:0 0 10px 0; text-align:center; }
+.head .soc a { background-color:#fff; display:inline-block; text-align:center; width:36px; height:36px; overflow:hidden; border-radius:50px; margin-right:3px; }
 .head .soc a:hover { background-color:#fff15b;}
 .head .soc a:last-child { margin:0;}
-.head .soc i { color:#2e99b1; padding-top:7px; font-size:26px; line-height:1;}
+.head .soc i { color:#2e99b1; padding-top:7px; font-size:22px; line-height:1;}
 
 #logo { margin:10px 0 0 7px;}
 
@@ -177,6 +178,10 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #bron .bron-day { width:100%; height:150px; overflow:hidden; background-color:#0f74a8; border:1px solid #c7c7c7; cursor:pointer; }
 #bron .bron-day:hover, #bron .bron-day.active { box-shadow: 0 0 7px #B3B3B3;}
 #bron .bron-day.busy { box-shadow:none; }
+#bron .bron-day .discount {
+	position: absolute; right: 15px; top: 5px; width: 37px; height: 37px; background-color: #c5070a;
+	border-radius: 50px; color: #fff; text-align: center; font-size: 14px; line-height: 36px;
+}
 #bron .bron-day .ch { height:27px; }
 #bron .bron-day input { margin:9px 0 0; padding:0; cursor:pointer;}
 #bron .bron-day .time { font-size:32px; color:#000; font-weight:700; line-height:34px;}
@@ -198,6 +203,18 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #bron .bron-day.yellow { background-color:#fffdf2;}
 #bron .bron-day.yellow .place span.bs { border:1px solid #f7de32; background-color:#f7de32;}
 #bron .btn { margin-top:10px;}
+#bron .bron-bonus { color: #62bc01; padding:0; font-size: 0;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+}
+#bron .bron-bonus.active { font-size: 20px; padding-top: 20px;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	-o-transition: all 0.3s;
+	transition: all 0.3s;
+}
 #bron .note { font-size:15px; color:#000; line-height: 18px; padding: 20px 0;}
 #bron .lnks div { display:inline-block; padding-bottom:60px;}
 #bron .lnks div a { font-size:20px; color:#2292ab; text-decoration:underline;}
@@ -270,17 +287,17 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #subscribe .frm i:hover { color:#fffe4e;}
 #subscribe .frm i.disabled {cursor: not-allowed; filter: alpha(opacity=65); opacity: .65; color:#fff;}
 #bmain { margin:90px 0 0; color:#fff;}
-#bmain .copy { text-align:left;}
-#bmain .soc { text-align:right; padding-left:0;}
-#bmain .soc a { background-color:#fff; display:inline-block; text-align:center; width:41px; height:41px; overflow:hidden; border-radius:50px; margin-right:12px; }
-#bmain .soc a:hover { background-color:#fff15b;}
-#bmain .soc a:last-child { margin:0;}
-#bmain .soc i { color:#2e99b1; padding-top:7px; font-size:26px; line-height:1;}
-#bmain .col2, #bmain .col3 { text-align:left; padding-left:0;}
-#bmain .col3 { padding-right:0;}
+#bmain .copy { text-align:left; width:22%;}
+#bmain .col2 { width:24%; text-align:left; padding-left:0;}
+#bmain .col3 { width:25%; text-align:left; padding-left:0; }
 #bmain .col2 a, #bmain .col3 a { color:#fff; text-decoration:underline;}
 #bmain .col2 a:hover, #bmain .col3 a:hover { text-decoration:none;}
 #bmain a.active {color:#fed472;}
+#bmain .soc { text-align:right; padding-left:0; width:29%;}
+#bmain .soc a { background-color:#fff; display:inline-block; text-align:center; width:41px; height:41px; overflow:hidden; border-radius:50px; margin-right:5px; }
+#bmain .soc a:hover { background-color:#fff15b;}
+#bmain .soc a:last-child { margin:0;}
+#bmain .soc i { color:#2e99b1; padding-top:7px; font-size:26px; line-height:1;}
 
 #frm-seance { width:376px; padding:15px 0 15px 0;}
 #frm-seance h4 { font-size:30px; font-weight:700; margin:0 0 15px; }

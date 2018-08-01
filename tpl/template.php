@@ -31,6 +31,8 @@
   <script type="text/javascript" src="/js/utils.js"></script>
   <script type="text/javascript" src="/js/spec.js?v=1"></script>
 
+  <script type="text/javascript" src="/js/moment.min.js"></script>
+
   <link href="/js/blueimp-gallery/css/blueimp-gallery.css" rel="stylesheet" type="text/css"/>
   <link href="/js/blueimp-gallery/css/blueimp-gallery-indicator.css" rel="stylesheet">
   <link href="/js/blueimp-gallery/css/blueimp-gallery-video.css" rel="stylesheet">
@@ -89,6 +91,8 @@
               <a href="#"><i class="fab fa-vk"></i></a>
               <a href="#"><i class="fab fa-odnoklassniki"></i></a>
               <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
             </div>
           </div>
         </div>
