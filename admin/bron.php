@@ -20,12 +20,9 @@ if(isset($_GET['action']))
 				$$key = clean($val);
 
 			// проверка даты
-			$d = substr($date,0,2);
-			$m = substr($date,3,2);
-			$y = substr($date,6,4);
-			if(checkdate($m, $d, $y) === false){
+      if(!MyCheckDate($date)){
 				jAlert('Неверная дата');
-			}
+      }
 			$iday = preg_replace("/\D/",'',date('Ymd',strtotime($date)));
 
 			// проверка возможности брони
@@ -33,17 +30,11 @@ if(isset($_GET['action']))
 				jAlert('Пожалуйста, выберите сеанс');
       }
       $cnt = $cnt_child7 + $cnt_child16 + $cnt_grown + $cnt_pensioner;
-      $q = "SELECT SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner)
-            FROM {$prx}bron
-            WHERE 1=1
-                  AND iday = {$iday}
-                  AND itime = {$itime}
-                  AND id <> '{$id}'
-            ";
-      $cnt_busy = (int)getField($q);
-      if($cnt_busy + $cnt > 6){
-        jAlert('Для выбранного сеанса превышен лимит по кол-ву мест.<br>Доступно мест: ' . (6 - $cnt_busy) . '<br>' . 'Запрошено мест: ' . $cnt);
+			$checkBron = checkBron($iday, $itime, $cnt, $id);
+			if($checkBron['status'] == 'busy'){
+				jAlert('Для выбранного сеанса превышен лимит по кол-ву мест.<br>Доступно мест: ' . $checkBron['avail'] . '<br>' . 'Запрошено мест: ' . $cnt);
       }
+
       // проверка имени клиента
       if(!$name){
         jAlert('Пожалуйста, укажите «Имя клиента»');
@@ -73,10 +64,7 @@ if(isset($_GET['action']))
 		// -----------------
     case 'getSeanse':
       $date = $_GET['date'];
-			$d = substr($date,0,2);
-			$m = substr($date,3,2);
-			$y = substr($date,6,4);
-			if(checkdate($m, $d, $y) === false){
+			if(!MyCheckDate($date)){
 				jAlert('Неверная дата');
 			}
 			$iday = preg_replace("/\D/",'',date('Ymd',strtotime($date)));
@@ -292,10 +280,7 @@ else
 
 	// проверка дат
 	for($i=1; $i<=2; $i++){
-		$d = substr($fl['day'.$i],0,2);
-		$m = substr($fl['day'.$i],3,2);
-		$y = substr($fl['day'.$i],6,4);
-		if(checkdate($m, $d, $y) === false){
+		if(!MyCheckDate($fl['day'.$i])){
 			$fl['day'.$i] = null;
 		}
   }

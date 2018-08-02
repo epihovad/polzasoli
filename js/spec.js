@@ -11,7 +11,14 @@ $(function () {
   Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
   //
   $('header .hb3 button').click(function(){
-    jPop('/inc/actions.php?show=seance');
+    jPop('/inc/actions.php?show=popup_bron');
+  });
+  //
+  $('#bron button').click(function(){
+    var day = $('#seanse-list .bron-day.active :checkbox:checked').attr('day');
+    if(day != undefined){
+      jPop('/inc/actions.php?show=popup_bron&day=' + day);
+    }
   });
   //
   $('#subscribe .frm i').click(function(){

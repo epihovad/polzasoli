@@ -78,12 +78,9 @@ if(isset($_GET['action'])){
 		// добавление сенасов на весь день по шаблону
 		case 'row_time_standart':
       $day = (int)$_GET['day'];
-			$y = substr($day,0,4);
-			$m = substr($day,4,2);
-			$d = substr($day,6,2);
-			if(checkdate($m, $d, $y) === false){
-			  exit;
-      }
+			if(!MyCheckDate($day, 'Ymd')){
+				exit;
+			}
 
 			$seance = array();
 
@@ -117,11 +114,7 @@ $dm = date('m');
 $dd = date('d');
 $day = (int)$_GET['day'];
 
-$y = substr($day,0,4);
-$m = substr($day,4,2);
-$d = substr($day,6,2);
-
-if(checkdate($m, $d, $y) !== false){
+if(MyCheckDate($day, 'Ymd')){
 	$date = new DateTime($day);
 	$dy = $date->format('Y');
 	$dm = $date->format('m');

@@ -133,12 +133,8 @@ if(isset($_GET['show']))
   {
     case 'schedule_on_day':
 			$iday = (int)$_GET['day'];
-			$y = substr($iday,0,4);
-			$m = substr($iday,4,2);
-			$d = substr($iday,6,2);
-			if(checkdate($m, $d, $y) === false){
-				errorAlert($iday);
-			  exit;
+			if(!MyCheckDate($iday, 'Ymd')){
+				exit;
 			}
 
 			ob_start();
@@ -211,11 +207,29 @@ if(isset($_GET['show']))
 			<?
       break;
     // ------------------- Запись на сеанс
-    case 'seance':
+    case 'popup_bron':
+      $iday = date('Ymd');
+      $date = date('d.m.Y');
+      $time = array();
+
+      // если дата и время передаётся из блока выбора сеанса
+      if($day = $_GET['day']){
+        $arr = explode('-',$day);
+        $iday_ = (int)$arr[0];
+        $itime_ = (int)$arr[1];
+				if(MyCheckDate($iday_, 'Ymd')){
+					$iday = $iday_;
+					$date = date('d.m.Y', strtotime($iday));
+				}
+				$time = getRow("SELECT * FROM {$prx}time WHERE pktime = '{$itime_}'");
+      }
+
       ?>
       <script>
         $(function () {
           chQuant($('#frm-seance'));
+          //
+
         })
       </script>
       <form id="frm-seance" action="/inc/actions.php?action=seance" class="frm" target="ajax" method="post">
@@ -241,6 +255,13 @@ if(isset($_GET['show']))
               <span class="sign">/чел.</span>
             </div>
           </div>
+        </div>
+        <div class="sep"></div>
+        <div class="pad">
+          <?
+          $free_days = GetFreeSeanseDays('20180725');
+          
+          ?>
         </div>
         <div class="sep"></div>
         <div class="pad">

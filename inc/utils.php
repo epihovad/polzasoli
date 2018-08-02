@@ -1,9 +1,69 @@
 <?
-/*function checkBron($iday, ){
+function checkBron($iday, $itime, $cnt, $id_ignore = null){
   global $prx;
 
+	$q = "SELECT SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner)
+        FROM {$prx}bron
+        WHERE 1=1
+              AND iday = {$iday}
+              AND itime = {$itime}
+        ";
+	if($id_ignore){
+	  $q .= "AND id <> '{$id_ignore}'";
+  }
+	$cnt_busy = (int)getField($q);
+	$status = ($cnt_busy + $cnt) > 6 ? 'busy' : 'free';
 
-}*/
+	return array('status' => $status, 'avail' => (6 - $cnt_busy));
+}
+
+function MyCheckDate($date, $format = 'd.m.Y'){
+  switch ($format){
+    default:
+			$d = substr($date,0,2);
+			$m = substr($date,3,2);
+			$y = substr($date,6,4);
+      break;
+		case 'Ymd':
+			$y = substr($date,0,4);
+			$m = substr($date,4,2);
+			$d = substr($date,6,2);
+			break;
+  }
+	return checkdate($m, $d, $y);
+}
+
+function GetFreeSeanseDays($iday_start = null, $all_days = false){
+  global $prx;
+
+  if(!$iday_start){
+    $iday_start = date('Ymd');
+  }
+
+  $q = "SELECT 	DISTINCT
+                s.iday
+        FROM ps_schedule s
+        JOIN ps_time t ON t.pktime = s.itime
+        LEFT JOIN (
+          SELECT 	iday,
+                  itime,
+                  SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS busy
+          FROM ps_bron
+          GROUP BY 	iday,
+                    itime
+        ) b ON b.iday = s.iday AND b.itime = s.itime
+        WHERE 1=1
+              %s
+              AND (b.busy < 6 OR b.busy IS NULL)
+        ORDER BY s.iday";
+  if($all_days){
+    $q = sprintf($q, '');
+  } else {
+		$q = sprintf($q, "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 1 DAY), '%Y%m%d')");
+  }
+
+  return getArr($q);
+}
 
 function price($price)
 {
