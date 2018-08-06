@@ -329,14 +329,40 @@ $index = true;
 // --------------------- FAQ
 ?>
 <style>
-#soc-vidget { text-align:center; min-height:550px;}
+#soc-vidget { text-align:center; padding-bottom:40px;}
 #soc-vidget h3 { font-size:36px; margin:25px 0 27px;}
+#soc-vidget #vk_groups { display:inline-block; vertical-align:top; margin-right:10px;}
+#soc-vidget #ok_group_widget { display:inline-block; vertical-align:top; margin-left:10px;}
 </style>
 <div id="soc-vidget">
   <div class="container-fluid">
 
     <h3>Оставайтесь с нами в социальных сетях<br>и узнавайте первыми информацию о скидках<br>и специальных предложениях!</h3>
 
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?158"></script>
+    <!-- VK Widget -->
+    <div id="vk_groups"></div>
+    <script type="text/javascript">
+      VK.Widgets.Group("vk_groups", {mode: 0, no_cover: 1, width: "400"}, 20003922);
+    </script>
+
+    <div id="ok_group_widget"></div>
+    <script>
+      !function (d, id, did, st) {
+        var js = d.createElement("script");
+        js.src = "https://connect.ok.ru/connect.js";
+        js.onload = js.onreadystatechange = function () {
+          if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+            if (!this.executed) {
+              this.executed = true;
+              setTimeout(function () {
+                OK.CONNECT.insertGroupWidget(id,did,st);
+              }, 0);
+            }
+          }};
+        d.documentElement.appendChild(js);
+      }(document,"ok_group_widget","54187394269304",'{"width":360,"height":285}');
+    </script>
 
   </div>
 </div>

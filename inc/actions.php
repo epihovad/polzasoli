@@ -10,8 +10,94 @@ if(isset($_GET['action']))
 	switch($_GET['action'])
 	{
 	  // -------------------
-		case 'seance':
-		  jAlert('привет');
+		case 'bron':
+			foreach($_REQUEST as $k=>$v)
+				$$k = clean($v);
+
+			// защита от спама
+			$refererUrlArr = parse_url($_SERVER['HTTP_REFERER']);
+			if($refererUrlArr['host'] != $_SERVER['HTTP_HOST'])
+				exit;
+
+			$iday = preg_replace("/\D/",'',date('Ymd',strtotime($date)));
+			$first = (int)$first;
+
+			// проверка имени клиента
+			if(!$name){
+				jAlert('Пожалуйста, укажите Ваше имя');
+			}
+			// проверка телефона
+			$phone = substr(preg_replace("/\D/",'',$phone), -10);
+			if(strlen($phone) != 10){
+				jAlert('Некорректный номер телефона');
+			}
+			// проверим Email
+			if($email && !check_mail($email)){
+				jAlert('Некорректный Email');
+			}
+      // проверим кол-во гостей
+      if(!$cnt = $cnt_child7 + $cnt_child16 + $cnt_grown + $cnt_pensioner){
+				jAlert('Пожалуйста, укажите количество гостей');
+      }
+      // проверим дату
+			if(!MyCheckDate($date)){
+				jAlert('Неверная дата бронирования');
+      }
+      // проверим время
+			if(!$itime = getField("SELECT pktime FROM {$prx}time WHERE pktime = '".(int)$itime."'")){
+				jAlert('Пожалуйста, выберите сеанс');
+			}
+			$checkBron = checkBron($iday, $itime, $cnt);
+			if($checkBron['status'] == 'busy'){
+				jAlert('Для выбранного сеанса превышен лимит по кол-ву мест.<br>Доступно мест: ' . $checkBron['avail'] . '<br>' . 'Запрошено мест: ' . $cnt);
+			}
+      if(!$pdata = (int)$pdata){
+			  jAlert('Пожалуйста, примите согласасие на<br>обработку Ваших персональных данных');
+      }
+
+      // добавляем клиента в базу
+			if(!$id_user = getField("SELECT id FROM {$prx}users WHERE phone = '{$phone}'")){
+				$set = "phone = '{$phone}',
+                name = '{$name}',
+                email = '{$email}'";
+				update('log', "type = 'ошибка при сохранении клиента', notes = '".clean($set)."'");
+				if(!$id_user = update('users', $set)) {
+				  // логируем
+					update('log', "type = 'ошибка при сохранении клиента', notes = '".clean($set)."'");
+					jAlert('Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.');
+				}
+			}
+
+			$set = "iday = '{$iday}',
+			        itime = '{$itime}',
+			        id_user = '{$id_user}',
+			        name = '{$name}',
+			        phone = '{$phone}',
+			        email = '{$email}',
+			        first = '{$first}',
+			        cnt_child7 = '{$cnt_child7}',
+			        cnt_child16 = '{$cnt_child16}',
+			        cnt_grown = '{$cnt_grown}',
+			        cnt_pensioner = '{$cnt_pensioner}'
+			        ";
+			if(!$id = update($tbl, $set)) {
+				// логируем
+				update('log', "type = 'ошибка при сохранении брони', notes = '".clean($set)."'");
+				jAlert('Во время сохранения данных произошла ошибка.');
+			}
+
+			$number = $iday . '/' . $itime . '-' . $id;
+			$_SESSION['my_bron'][] = $number;
+
+			// журнал
+			update('log', "type = 'новая бронь', link = 'bron.php?red={$id}'");
+
+			$message  = 'Уважаемый(ая) '.$name.'!';
+			$message .= '<br>Номер Вашей брони: <b>'.$number.'</b>';
+			$message .= '<br>Наш менеджер свяжется с Вами для уточнения заказа.';
+			$message .= '<br>Благодарим Вас за обращение в нашу Компанию.';
+
+			?><script>top.jQuery(document).jAlert('show','alert','<?=$message?>',function(){top.location.href='/bron/?show=bron=<?=$number?>'});</script><?
 		  break;
 		// ------------------- Форма обратной связи
 		case 'feedback':
@@ -224,43 +310,81 @@ if(isset($_GET['show']))
 				$time = getRow("SELECT * FROM {$prx}time WHERE pktime = '{$itime_}'");
       }
 
+			$avail_seanse = GetFreeSeanse($iday);
+
       ?>
       <script>
         $(function () {
           chQuant($('#frm-seance'));
           //
-
+          $('#frm-seance .dt').datepicker({
+            minDate: 'd',
+            maxDate: '+6d',
+          }).change(function () {
+            var d = moment($(this).val(), 'DD.MM.YYYY');
+            if(!d._isValid){
+              $(document).jAlert('show','alert','Указана некорректная дата');
+              return false;
+            }
+            var iday = d.format('YYYYMMDD');
+            $('#frm-seance .tm option[dt!='+iday+']').addClass('hidden');
+            $('#frm-seance .tm option').removeClass('selected');
+            $('#frm-seance .tm option[dt='+iday+']').removeClass('hidden');
+            $('#frm-seance .tm option[dt='+iday+']:first').addClass('selected');
+            $('#frm-seance .tm').val($('#frm-seance .tm option[dt='+iday+']:first').val()).change();
+          });
+          //
+          $('#frm-seance .tm').change(function () {
+            $(this).find('option').removeClass('selected');
+            $(this).find('option:selected').addClass('selected');
+          });
         })
       </script>
-      <form id="frm-seance" action="/inc/actions.php?action=seance" class="frm" target="ajax" method="post">
+      <form id="frm-seance" action="/inc/actions.php?action=bron" class="frm" target="ajax" method="post">
         <div class="pad">
           <h4>Записаться на сеанс</h4>
           <input type="text" class="form-control" name="name" placeholder="Ваше Имя">
           <input type="text" class="form-control" name="phone" placeholder="Контактный телефон">
+          <input type="text" class="form-control" name="email" placeholder="Ваш Email (не обязательно)">
           <div class="row sguest">
             <div class="col-xs-6 col-sm-6 col-md-6">
               <label>Дети (до 7 лет)</label>
-              <div class="ch"><?=chQuant('ch7', 0, 0)?></div>
+              <div class="ch"><?=chQuant('cnt_child7', 0, 0)?></div>
               <span class="sign">/чел.</span>
               <label>Взрослые</label>
-              <div class="ch"><?=chQuant('grown', 0, 0)?></div>
+              <div class="ch"><?=chQuant('cnt_grown', 0, 0)?></div>
               <span class="sign">/чел.</span>
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6">
               <label>Дети (до 16 лет)</label>
-              <div class="ch"><?=chQuant('ch16', 0, 0)?></div>
+              <div class="ch"><?=chQuant('cnt_child16', 0, 0)?></div>
               <span class="sign">/чел.</span>
               <label>Пенсионеры</label>
-              <div class="ch"><?=chQuant('pensioner', 0, 0)?></div>
+              <div class="ch"><?=chQuant('cnt_pensioner', 0, 0)?></div>
               <span class="sign">/чел.</span>
             </div>
           </div>
         </div>
         <div class="sep"></div>
         <div class="pad">
+          <h5>Желаемые дата и время сеанса:</h5>
           <?
-          $free_days = GetFreeSeanseDays('20180725');
-          
+          if($avail_seanse){
+            ?>
+            <input type="text" class="dt form-control" name="date" value="<?=$date?>">
+            <select class="form-control tm" name="itime"><?
+            foreach ($avail_seanse as $d => $item){
+							$hidden = $d != $iday ? 'hidden' : '';
+              foreach ($item as $tm => $arr){
+								$selected = $d == $iday && $tm == $time['pktime'] ? ' selected' : '';
+                $disabled = !$arr['is_avail'] ? ' disabled' : '';
+								?><option value="<?=$tm?>" dt="<?=$d?>" class="<?=$hidden?>"<?=$selected?><?=$disabled?>><?=$arr['ihour']?>:<?=$arr['iminute']?> <span>доступно мест: <?=$arr['free']?></span></option><?
+              }
+            }
+            ?></select>
+            <div class="clearfix"></div>
+            <?
+          }
           ?>
         </div>
         <div class="sep"></div>

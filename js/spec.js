@@ -80,7 +80,6 @@ function SeanseCalendar(day) {
   }
   if(day == undefined){
     day = moment().format('YYYYMMDD');
-    day = 20180724; // убрать потом
   }
   inajax('/inc/actions.php', 'show=schedule_on_day&day=' + day);
 }

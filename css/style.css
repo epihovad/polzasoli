@@ -303,14 +303,21 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #frm-seance h4 { font-size:30px; font-weight:700; margin:0 0 15px; }
 #frm-seance .pad { padding:0 29px;}
 #frm-seance input[name="name"] { margin-bottom:20px; font: 400 16px 'Roboto', sans-serif; color: #000;}
-#frm-seance input[name="phone"] { margin-bottom:10px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+#frm-seance input[name="phone"] { margin-bottom:20px; font: 400 16px 'Roboto', sans-serif; color: #000;}
+#frm-seance input[name="email"] { margin-bottom:10px; font: 400 16px 'Roboto', sans-serif; color: #000;}
 #frm-seance .sguest label {font-size:14px; padding:20px 0 5px;}
 #frm-seance .sguest .sign { color:#939393;}
 #frm-seance .sguest .btn-number { color:#939393;}
 #frm-seance .sguest .btn-number:hover, #frm-seance .sguest .btn-number:active { color:#000;}
 #frm-seance .sguest .input-number { border-color:#419fb9; color:#939393; }
 #frm-seance .sguest .ch .input-group .input-group-btn { border-color:#419fb9; }
-#frm-seance .sep { margin-top:25px; height:1px; border-top:2px dotted #419fb9; padding:22px 0 0;}
+#frm-seance .sep { margin-top:25px; height:1px; border-top:2px dotted #419fb9; padding:22px 0 0; opacity:0.3;}
+#frm-seance h5 { margin: 0 0 10px 0; font-size: 16px;}
+#frm-seance input.dt { width:100px; text-align:center; float:left; font-size:16px; padding:6px; color: #939393;}
+#frm-seance select.tm { width:auto; float:right; font-size:16px; padding:6px; color: #939393;}
+#frm-seance select.tm option { color:#4a4a4a;}
+#frm-seance select.tm option.selected { color: #0ea4de; }
+#frm-seance select.tm option:disabled { color: #b3b3b3; }
 #frm-seance .checkbox { margin:0 0 10px; }
 #frm-seance .checkbox input { margin-top:0;}
 #frm-seance .checkbox label { font-size:13px; line-height:14px;}

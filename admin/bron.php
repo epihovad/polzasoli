@@ -44,20 +44,35 @@ if(isset($_GET['action']))
 			if(strlen($phone) != 10){
 			  jAlert('Некорректный номер телефона');
 			}
+      if($email && !check_mail($email)){
+				jAlert('Некорректный Email клиента');
+      }
+
+			// добавляем клиента
+      if(!$id_user = getField("SELECT id FROM {$prx}users WHERE phone = '{$phone}'")){
+				$set = "phone = '{$phone}',
+                name = '{$name}',
+                email = '{$email}'";
+				if(!$id_user = update('users', $set)) {
+					jAlert('Во время сохранения данных произошла ошибка.');
+				}
+      }
 
 			$set = "iday = '{$iday}',
 			        itime = '{$itime}',
 			        id_user = '{$id_user}',
 			        name = '{$name}',
 			        phone = '{$phone}',
+			        email = '{$email}',
 			        first = '{$first}',
 			        cnt_child7 = '{$cnt_child7}',
 			        cnt_child16 = '{$cnt_child16}',
 			        cnt_grown = '{$cnt_grown}',
 			        cnt_pensioner = '{$cnt_pensioner}'
 			        ";
-			if(!$id = update($tbl,$set,$id))
+			if(!$id = update($tbl,$set,$id)) {
 				jAlert('Во время сохранения данных произошла ошибка.');
+			}
 
 			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
@@ -229,6 +244,11 @@ if(isset($_GET['red']))
         <th></th>
         <th>Телефон клиента</th>
         <td><?=input('text', 'phone', $row['phone'])?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Email клиента</th>
+        <td><?=input('text', 'email', $row['email'], 'placeholder="ввод НЕ обязателен"')?></td>
       </tr>
       <tr>
         <th></th>

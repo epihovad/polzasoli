@@ -1,4 +1,5 @@
 <?
+// проверка доступности бронирования для конкретной даты и времени
 function checkBron($iday, $itime, $cnt, $id_ignore = null){
   global $prx;
 
@@ -17,30 +18,15 @@ function checkBron($iday, $itime, $cnt, $id_ignore = null){
 	return array('status' => $status, 'avail' => (6 - $cnt_busy));
 }
 
-function MyCheckDate($date, $format = 'd.m.Y'){
-  switch ($format){
-    default:
-			$d = substr($date,0,2);
-			$m = substr($date,3,2);
-			$y = substr($date,6,4);
-      break;
-		case 'Ymd':
-			$y = substr($date,0,4);
-			$m = substr($date,4,2);
-			$d = substr($date,6,2);
-			break;
-  }
-	return checkdate($m, $d, $y);
-}
-
+// проверка доступных дат для бронирования
 function GetFreeSeanseDays($iday_start = null, $all_days = false){
-  global $prx;
+	global $prx;
 
-  if(!$iday_start){
-    $iday_start = date('Ymd');
-  }
+	if(!$iday_start){
+		$iday_start = date('Ymd');
+	}
 
-  $q = "SELECT 	DISTINCT
+	$q = "SELECT 	DISTINCT
                 s.iday
         FROM ps_schedule s
         JOIN ps_time t ON t.pktime = s.itime
@@ -55,14 +41,80 @@ function GetFreeSeanseDays($iday_start = null, $all_days = false){
         WHERE 1=1
               %s
               AND (b.busy < 6 OR b.busy IS NULL)
-        ORDER BY s.iday";
+        ORDER BY s.iday, s.itime";
+	if($all_days){
+		$q = sprintf($q, '');
+	} else {
+		$q = sprintf($q, "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 6 DAY), '%Y%m%d')");
+	}
+	return getArr($q);
+}
+
+// массив доступных дат и сеансов для бронирования
+function GetFreeSeanse($iday_start = null, $all_days = false){
+  global $prx;
+
+  if(!$iday_start){
+    $iday_start = date('Ymd');
+  }
+
+  $q = "SELECT 	DISTINCT
+                s.iday,
+                s.itime,
+                t.ihour,
+                t.iminute,
+                IF(b.busy IS NULL, 0, b.busy) AS busy,
+                6 - IF(b.busy IS NULL, 0, b.busy) AS free,
+                IF(b.busy < 6 OR b.busy IS NULL, 1, 0) AS is_avail
+        FROM ps_schedule s
+        JOIN ps_time t ON t.pktime = s.itime
+        LEFT JOIN (
+          SELECT 	iday,
+                  itime,
+                  SUM(cnt_child7 + cnt_child16 + cnt_grown + cnt_pensioner) AS busy
+          FROM ps_bron
+          GROUP BY 	iday,
+                    itime
+        ) b ON b.iday = s.iday AND b.itime = s.itime
+        WHERE 1=1
+              %s
+              -- AND (b.busy < 6 OR b.busy IS NULL)
+        ORDER BY s.iday, s.itime";
   if($all_days){
     $q = sprintf($q, '');
   } else {
-		$q = sprintf($q, "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 1 DAY), '%Y%m%d')");
+		$q = sprintf($q, "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 6 DAY), '%Y%m%d')");
   }
 
-  return getArr($q);
+	$avail = array();
+
+  $r = sql($q);
+  while ($arr = mysqli_fetch_assoc($r)){
+    $avail[$arr['iday']][$arr['itime']] = array(
+      'ihour' => $arr['ihour'],
+      'iminute' => $arr['iminute'],
+			'busy' => $arr['busy'],
+			'free' => $arr['free'],
+			'is_avail' => $arr['is_avail'],
+    );
+  }
+  return $avail;
+}
+
+function MyCheckDate($date, $format = 'd.m.Y'){
+	switch ($format){
+		default:
+			$d = substr($date,0,2);
+			$m = substr($date,3,2);
+			$y = substr($date,6,4);
+			break;
+		case 'Ymd':
+			$y = substr($date,0,4);
+			$m = substr($date,4,2);
+			$d = substr($date,6,2);
+			break;
+	}
+	return checkdate($m, $d, $y);
 }
 
 function price($price)
