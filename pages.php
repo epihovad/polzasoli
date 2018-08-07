@@ -18,10 +18,10 @@ $h1 = $page['h1'] ? $page['h1'] : $page['name'];
 ?>
 <div class="container-fluid">
   <h1><?=$h1?></h1>
-  <div class="content">
+  <div class="content" style="padding-bottom:40px;">
     <?=$page['text']?>
+    <a href="" class="back" rel="nofollow">назад</a>
   </div>
-  <a href="" class="back" rel="nofollow">назад</a>
 </div>
 <?
 $content = ob_get_clean();

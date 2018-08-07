@@ -58,6 +58,12 @@ function GetFreeSeanse($iday_start = null, $all_days = false){
     $iday_start = date('Ymd');
   }
 
+  $where = '';
+  if(!$all_days){
+    $where .= "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 6 DAY), '%Y%m%d')\r\n";
+		$where .= "AND CONCAT(s.iday,s.itime) > DATE_FORMAT(NOW(), '%Y%m%d%H%i')";
+  }
+
   $q = "SELECT 	DISTINCT
                 s.iday,
                 s.itime,
@@ -77,14 +83,9 @@ function GetFreeSeanse($iday_start = null, $all_days = false){
                     itime
         ) b ON b.iday = s.iday AND b.itime = s.itime
         WHERE 1=1
-              %s
+              {$where}
               -- AND (b.busy < 6 OR b.busy IS NULL)
         ORDER BY s.iday, s.itime";
-  if($all_days){
-    $q = sprintf($q, '');
-  } else {
-		$q = sprintf($q, "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 6 DAY), '%Y%m%d')");
-  }
 
 	$avail = array();
 

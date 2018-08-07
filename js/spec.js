@@ -8,6 +8,8 @@ $(function () {
   chQuant();
   iFAQ();
   //
+  $('a.back').click(function(){ history.back(); return false; });
+  //
   Inputmask({mask: '+7 (999) 999-99-99', showMaskOnHover: false}).mask($('#fbron input[name="phone"]'));
   //
   $('header .hb3 button').click(function(){

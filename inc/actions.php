@@ -80,7 +80,7 @@ if(isset($_GET['action']))
 			        cnt_grown = '{$cnt_grown}',
 			        cnt_pensioner = '{$cnt_pensioner}'
 			        ";
-			if(!$id = update($tbl, $set)) {
+			if(!$id = update('bron', $set)) {
 				// логируем
 				update('log', "type = 'ошибка при сохранении брони', notes = '".clean($set)."'");
 				jAlert('Во время сохранения данных произошла ошибка.');
@@ -95,9 +95,8 @@ if(isset($_GET['action']))
 			$message  = 'Уважаемый(ая) '.$name.'!';
 			$message .= '<br>Номер Вашей брони: <b>'.$number.'</b>';
 			$message .= '<br>Наш менеджер свяжется с Вами для уточнения заказа.';
-			$message .= '<br>Благодарим Вас за обращение в нашу Компанию.';
 
-			?><script>top.jQuery(document).jAlert('show','alert','<?=$message?>',function(){top.location.href='/bron/?show=bron=<?=$number?>'});</script><?
+			?><script>top.jQuery(document).jAlert('show','alert','<?=$message?>',function(){top.location.href='/cart/?show=bron&number=<?=$number?>'});</script><?
 		  break;
 		// ------------------- Форма обратной связи
 		case 'feedback':

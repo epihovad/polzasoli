@@ -33,3 +33,6 @@ RewriteRule ^uploads/(pages|tickets|slider|banner_mini|gallery|gallery_catalog|r
 # -------------- Страницы
 RewriteRule ^([a-zA-Z0-9_-]+).htm$ pages.php?link=$1
 RewriteRule ^([a-zA-Z0-9_-]+).htm&(.*)$ pages.php?link=$1&$2
+
+# -------------- Корзина
+RewriteRule ^cart/(.*)$ cart.php?$1 [QSA,NC,L]

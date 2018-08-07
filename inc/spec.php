@@ -168,7 +168,7 @@ function banner_mini(){
         $('#bnr-mini').slideUp(300,function () {
           $(this).remove();
         });
-        $.cookie('bnr-mini', 'hide', { expires: 1 });
+        $.cookie('bnr-mini', 'hide', { path: '/', expires: 1 });
       });
     })
   </script>

@@ -6,6 +6,7 @@ html { position: relative; min-height: 100%;}
 body { /*margin-bottom: 60px;*/ background-color:#fff; font-family:'Roboto', sans-serif; }
 
 .abtn { text-decoration:none !important; border-bottom:1px dashed;}
+a.back { display: table; margin-top: 25px;}
 
 #ajax { width:100%; display:none; }
 
