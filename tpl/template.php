@@ -74,7 +74,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="hb1 col-xs-3 col-sm-3 col-md-3">
-          <div class="head-phone"><?=set('phone')?></div>
+          <div class="head-phone"><span><?=set('phone')?></span></div>
           <div class="head-address"><?=set('address')?></div>
         </div>
         <div class="hb2 col-xs-3 col-sm-3 col-md-3">

@@ -28,7 +28,7 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 .head .hb2 { width:260px !important; padding:0;}
 .head .hb3 { width:228px !important; padding:0;}
 .head .hb4 { width:206px !important; padding:0 0 0 0;}
-.head-phone { font-weight:700; font-size:24px; line-height:1; color:#f4f2b4;}
+.head-phone span { font-weight:700; font-size:24px; line-height:1; background-color: #fbf9e1; border-radius: 50px; padding: 5px 15px;}
 .head-address { font-size:15px; color:#fff; line-height:19px; padding-top:12px;}
 .head-wtime { font-weight:900; font-size:22px; color:#fff;}
 
