@@ -373,14 +373,32 @@ if(isset($_GET['show']))
 				$itime = 0;
 			}
 
+			$last_avail_day = array_keys($avail_seanse)[sizeof(array_keys($avail_seanse)) - 1];
+			$avail_days = array();
+			foreach (array_keys($avail_seanse) as $d){
+			  $avail_days[] = date('d.m.Y', strtotime($d));
+      }
+
+			$iy1 = date('Y', strtotime($iday));
+			$im1 = date('m', strtotime($iday)) - 1;
+			$id1 = date('d', strtotime($iday));
+
+			$iy2 = date('Y', strtotime($last_avail_day));
+			$im2 = date('m', strtotime($last_avail_day)) - 1;
+			$id2 = date('d', strtotime($last_avail_day));
 			?>
       <script>
         $(function () {
           chQuant($('#frm-seance'));
           //
+          var avail_days = ['<?=implode("','", $avail_days)?>'];
           $('#frm-seance .dt').datepicker({
-            minDate: 'd',
-            maxDate: '+6d',
+            minDate: new Date(<?=$iy1?>, <?=$im1?>, <?=$id1?>),
+            maxDate: new Date(<?=$iy2?>, <?=$im2?>, <?=$id2?>),
+            beforeShowDay: function(date){
+              var string = $.datepicker.formatDate('dd.mm.yy', date);
+              return [ avail_days.indexOf(string) >= 0 ]
+            }
           }).change(function () {
             var d = moment($(this).val(), 'DD.MM.YYYY');
             if(!d._isValid){
