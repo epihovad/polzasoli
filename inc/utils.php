@@ -19,11 +19,18 @@ function checkBron($iday, $itime, $cnt, $id_ignore = null){
 }
 
 // проверка доступных дат для бронирования
-function GetFreeSeanseDays($iday_start = null, $all_days = false){
+function GetFreeSeanseDays($iday_start = null, $interval_days = 6){
 	global $prx;
 
 	if(!$iday_start){
 		$iday_start = date('Ymd');
+	}
+
+	$where = '';
+	if($interval_days){
+		$where .= "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL {$interval_days} DAY), '%Y%m%d')\r\n";
+	} else {
+		$where .= "AND s.iday >= '{$iday_start}'";
 	}
 
 	$q = "SELECT 	DISTINCT
@@ -39,19 +46,16 @@ function GetFreeSeanseDays($iday_start = null, $all_days = false){
                     itime
         ) b ON b.iday = s.iday AND b.itime = s.itime
         WHERE 1=1
-              %s
               AND (b.busy < 6 OR b.busy IS NULL)
+              AND STR_TO_DATE(CONCAT(s.iday,t.ihour,':',t.iminute), '%Y%m%d%H:%i') > NOW()
+              {$where}
         ORDER BY s.iday, s.itime";
-	if($all_days){
-		$q = sprintf($q, '');
-	} else {
-		$q = sprintf($q, "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 6 DAY), '%Y%m%d')");
-	}
+
 	return getArr($q);
 }
 
 // массив доступных дат и сеансов для бронирования
-function GetFreeSeanse($iday_start = null, $all_days = false){
+function GetFreeSeanse($iday_start = null, $interval_days = 6){
   global $prx;
 
   if(!$iday_start){
@@ -59,9 +63,10 @@ function GetFreeSeanse($iday_start = null, $all_days = false){
   }
 
   $where = '';
-  if(!$all_days){
-    $where .= "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL 6 DAY), '%Y%m%d')\r\n";
-		$where .= "AND CONCAT(s.iday,s.itime) > DATE_FORMAT(NOW(), '%Y%m%d%H%i')";
+  if($interval_days){
+    $where .= "AND s.iday BETWEEN '{$iday_start}' AND DATE_FORMAT(DATE_ADD(DATE_FORMAT('{$iday_start}','%Y%m%d'), INTERVAL {$interval_days} DAY), '%Y%m%d')\r\n";
+  } else {
+    $where .= "AND s.iday >= '{$iday_start}'";
   }
 
   $q = "SELECT 	DISTINCT
@@ -83,8 +88,8 @@ function GetFreeSeanse($iday_start = null, $all_days = false){
                     itime
         ) b ON b.iday = s.iday AND b.itime = s.itime
         WHERE 1=1
+              AND STR_TO_DATE(CONCAT(s.iday,t.ihour,':',t.iminute), '%Y%m%d%H:%i') > NOW()
               {$where}
-              -- AND (b.busy < 6 OR b.busy IS NULL)
         ORDER BY s.iday, s.itime";
 
 	$avail = array();

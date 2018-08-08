@@ -243,13 +243,7 @@ $index = true;
 
     <h3>Расписание сеансов галотерапии<br>в соляной пещере «Ассоль»</h3>
 
-    <div class="bron-calendar">
-      <a href="" rel="nofollow">10</a><a href="" rel="nofollow">11</a><a href="" rel="nofollow">12</a><a href="" rel="nofollow">13</a>
-      <a href="" class="prev" rel="nofollow"><i class="fas fa-chevron-left"></i></a>
-      <a href="" class="cur" rel="nofollow"><span>15 июня</span><i class="far fa-calendar-alt"></i></a>
-      <a href="" class="next" rel="nofollow"><i class="fas fa-chevron-right"></i></a>
-      <a href="" rel="nofollow">15</a><a href="" rel="nofollow">16</a><a href="" rel="nofollow">17</a><a href="" rel="nofollow">18</a>
-    </div>
+    <div class="bron-calendar"></div>
 
     <div class="bron-days row">
       <div id="seanse-list"></div>

@@ -9,7 +9,7 @@ if(isset($_GET['action']))
 {
 	switch($_GET['action'])
 	{
-	  // -------------------
+		// -------------------
 		case 'bron':
 			foreach($_REQUEST as $k=>$v)
 				$$k = clean($v);
@@ -35,15 +35,15 @@ if(isset($_GET['action']))
 			if($email && !check_mail($email)){
 				jAlert('Некорректный Email');
 			}
-      // проверим кол-во гостей
-      if(!$cnt = $cnt_child7 + $cnt_child16 + $cnt_grown + $cnt_pensioner){
+			// проверим кол-во гостей
+			if(!$cnt = $cnt_child7 + $cnt_child16 + $cnt_grown + $cnt_pensioner){
 				jAlert('Пожалуйста, укажите количество гостей');
-      }
-      // проверим дату
+			}
+			// проверим дату
 			if(!MyCheckDate($date)){
 				jAlert('Неверная дата бронирования');
-      }
-      // проверим время
+			}
+			// проверим время
 			if(!$itime = getField("SELECT pktime FROM {$prx}time WHERE pktime = '".(int)$itime."'")){
 				jAlert('Пожалуйста, выберите сеанс');
 			}
@@ -51,18 +51,18 @@ if(isset($_GET['action']))
 			if($checkBron['status'] == 'busy'){
 				jAlert('Для выбранного сеанса превышен лимит по кол-ву мест.<br>Доступно мест: ' . $checkBron['avail'] . '<br>' . 'Запрошено мест: ' . $cnt);
 			}
-      if(!$pdata = (int)$pdata){
-			  jAlert('Пожалуйста, примите согласасие на<br>обработку Ваших персональных данных');
-      }
+			if(!$pdata = (int)$pdata){
+				jAlert('Пожалуйста, примите согласасие на<br>обработку Ваших персональных данных');
+			}
 
-      // добавляем клиента в базу
+			// добавляем клиента в базу
 			if(!$id_user = getField("SELECT id FROM {$prx}users WHERE phone = '{$phone}'")){
 				$set = "phone = '{$phone}',
                 name = '{$name}',
                 email = '{$email}'";
 				update('log', "type = 'ошибка при сохранении клиента', notes = '".clean($set)."'");
 				if(!$id_user = update('users', $set)) {
-				  // логируем
+					// логируем
 					update('log', "type = 'ошибка при сохранении клиента', notes = '".clean($set)."'");
 					jAlert('Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.');
 				}
@@ -97,39 +97,39 @@ if(isset($_GET['action']))
 			$message .= '<br>Наш менеджер свяжется с Вами для уточнения заказа.';
 
 			?><script>top.jQuery(document).jAlert('show','alert','<?=$message?>',function(){top.location.href='/cart/?show=bron&number=<?=$number?>'});</script><?
-		  break;
+			break;
 		// ------------------- Форма обратной связи
 		case 'feedback':
 
-		  $type = '';
-		  switch ($_GET['type']){
-        case 'cns': $type = 'Консультация'; break;
+			$type = '';
+			switch ($_GET['type']){
+				case 'cns': $type = 'Консультация'; break;
 				case 'opt': $type = 'Оптовики'; break;
-        default:    $type = 'Сообщение'; break;
-      }
+				default:    $type = 'Сообщение'; break;
+			}
 
 			foreach($_POST as $k=>$v)
 				$$k = clean($v);
 
 			if($hdn) exit; // спам-боты
 
-      if($type == 'Оптовики' && !$firma) jAlert('Пожалуйста, укажите название организации');
+			if($type == 'Оптовики' && !$firma) jAlert('Пожалуйста, укажите название организации');
 			if(!$name) jAlert($type == 'Оптовики' ? 'Пожалуйста, укажите контактное лицо' : 'Пожалуйста, представьтесь');
 			if($type == 'Консультация' || $type == 'Оптовики'){
 				$phone = substr(preg_replace("/\D/",'',$phone), -10);
 				if(strlen($phone) != 10) jAlert('Некорректный номер телефона');
-      }
-      if($type != 'Консультация'){
+			}
+			if($type != 'Консультация'){
 				if(!check_mail($email)) jAlert('Введен некорректный E-mail');
-      }
+			}
 			if(!$text) jAlert('Пожалуйста, введите Ваше сообщение');
 
 			$mailto = array();
 
 			ob_start();
 			if($type == 'Оптовики'){
-			  ?><b>Организация</b>: <?=$firma?><br /><?
-      }
+				?><b>Организация</b>: <?=$firma?><br /><?
+			}
 			?>
       <b><?=$type == 'Оптовики' ? 'Контактное лицо' : 'Имя'?></b>: <?=$name?><br />
       <b>E-mail</b>: <?=$email?><br />
@@ -162,7 +162,7 @@ if(isset($_GET['action']))
 			// защита от спама
 			$refererUrlArr = parse_url($_SERVER['HTTP_REFERER']);
 			if($refererUrlArr['host'] != $_SERVER['HTTP_HOST'])
-			  exit;
+				exit;
 			//if($hdn) exit;
 
 			if(!check_mail($email)){
@@ -173,8 +173,8 @@ if(isset($_GET['action']))
           top.$(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.$('#subscribe .frm input').val('')});
         </script>
 				<?
-        exit;
-      }
+				exit;
+			}
 
 			// проверка подписан ли уже email
 			if($subs = getRow("SELECT * FROM {$prx}subscribers WHERE email = '{$email}'")){
@@ -206,7 +206,7 @@ if(isset($_GET['action']))
         top.$('#subscribe .frm i').removeClass('disabled');
         top.$(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.$('#subscribe .frm input').val('')});
       </script>
-      <?
+			<?
 			exit;
 	}
 	exit;
@@ -215,12 +215,66 @@ if(isset($_GET['action']))
 if(isset($_GET['show']))
 {
 	switch($_GET['show'])
-  {
-    case 'schedule_on_day':
-			$iday = (int)$_GET['day'];
-			if(!MyCheckDate($iday, 'Ymd')){
-				exit;
+	{
+		case 'avail_bron_days':
+
+			$iday = (int)$_GET['day'] ?: date('Ymd');
+
+			$avail_days = GetFreeSeanseDays();
+
+			// если дата кривая или она не доступна
+			if(!MyCheckDate($iday, 'Ymd') || in_array($iday, $avail_days) === false){
+				// берём первую доступную дату
+				$iday = $avail_days[0];
 			}
+
+			$date = date('d.m.Y', strtotime($iday));
+
+			ob_start();
+
+			$i=0;
+			foreach ($avail_days as $k => $d){
+				$num_day = date('d', strtotime($d));
+				if($d == $iday){
+					$prev = @$avail_days[$i-1];
+					$next = @$avail_days[$i+1];
+					?><a href="" day="<?=$prev?>" class="prev<?=!$prev?' disabled':''?>" rel="nofollow"><i class="fas fa-chevron-left"></i></a><?
+          ?><a href="" class="active<?=$d==date('Ymd')?' cur':''?>" rel="nofollow"><span><?=$num_day?> <?=getRusDate('M',$date)?></span><?/*<i class="far fa-calendar-alt"></i>*/?></a><?
+          ?><a href="" day="<?=$next?>" class="next<?=!$next?' disabled':''?>" rel="nofollow"><i class="fas fa-chevron-right"></i></a><?
+        } else {
+					?><a href="" day="<?=$d?>" rel="nofollow"><?=$num_day?></a><?
+				}
+				$i++;
+			}
+			$data = ob_get_clean();
+
+			?>
+      <script>
+        top.$('#bron .bron-calendar').html('<?=cleanJS($data)?>');
+      </script>
+			<?
+
+			break;
+		//
+		case 'schedule_on_day':
+
+			$iday = (int)$_GET['day'];
+
+			// если дата кривая
+			if(!MyCheckDate($iday, 'Ymd')){
+				// берём текущую
+				$iday = date('Ymd');
+			}
+
+			$avail_seanse = GetFreeSeanse($iday);
+
+			// проверим доступна ли переданная дата на момент открытия окна
+			if(in_array($iday, array_keys($avail_seanse)) === false){
+				// берём первую доступную дату
+				$iday = array_keys($avail_seanse)[0];
+			}
+
+			$date = date('d.m.Y', strtotime($iday));
 
 			ob_start();
 			$query = "SELECT 	s.iday,
@@ -253,13 +307,13 @@ if(isset($_GET['show']))
 				?>
         <div class="bron-day-arr col-xs-5 col-sm-5 col-md-5">
           <div class="bron-day <?=$color?>">
-            <? if($row['discount']){ ?>
-            <div class="discount">-<?=$row['discount']?>%</div>
-            <?}?>
+						<? if($row['discount']){ ?>
+              <div class="discount">-<?=$row['discount']?>%</div>
+						<?}?>
             <div class="ch">
               <input type="checkbox"
                 day="<?=$row['iday']?>-<?=$row['itime']?>"
-                time="<?=date('d.m.y')?> в <?=$row['ihour']?>:<?=$row['iminute']?>"
+                time="<?=$date?> в <?=$row['ihour']?>:<?=$row['iminute']?>"
                 discount="<?=$row['discount']?>"
               >
             </div>
@@ -290,28 +344,36 @@ if(isset($_GET['show']))
         top.$('#seanse-list').html('<?=cleanJS($data)?>');
       </script>
 			<?
-      break;
-    // ------------------- Запись на сеанс
-    case 'popup_bron':
-      $iday = date('Ymd');
-      $date = date('d.m.Y');
-      $time = array();
+			break;
+		// ------------------- Запись на сеанс
+		case 'popup_bron':
+			$iday = date('Ymd');
+			$date = date('d.m.Y');
+			$itime = 0;
 
-      // если дата и время передаётся из блока выбора сеанса
-      if($day = $_GET['day']){
-        $arr = explode('-',$day);
-        $iday_ = (int)$arr[0];
-        $itime_ = (int)$arr[1];
+			// если дата и время передаётся из блока выбора сеанса
+			if($day = $_GET['day']){
+				$arr = explode('-', $day);
+				$iday_ = (int)$arr[0];
+				$itime = (int)$arr[1];
 				if(MyCheckDate($iday_, 'Ymd')){
 					$iday = $iday_;
 					$date = date('d.m.Y', strtotime($iday));
 				}
-				$time = getRow("SELECT * FROM {$prx}time WHERE pktime = '{$itime_}'");
-      }
+			}
 
+			// массив доступных сеансов
 			$avail_seanse = GetFreeSeanse($iday);
 
-      ?>
+			// проверим доступна ли переданная дата на момент открытия окна
+			if(in_array($iday, array_keys($avail_seanse)) === false){
+				// берём первую доступную дату
+				$iday = array_keys($avail_seanse)[0];
+				$date = date('d.m.Y', strtotime($iday));
+				$itime = 0;
+			}
+
+			?>
       <script>
         $(function () {
           chQuant($('#frm-seance'));
@@ -367,24 +429,24 @@ if(isset($_GET['show']))
         <div class="sep"></div>
         <div class="pad">
           <h5>Желаемые дата и время сеанса:</h5>
-          <?
-          if($avail_seanse){
-            ?>
+					<?
+					if($avail_seanse){
+						?>
             <input type="text" class="dt form-control" name="date" value="<?=$date?>">
             <select class="form-control tm" name="itime"><?
-            foreach ($avail_seanse as $d => $item){
-							$hidden = $d != $iday ? 'hidden' : '';
-              foreach ($item as $tm => $arr){
-								$selected = $d == $iday && $tm == $time['pktime'] ? ' selected' : '';
-                $disabled = !$arr['is_avail'] ? ' disabled' : '';
-								?><option value="<?=$tm?>" dt="<?=$d?>" class="<?=$hidden?>"<?=$selected?><?=$disabled?>><?=$arr['ihour']?>:<?=$arr['iminute']?> <span>доступно мест: <?=$arr['free']?></span></option><?
-              }
-            }
-            ?></select>
+							foreach ($avail_seanse as $d => $item){
+								$hidden = $d != $iday ? 'hidden' : '';
+								foreach ($item as $tm => $arr){
+									$selected = $d == $iday && $tm == $itime ? ' selected' : '';
+									$disabled = !$arr['is_avail'] ? ' disabled' : '';
+									?><option value="<?=$tm?>" dt="<?=$d?>" class="<?=$hidden?>"<?=$selected?><?=$disabled?>><?=$arr['ihour']?>:<?=$arr['iminute']?> <span>доступно мест: <?=$arr['free']?></span></option><?
+								}
+							}
+							?></select>
             <div class="clearfix"></div>
-            <?
-          }
-          ?>
+						<?
+					}
+					?>
         </div>
         <div class="sep"></div>
         <div class="pad">
@@ -409,8 +471,8 @@ if(isset($_GET['show']))
           Inputmask({mask: '+7 (999) 999-99-99',showMaskOnHover: false}).mask($('#frm-seance input[name="phone"]'));
         });
       </script>
-      <?
-      break;
+			<?
+			break;
 		/*// ------------------- Форма обратной связи
 		case 'feedback':
 			$type = $_GET['type'];

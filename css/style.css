@@ -164,16 +164,16 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 
 #bron { text-align:center;}
 #bron h3 { font-size:42px; margin:25px 0 27px;}
-#bron .bron-calendar { padding:0 0 25px 0;}
+#bron .bron-calendar { height:70px;}
 #bron .bron-calendar a { color:#191919; font-weight:700; padding:0 5px; text-decoration:underline; vertical-align: middle;}
 #bron .bron-calendar a:hover { text-decoration:none;}
 #bron .bron-calendar a.prev, #bron .bron-calendar a.next { text-decoration:none; font-size:32px; color:#00a1bd;}
 #bron .bron-calendar a.prev:hover, #bron .bron-calendar a.next:hover {color:#104F7E;}
-#bron .bron-calendar a.prev i, #bron .bron-calendar a.next i {}
-#bron .bron-calendar a.cur { font-size:32px; color:#00a1bd; vertical-align: middle; font-weight:400; text-decoration:none;}
-#bron .bron-calendar a.cur:hover {color:#104F7E;}
-#bron .bron-calendar a.cur span + i { padding:0 5px 0 10px;}
-#bron .bron-calendar a.cur:before { content:"Сегодня"; margin:-15px 0 0 55px; position:absolute; font-size:16px; }
+#bron .bron-calendar a.prev.disabled, #bron .bron-calendar a.next.disabled { opacity:0.5; color:#00a1bd !important;}
+#bron .bron-calendar a.active { font-size:32px; color:#00a1bd; vertical-align: middle; font-weight:400; text-decoration:none; position:relative;}
+#bron .bron-calendar a.active:hover {color:#104F7E;}
+#bron .bron-calendar a.active span + i { padding:0 5px 0 10px;}
+#bron .bron-calendar a.cur:before { content:"Сегодня"; margin-top:-15px; position:absolute; font-size:16px; left:0; right:0; }
 #bron .bron-days { margin:0;}
 #bron .bron-days .bron-day-arr { margin-bottom:20px;}
 #bron .bron-day { width:100%; height:150px; overflow:hidden; background-color:#0f74a8; border:1px solid #c7c7c7; cursor:pointer; }

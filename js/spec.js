@@ -3,7 +3,7 @@ $(function () {
   Ch2btn();
   iReviews();
   iGallery();
-  SeanseCalendar();
+  SeanseCalendarChDay();
   SelectSeanse();
   chQuant();
   iFAQ();
@@ -75,15 +75,33 @@ function iGallery(){
   });
 }
 
+function SeanseCalendarChDay() {
+  var $block = $('#bron .bron-calendar');
+  if(!$block.length){
+    return false;
+  }
+  //
+  inajax('/inc/actions.php', 'show=avail_bron_days');
+  SeanseCalendar();
+  //
+  $block.on('click', 'a', function () {
+    var day = $(this).attr('day');
+    if($(this).hasClass('cur') || $(this).hasClass('disabled')){
+      return false;
+    }
+    inajax('/inc/actions.php', 'show=avail_bron_days&day=' + day);
+    SeanseCalendar(day);
+    return false;
+  });
+}
+
 function SeanseCalendar(day) {
   var $block = $('#bron .bron-days');
   if(!$block.length){
     return false;
   }
-  if(day == undefined){
-    day = moment().format('YYYYMMDD');
-  }
   inajax('/inc/actions.php', 'show=schedule_on_day&day=' + day);
+  $('#bron .btn b').html('');
 }
 
 function SelectSeanse() {
