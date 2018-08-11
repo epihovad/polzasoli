@@ -27,6 +27,8 @@ $(function () {
     $(this).addClass('disabled');
     inajax('/inc/actions.php?action=subscribe','email='+$(this).prev().val());
   });
+  //
+  Blueimp();
 });
 
 function Ch2btn() {
@@ -209,6 +211,14 @@ function iFAQ() {
     $('#ifaq .ifaq-a.active').removeClass('active');
     $(this).addClass('active');
     $(this).next(':first').addClass('active');
+    return false;
+  });
+}
+
+function Blueimp() {
+  $('a.blueimp').click(function () {
+    var $a = $(this);
+    blueimp.Gallery($a, {});
     return false;
   });
 }

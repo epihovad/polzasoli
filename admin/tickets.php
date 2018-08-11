@@ -26,6 +26,18 @@ if(isset($_GET['action']))
 
 			if(!$name) jAlert('Укажите название');
 
+			$updateLink = false;
+			$where = $id ? " and id<>{$id}" : "";
+
+			if($link){
+				if(getField("SELECT id FROM {$prx}{$tbl} WHERE link='{$link}'{$where}"))
+					$updateLink = true;
+			} else {
+				$link = makeUrl($name);
+				if(getField("SELECT id FROM {$prx}{$tbl} WHERE link='{$link}'{$where}"))
+					$updateLink = true;
+			}
+
 			$set = "name = '{$name}',
 			        text = ".($text ? "'{$text}'" : 'NULL').",
 			        price = '{$price}',
@@ -41,9 +53,13 @@ if(isset($_GET['action']))
 							title = " . ($title ? "'{$title}'" : "NULL") . ",
 							keywords = " . ($keywords ? "'{$keywords}'" : "NULL") . ",
 							description = " . ($description ? "'{$description}'" : "NULL");
+			if(!$updateLink) $set .= ",link='{$link}'";
 
 			if(!$id = update($tbl,$set,$id))
 				jAlert('Во время сохранения данных произошла ошибка.');
+
+			if($updateLink)
+				update($tbl,"link='".($link.'_'.$id)."'",$id);
 
 			// загружаем картинку
 			if(sizeof((array)$_FILES[$tbl]['name']))
@@ -106,11 +122,16 @@ if(isset($_GET['red']))
         <th>Название</th>
         <td><?=input('text', 'name', $row['name'])?></td>
       </tr>
+      <tr>
+        <th><?=help('ссылка формируется автоматически,<br>значение данного поля можно изменить')?></th>
+        <th>Ссылка</th>
+        <td><?=input('text', 'link', $row['link'])?></td>
+      </tr>
       <?=show_tr_images($id,'Фото','Для корректного отображения,<br>рекомендуется загружать квадратное изображение размером 320x320 пискелей',1,$tbl,$tbl)?>
       <tr>
         <th></th>
         <th>Описание</th>
-        <td><?=input('textarea', 'text', $row['text'])?></td>
+        <td><?=showCK('text', $row['text'], 'basic')?></td>
       </tr>
       <tr>
         <th></th>
@@ -204,7 +225,7 @@ else
 		$where .= "\r\nAND CONCAT(',',ids_disease,',') LIKE '%,{$fl['disease']},%'";
 	}
 	if($fl['search'] != ''){
-	  $sf = array('name','text','price','old_price','validity','age','h1','title','keywords','description');
+	  $sf = array('name','link','text','price','old_price','validity','age','h1','title','keywords','description');
 		$w = '';
 		foreach ($sf as $field){
 			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
@@ -290,6 +311,7 @@ else
         <th width="1%">№</th>
         <th width="1%" style="text-align:center;"><img src="img/image.png" title="изображение" /></th>
         <th nowrap width="30%"><?=SortColumn('Название','A.name')?></th>
+        <th nowrap>Ссылка</th>
         <? if($fl['sitemap']){?>
           <th nowrap><?=SortColumn('lastmod','S.lastmod')?></th>
           <th nowrap><?=SortColumn('changefreq','S.changefreq')?></th>
@@ -329,6 +351,7 @@ else
             </a>
           </th>
           <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+          <td style="text-align:center"><a href="/tickets/<?=$row['link']?>.htm" class="clr-green im-lnk" target="_blank"><i class="fas fa-link"></i></a></td>
           <? if($fl['sitemap']){?>
             <th class="sitemap sm-lastmod"><input type="text" class="form-control input-sm datepicker" name="lastmod[<?=$id?>]" value="<?=(isset($row['lastmod'])?date('d.m.Y',strtotime($row['lastmod'])):date("d.m.Y"))?>" /></th>
             <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>

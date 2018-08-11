@@ -36,3 +36,7 @@ RewriteRule ^([a-zA-Z0-9_-]+).htm&(.*)$ pages.php?link=$1&$2
 
 # -------------- Корзина
 RewriteRule ^cart/(.*)$ cart.php?$1 [QSA,NC,L]
+
+# -------------- Абонементы
+RewriteRule ^tickets/([a-zA-Z0-9_\-]+).htm(.*)$ tickets.php?link=$1$2
+RewriteRule ^tickets/(.*)$ tickets.php?$1 [QSA,NC,L]

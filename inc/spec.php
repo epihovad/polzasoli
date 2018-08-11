@@ -251,6 +251,15 @@ function diseases(){
 
 }
 
+// СТРОКА НАВИГАЦИИ
+function navigate()
+{
+	global $navigate;
+	if(!$navigate) return;
+	$sep = '<span>/</span>';
+	?><div id="navigate"><a href="/">Главная страница</a><?=$sep?><?=$navigate?><?=$sep?></div><?
+}
+
 function num2str($count,$txt='товар')
 {
 	$pat = array(
