@@ -34,6 +34,10 @@ RewriteRule ^uploads/(pages|tickets|slider|banner_mini|gallery|gallery_catalog|r
 RewriteRule ^([a-zA-Z0-9_-]+).htm$ pages.php?link=$1
 RewriteRule ^([a-zA-Z0-9_-]+).htm&(.*)$ pages.php?link=$1&$2
 
+# -------------- Болезни
+RewriteRule ^diseases/([a-zA-Z0-9_\-]+).htm(.*)$ diseases.php?link=$1$2
+RewriteRule ^diseases/(.*)$ diseases.php?$1 [QSA,NC,L]
+
 # -------------- Корзина
 RewriteRule ^cart/(.*)$ cart.php?$1 [QSA,NC,L]
 

@@ -13,15 +13,15 @@ $title = $page['name'];
 foreach(array('title','keywords','description') as $val)
 	if($page[$val]) $$val = $page[$val];
 
-ob_start();
 $h1 = $page['h1'] ? $page['h1'] : $page['name'];
+
+ob_start();
 ?>
-<div class="container-fluid">
+<div class="container-fluid" style="padding-bottom:40px">
+  <?=navigate()?>
   <h1><?=$h1?></h1>
-  <div class="content" style="padding-bottom:40px;">
-    <?=$page['text']?>
-    <a href="" class="back" rel="nofollow">назад</a>
-  </div>
+  <?=$page['text']?>
+  <a href="" class="back" rel="nofollow">назад</a>
 </div>
 <?
 $content = ob_get_clean();

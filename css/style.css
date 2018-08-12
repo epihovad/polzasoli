@@ -7,6 +7,10 @@ body { /*margin-bottom: 60px;*/ background-color:#fff; font-family:'Roboto', san
 
 .abtn { text-decoration:none !important; border-bottom:1px dashed;}
 a.back { display: table; margin-top: 25px;}
+a.back i {
+	font-size:12px;
+	margin-right:5px;
+}
 
 #ajax { width:100%; display:none; }
 

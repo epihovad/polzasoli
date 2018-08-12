@@ -110,62 +110,7 @@ $index = true;
 
 
 // --------------------- Блок Отзывы
-?>
-<div id="ireviews">
-  <div class="container-fluid">
-
-  <h3>Мнение наших любимых клиентов</h3>
-
-  <div class="ch2btn btn-group">
-    <button type="button" class="btn btn-default active" for="ireviews-story"><span></span>Рассказы</button>
-    <button type="button" class="btn btn-default" for="ireviews-video"><span></span>Видео</button>
-  </div>
-
-  <div id="ireviews-story">
-    <div class="txt">
-			<? for($i=0; $i<5; $i++){?>
-      <div class="item<?=!$i?' active':''?>">
-        <?=mb_substr('Здравствуйте, хочу рассказать о результатах пользы соляной пещеры‚как раз пошла эпидемия вируса и конечно же ребёнок заболеп‚наконец то температура ушла‚но кашель! Лающий‚ ночной, до рвоты, не помогало ничего! Ни табпетки‚ ни полоскания, и мы пошли в галокамеру, наутро я не поверила‚что мы спали ночь! Ура! Потом он перешёл во влажный и постепенно проходит‚так же и насморк тоже вылечили,а не спасали никакие капли‚ ужасное состояние было.',0,rand(300,400))?>
-      </div>
-			<?}?>
-    </div>
-    <div class="author">
-      <div class="row">
-        <? for($i=0; $i<5; $i++){?>
-        <div class="item<?=!$i?' active':''?>">
-          <img class="img-circle" src="/uploads/reviews/104x104/5.jpg">
-          <span>Надежда</span>
-        </div>
-        <?}?>
-      </div>
-    </div>
-  </div>
-
-  <div id="ireviews-video">
-    <div class="video">
-			<? for($i=0; $i<5; $i++){?>
-        <div class="item<?=!$i?' active':''?>">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/Z_m0Ip7XmNg" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-			<?}?>
-    </div>
-    <div class="author">
-      <div class="row">
-				<? for($i=0; $i<5; $i++){?>
-          <div class="item<?=!$i?' active':''?>">
-            <img class="img-circle" src="/uploads/reviews/104x104/5.jpg">
-            <span>Ольга</span>
-          </div>
-				<?}?>
-      </div>
-    </div>
-  </div>
-
-  <button class="btn btn-warning">Отставить отзыв</button>
-
-  </div>
-</div>
-<?
+reviews();
 
 // --------------------- Блок Фото
 ?>
@@ -237,29 +182,7 @@ $index = true;
 <?
 
 // --------------------- Блок бронирования
-?>
-<div id="bron">
-  <div class="container-fluid">
-
-    <h3>Расписание сеансов галотерапии<br>в соляной пещере «Ассоль»</h3>
-
-    <div class="bron-calendar"></div>
-
-    <div class="bron-days row">
-      <div id="seanse-list"></div>
-      <div class="clearfix"></div>
-      <button class="btn btn-warning">Записаться на сеанс<b></b></button>
-      <div class="bron-bonus">Забронируйте даный сеанс с выгодой <b></b>%</div>
-      <div class="note">Мы обязательно предварительно вам перезвоним<br>и уточним время и другие детали проведения сеанса</div>
-      <div class="lnks">
-        <div><i class="fas fa-check-circle"></i><a href="">О пользе галотерапии</a></div>
-        <div><i class="fas fa-ban"></i><a href="">Противопоказания</a></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-<?
+bron();
 
 // --------------------- Блок расчета стоимости абонемента
 ?>
@@ -300,67 +223,10 @@ $index = true;
 <?
 
 // --------------------- FAQ
-?>
-<div id="ifaq">
-  <div class="container-fluid">
+FAQ();
 
-    <h3>Ответы на часто задаваемые вопросы</h3>
-
-    <?
-    $res = sql("SELECT * FROM {$prx}faq WHERE status = 1 ORDER BY sort,id");
-    while ($row = mysqli_fetch_assoc($res)){
-      ?>
-      <a href="" class="ifaq-q" rel="nofollow"><i>?</i><?=$row['question']?></a>
-      <div class="ifaq-a"><h4>Ответ:</h4><?=$row['answer']?></div>
-      <?
-    }
-    ?>
-
-  </div>
-</div>
-<?
-
-// --------------------- FAQ
-?>
-<style>
-#soc-vidget { text-align:center; padding-bottom:40px;}
-#soc-vidget h3 { font-size:36px; margin:25px 0 27px;}
-#soc-vidget #vk_groups { display:inline-block; vertical-align:top; margin-right:10px;}
-#soc-vidget #ok_group_widget { display:inline-block; vertical-align:top; margin-left:10px;}
-</style>
-<div id="soc-vidget">
-  <div class="container-fluid">
-
-    <h3>Оставайтесь с нами в социальных сетях<br>и узнавайте первыми информацию о скидках<br>и специальных предложениях!</h3>
-
-    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?158"></script>
-    <!-- VK Widget -->
-    <div id="vk_groups"></div>
-    <script type="text/javascript">
-      VK.Widgets.Group("vk_groups", {mode: 0, no_cover: 1, width: "400"}, 20003922);
-    </script>
-
-    <div id="ok_group_widget"></div>
-    <script>
-      !function (d, id, did, st) {
-        var js = d.createElement("script");
-        js.src = "https://connect.ok.ru/connect.js";
-        js.onload = js.onreadystatechange = function () {
-          if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
-            if (!this.executed) {
-              this.executed = true;
-              setTimeout(function () {
-                OK.CONNECT.insertGroupWidget(id,did,st);
-              }, 0);
-            }
-          }};
-        d.documentElement.appendChild(js);
-      }(document,"ok_group_widget","54187394269304",'{"width":360,"height":285}');
-    </script>
-
-  </div>
-</div>
-<?
+// --------------------- Виждеты соц сетей
+SocVidgets();
 
 // --------------------- Мини-баннер
 banner_mini();
