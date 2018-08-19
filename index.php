@@ -74,7 +74,11 @@ $index = true;
 <script src="/js/jquery.mb.YTPlayer.js"></script>
 <script>
   $(function () {
-    $(".player").mb_YTPlayer();
+    if (!device.tablet() && !device.mobile()) {
+      $(".player").mb_YTPlayer();
+    } else {
+      $('#ipromo').addClass('bgimg');
+    }
   })
 </script>
 
