@@ -70,7 +70,17 @@ $index = true;
 
 // --------------------- Блок Промо
 ?>
+<script src="/js/device.min.js"></script>
+<script src="/js/jquery.mb.YTPlayer.js"></script>
+<script>
+  $(function () {
+    $(".player").mb_YTPlayer();
+  })
+</script>
+
 <div id="ipromo">
+  <div id="in-ipromo">
+  <a id="bgndVideo" class="player" data-property="{videoURL:'https://www.youtube.com/watch?v=0YpNOZg-siI',containment:'#ipromo',autoPlay:true, mute:true, showControls:false, opacity:1}"></a>
   <div class="container-fluid">
     <h3>В нашей пещере полезно, комфортно<br>и очень весело находится всей семье!</h3>
     <div class="ipromo-list">
@@ -104,6 +114,7 @@ $index = true;
       </div>
     </div>
     <button class="btn btn-warning" onclick="scrollingTo($('#bron'),0,500);">Выбрать время и записаться на сеанс<i class="fas fa-arrow-down"></i></button>
+  </div>
   </div>
 </div>
 <?

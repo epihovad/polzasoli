@@ -112,7 +112,8 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 	background-image:url(/img/iabon-bn.png); background-repeat:no-repeat; background-size:100%; background-color:#0ebac5;
 }
 
-#ipromo {text-align:center; color:#fff; background:url(/img/bg-promo.jpg) no-repeat center; background-size:cover; height:702px; overflow:hidden;}
+#ipromo { position: relative; text-align:center; color:#fff; height:702px; overflow:hidden;}
+#in-ipromo { position: relative; background-image:url(/img/pattern.png); height:702px; overflow:hidden;}
 #ipromo h3 { font-size:42px; margin:30px 0 54px; line-height:50px;}
 #ipromo .ipromo-list .row:nth-child(1) { padding:0 0 56px 0;}
 #ipromo .ipromo-list .row div { font-size:20px; line-height:24px;}
