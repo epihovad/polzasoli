@@ -95,6 +95,7 @@ if($ticket){
         </div>
       </div>
     </div>
+
     <a href="" class="back" rel="nofollow"><i class="fas fa-arrow-left"></i>назад</a>
   </div>
 	<?
@@ -117,14 +118,53 @@ else {
 	$navigate = '<a href="/tickets/">Услуги и цены</a>';
 
   ?>
+  <style>
+    #tickets .tickets-type a { position:relative; display:inline-block; background-color:#f6f6f6; color:#939393; text-decoration:none; font-size:20px; padding:10px 15px; margin:0 8px 8px 0;}
+    #tickets .tickets-type a:hover { color:#000;}
+    #tickets .tickets-type a.active { background-color:#fbf9e2; color:#000; padding-right:35px;}
+    #tickets .tickets-type a.active::after { content: "\f00d"; font-weight: 900; font-family: "Font Awesome 5 Free"; position:absolute; right:10px; color:#939393;}
+    #tickets .tickets-type a.active:hover:after { color:#000;}
+  </style>
   <div class="container-fluid" style="padding-bottom:40px">
     <?=navigate()?>
     <h1><?=$h1?></h1>
 
     <div id="tickets">
-      111
+
+      <?
+      $r = sql("SELECT * FROM {$prx}tickets_type WHERE status = 1");
+      if(@mysqli_num_rows($r)){
+        ?><div class="tickets-type"><?
+        $tt = trim($_GET['type']);
+				$ttArr = array_diff(explode(',', $tt), array(0, null));
+        while ($type = mysqli_fetch_assoc($r)){
+          $_ttArr = $ttArr;
+          $active = in_array($type['id'], $ttArr) === true;
+          if($active){
+            unset($_ttArr[array_search($type['id'], $ttArr)]);
+          } else {
+						$_ttArr[] = $type['id'];
+          }
+          $href = sgp($_SERVER['REQUEST_URI'], 'type', implode(',', $_ttArr), true);
+          ?><a href="<?=$href?>"<?=$active?' class="active"':''?>><?=$type['name']?></a><?
+        }
+        ?></div><?
+      }
+      ?>
+
+      <div class="tickets-who">
+        <label>Кто будет посещать сеансы: </label>
+				<?=dll("SELECT * FROM {$prx}tickets_who WHERE status = 1 ORDER BY name",' onchange="location.href=replaceUrlParam(url(),\'who\',this.value)"',$_GET['who'],array(null => ''))?>
+      </div>
+
+      <div class="tickets-disease">
+        <label>Диагноз врача (если есть): </label>
+				<?=dll("SELECT * FROM {$prx}disease WHERE status = 1 ORDER BY name",' onchange="location.href=replaceUrlParam(url(),\'disease\',this.value)"',$_GET['disease'],array(null => ''))?>
+      </div>
+
     </div>
-    <a href="" class="back" rel="nofollow">назад</a>
+
+    <a href="" class="back" rel="nofollow"><i class="fas fa-arrow-left"></i>назад</a>
   </div>
   <?
 

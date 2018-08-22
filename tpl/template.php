@@ -17,6 +17,7 @@
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <link href="/css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet" type="text/css" />
+  <?/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">*/?>
 
   <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
   <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
