@@ -16,6 +16,11 @@ $(function () {
     jPop('/inc/actions.php?show=popup_bron');
   });
   //
+  $('header .callme a').click(function(){
+    jPop('/inc/actions.php?show=callme');
+    return false;
+  });
+  //
   $('#bron button').click(function(){
     var day = $('#seanse-list .bron-day.active :checkbox:checked').attr('day');
     if(day != undefined){

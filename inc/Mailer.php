@@ -12,9 +12,9 @@ class Mailer extends PHPMailer {
 		$this->Debugoutput = 'html';
 		$this->isHTML(true);
 		$this->Host = 'smtp.timeweb.ru';
-		$this->Username = 'info@estill.ru';
-		$this->Password = 'N3eE5rVS';
-		$this->setFrom('info@estill.ru', 'EUROSTYLE - стильно и тепло');
+		$this->Username = '';
+		$this->Password = '';
+		$this->setFrom('info@polzasoli.ru', 'Ассоль - соляная пещера');
 	}
 
 	// $emails - массив адресатов array('test1@mail.ru'=>'Тест Петрович','test2@mail.ru'=>'Тест Иванович')
@@ -27,17 +27,3 @@ class Mailer extends PHPMailer {
 		return $this->send();
 	}
 }
-
-/*$mail = new Mailer();
-$mail->Subject = 'Тема';
-$mail->setFrom('olap@vseinstrumenti.ru', 'VEGA report');
-$mail->addAddress('alexander.epihov@vseinstrumenti.ru', 'Епихов Александр');
-$mail->Body = 'тело письма';
-$mail->AltBody = 'какой-то AltBody';
-
-//send the message, check for errors
-if (!$mail->send()) {
-	echo "Mailer Error: " . $mail->ErrorInfo;
-} else {
-	echo "Message sent!";
-}*/
