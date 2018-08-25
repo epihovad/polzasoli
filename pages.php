@@ -21,7 +21,7 @@ ob_start();
   <?=navigate()?>
   <h1><?=$h1?></h1>
   <?=$page['text']?>
-  <a href="" class="back" rel="nofollow">назад</a>
+  <a href="" class="back" rel="nofollow"><i class="fas fa-arrow-left"></i>назад</a>
 </div>
 <?
 $content = ob_get_clean();

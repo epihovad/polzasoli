@@ -5,7 +5,7 @@ $h1 = 'Справочник болезней';
 $h = 'Общий список';
 $title .= ' :: ' . $h1;
 $navigate = '<span></span>Общий список';
-$tbl = 'disease';
+$tbl = 'diseases';
 
 // ------------------- СОХРАНЕНИЕ ------------------------
 if(isset($_GET['action']))
@@ -241,7 +241,7 @@ else
             <th class="sitemap sm-changefreq"><?=dll(array('always'=>'always','hourly'=>'hourly','daily'=>'daily','weekly'=>'weekly','monthly'=>'monthly','yearly'=>'yearly','never'=>'never'),'name="changefreq['.$id.']"',$row['changefreq']?$row['changefreq']:'monthly')?></th>
             <th class="sitemap sm-priority"><input type="text" class="form-control input-sm" name="priority[<?=$id?>]" value="<?=$row['priority']?$row['priority']:'0.5'?>" maxlength="3" /></th>
 					<? }?>
-          <td class="sp">/disease/<a href="/disease/<?=$row['link']?>.htm" class="clr-green" target="_blank"><?=$row['link']?></a>.htm</td>
+          <td class="sp">/diseases/<a href="/diseases/<?=$row['link']?>.htm" class="clr-green" target="_blank"><?=$row['link']?></a>.htm</td>
           <th><?=btn_flag($row['status'],$id,'action=status&id=')?></th>
           <th nowrap><?=btn_edit($id)?></th>
         </tr>

@@ -7,8 +7,8 @@ php_value default_charset utf-8
 php_flag register_globals off
 php_flag display_errors off
 
-#ErrorDocument 403 /errors.php?code=403
-#ErrorDocument 404 /errors.php?code=404
+ErrorDocument 403 /errors.php?code=403
+ErrorDocument 404 /errors.php?code=404
 
 Options -Indexes
 
@@ -35,8 +35,8 @@ RewriteRule ^([a-zA-Z0-9_-]+).htm$ pages.php?link=$1
 RewriteRule ^([a-zA-Z0-9_-]+).htm&(.*)$ pages.php?link=$1&$2
 
 # -------------- Болезни
-RewriteRule ^diseases/([a-zA-Z0-9_\-]+).htm(.*)$ diseases.php?link=$1$2
-RewriteRule ^diseases/(.*)$ diseases.php?$1 [QSA,NC,L]
+#RewriteRule ^diseases/([a-zA-Z0-9_\-]+).htm(.*)$ diseases.php?link=$1$2
+#RewriteRule ^diseases/(.*)$ diseases.php?$1 [QSA,NC,L]
 
 # -------------- Корзина
 RewriteRule ^cart/(.*)$ cart.php?$1 [QSA,NC,L]
