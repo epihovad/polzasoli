@@ -31,7 +31,7 @@
   <script src="/js/js-url-master/url.min.js"></script>
 
   <script type="text/javascript" src="/js/utils.js"></script>
-  <script type="text/javascript" src="/js/spec.js?v=1"></script>
+  <script type="text/javascript" src="/js/spec.js?v=20180825"></script>
 
   <script type="text/javascript" src="/js/moment.min.js"></script>
 
@@ -51,7 +51,7 @@
 
   <script src="/js/jquery.cookie.js"></script>
 
-  <link href="/css/style.css?v=5" rel="stylesheet" type="text/css" />
+  <link href="/css/style.css?v=20180825" rel="stylesheet" type="text/css" />
 
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
