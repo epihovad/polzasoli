@@ -106,7 +106,7 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #iabon .iabon-list-item h4 { font-weight:700; font-size:23px; margin:21px 0 7px;}
 #iabon .iabon-list-item .age span { padding:0 65px 7px; border-bottom:2px solid #fff072; display:inline-block;}
 #iabon .iabon-list-item .hblue { font-weight:700; font-size:19px; color:#2292ab; margin:5px 0 7px;}
-#iabon .iabon-list-item .disease { font-size:16px; height: 48px; overflow: hidden; }
+#iabon .iabon-list-item .diseases { font-size:16px; height: 48px; overflow: hidden; }
 #iabon .iabon-list .bn {
 	display:inline-block; width:100%; height:272px; overflow:hidden;
 	background-image:url(/img/iabon-bn.png); background-repeat:no-repeat; background-size:100%; background-color:#0ebac5;

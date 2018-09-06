@@ -56,7 +56,7 @@ if(isset($_GET['action']))
 							name='{$name}',
 							preview=".($preview?"'{$preview}'":"NULL").",
 				      text=".($text?"'{$text}'":"NULL").",
-							ids_disease=".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
+							ids_diseases=".(sizeof($_POST['ids_diseases']) > 0 ? "'".implode(',', $_POST['ids_diseases'])."'" : 'NULL').",
 							type='{$type}',
 							is_main='{$is_main}',
 							is_bmain='{$is_bmain}',
@@ -184,7 +184,7 @@ elseif(isset($_GET['red']))
       <tr class="for-page">
         <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
         <th>Спр-к болезней</th>
-        <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
+        <td><?=dll("SELECT * FROM {$prx}diseases ORDER BY name",'name="ids_diseases[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_diseases']),null,'chosen')?></td>
       </tr>
       <?
       if(!$locked)

@@ -47,7 +47,7 @@ if(isset($_GET['action']))
 			        seance = ".($seance ? "'{$seance}'" : 'NULL').",
 			        ids_type = ".(sizeof($_POST['ids_type']) > 0 ? "'".implode(',', $_POST['ids_type'])."'" : 'NULL').",
 			        ids_who = ".(sizeof($_POST['ids_who']) > 0 ? "'".implode(',', $_POST['ids_who'])."'" : 'NULL').",
-			        ids_disease = ".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
+			        ids_diseases = ".(sizeof($_POST['ids_diseases']) > 0 ? "'".implode(',', $_POST['ids_diseases'])."'" : 'NULL').",
 			        status = '{$status}',
 							h1 = " . ($h1 ? "'{$h1}'" : "NULL") . ",
 							title = " . ($title ? "'{$title}'" : "NULL") . ",
@@ -171,7 +171,7 @@ if(isset($_GET['red']))
       <tr>
         <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
         <th>Спр-к болезней</th>
-        <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
+        <td><?=dll("SELECT * FROM {$prx}diseases ORDER BY name",'name="ids_diseases[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_diseases']),null,'chosen')?></td>
       </tr>
       <tr>
         <th></th>
@@ -206,13 +206,13 @@ else
 	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
 	$fl['type'] = $_GET['fl']['type'];
 	$fl['who'] = $_GET['fl']['who'];
-	$fl['disease'] = $_GET['fl']['disease'];
+	$fl['diseases'] = $_GET['fl']['diseases'];
 	$fl['sort'] = $_GET['fl']['sort'];
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$filters['type'] = "выбор абонементов по типу";
 	$filters['who'] = "выбор абонементов по типу посетителей";
-	$filters['disease'] = 'выбор объектов по спр-ку болезней';
+	$filters['diseases'] = 'выбор объектов по спр-ку болезней';
 
 	$where = '';
 	if($fl['type']){
@@ -221,8 +221,8 @@ else
 	if($fl['who']){
 	  $where .= "\r\nAND CONCAT(',',ids_who,',') LIKE '%,{$fl['who']},%'";
 	}
-	if($fl['disease']){
-		$where .= "\r\nAND CONCAT(',',ids_disease,',') LIKE '%,{$fl['disease']},%'";
+	if($fl['diseases']){
+		$where .= "\r\nAND CONCAT(',',ids_diseases,',') LIKE '%,{$fl['diseases']},%'";
 	}
 	if($fl['search'] != ''){
 	  $sf = array('name','link','text','price','old_price','validity','age','h1','title','keywords','description');
@@ -291,7 +291,7 @@ else
       </div>
       <div class="item">
         <label>Спр-к болезней</label>
-				<?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="fl[disease]" multiple data-placeholder="-- неважно --"',$fl['disease']?explode(',',$fl['disease']):null,null,'chosen')?>
+				<?=dll("SELECT * FROM {$prx}diseases ORDER BY name",'name="fl[diseases]" multiple data-placeholder="-- неважно --"',$fl['diseases']?explode(',',$fl['diseases']):null,null,'chosen')?>
       </div>
       <div class="item search">
         <label>Контекстный поиск</label><br>

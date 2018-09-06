@@ -32,9 +32,9 @@ if($ticket){
     #ticket-page .col-info { display:table-cell; padding:0 0 40px 0; vertical-align:top;}
     #ticket-page .col-info .who { font-weight:700; color:#2292ab;}
     #ticket-page .col-info .who b { color:#333;}
-    #ticket-page .ticket-disease { padding:10px; background-color:#f1f6fa; margin:20px 0 10px;}
-    #ticket-page .ticket-disease div { font-weight:700; padding-bottom:10px;}
-    #ticket-page .ticket-disease a { color:#2292ab; }
+    #ticket-page .ticket-diseases { padding:10px; background-color:#f1f6fa; margin:20px 0 10px;}
+    #ticket-page .ticket-diseases div { font-weight:700; padding-bottom:10px;}
+    #ticket-page .ticket-diseases a { color:#2292ab; }
     #ticket-page .ar-price * { vertical-align:middle; position:relative;}
     #ticket-page #buy i { padding:0 10px 0 0; }
     #ticket-page .old-price { display:inline-block; margin-right:20px; color: #666; font-size: 22px; text-decoration:line-through;}
@@ -74,9 +74,9 @@ if($ticket){
         </p>
         <?
         // болезни
-        if($ticket['ids_disease']){
-          ?><div class="ticket-disease"><div>Подходит для значительного улучшения состояния организма и профилактики при диагнозах врача:</div><?
-          $r = sql("SELECT name, link FROM {$prx}disease WHERE id IN ({$ticket['ids_disease']}) AND status = 1");
+        if($ticket['ids_diseases']){
+          ?><div class="ticket-diseases"><div>Подходит для значительного улучшения состояния организма и профилактики при диагнозах врача:</div><?
+          $r = sql("SELECT name, link FROM {$prx}diseases WHERE id IN ({$ticket['ids_diseases']}) AND status = 1");
           $str = '';
           while ($arr = @mysqli_fetch_assoc($r)){
             ob_start();
@@ -157,9 +157,9 @@ else {
 				<?=dll("SELECT * FROM {$prx}tickets_who WHERE status = 1 ORDER BY name",' onchange="location.href=replaceUrlParam(url(),\'who\',this.value)"',$_GET['who'],array(null => ''))?>
       </div>
 
-      <div class="tickets-disease">
+      <div class="tickets-diseases">
         <label>Диагноз врача (если есть): </label>
-				<?=dll("SELECT * FROM {$prx}disease WHERE status = 1 ORDER BY name",' onchange="location.href=replaceUrlParam(url(),\'disease\',this.value)"',$_GET['disease'],array(null => ''))?>
+				<?=dll("SELECT * FROM {$prx}diseases WHERE status = 1 ORDER BY name",' onchange="location.href=replaceUrlParam(url(),\'diseases\',this.value)"',$_GET['diseases'],array(null => ''))?>
       </div>
 
     </div>

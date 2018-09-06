@@ -28,7 +28,7 @@ $index = true;
                   <h4>Аденоиды</h4>
                   <div class="age"><span>от 2-х до 16 лет</span></div>
                   <div class="hblue">Диагноз врача</div>
-                  <div class="disease">Аденоид I степени, Аденоид II степени, Аденоид III степени Аденоид I степени, Аденоид II степени, Аденоид III степени</div>
+                  <div class="diseases">Аденоид I степени, Аденоид II степени, Аденоид III степени Аденоид I степени, Аденоид II степени, Аденоид III степени</div>
                   <div class="hblue">около 30 сеансов</div>
                   <a class="btn btn-warning btn-sm" data-target="#" href="#" role="button">Забронировать абонемент</a>
                 </div>
@@ -51,7 +51,7 @@ $index = true;
                   <h4>Аденоиды</h4>
                   <div class="age"><span>от 2-х до 16 лет</span></div>
                   <div class="hblue">Диагноз врача</div>
-                  <div class="disease">Аденоид I степени, Аденоид II степени, Аденоид III степени Аденоид I степени, Аденоид II степени, Аденоид III степени</div>
+                  <div class="diseases">Аденоид I степени, Аденоид II степени, Аденоид III степени Аденоид I степени, Аденоид II степени, Аденоид III степени</div>
                   <div class="hblue">около 30 сеансов</div>
                   <a class="btn btn-warning btn-sm" data-target="#" href="#" role="button">Забронировать абонемент</a>
                 </div>

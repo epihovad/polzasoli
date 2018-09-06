@@ -41,7 +41,7 @@ if(isset($_GET['action']))
 			$set = "name='{$name}',
 							preview='{$preview}',
 							text='{$text}',
-							ids_disease=".(sizeof($_POST['ids_disease']) > 0 ? "'".implode(',', $_POST['ids_disease'])."'" : 'NULL').",
+							ids_diseases=".(sizeof($_POST['ids_diseases']) > 0 ? "'".implode(',', $_POST['ids_diseases'])."'" : 'NULL').",
 							status='{$status}',
 							title=".($title?"'{$title}'":"NULL").",
 							keywords=".($keywords?"'{$keywords}'":"NULL").",
@@ -112,7 +112,7 @@ if(isset($_GET['red']))
       <tr>
         <th><?=help('Привязка к объектам из спр-ка болезней<br>для вывода на сайте (в нижней части) соответствующих статей')?></th>
         <th>Спр-к болезней</th>
-        <td><?=dll("SELECT * FROM {$prx}disease ORDER BY name",'name="ids_disease[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_disease']),null,'chosen')?></td>
+        <td><?=dll("SELECT * FROM {$prx}diseases ORDER BY name",'name="ids_diseases[]" multiple data-placeholder="Укажите болезни" style="width:100%"',explode(',',$row['ids_diseases']),null,'chosen')?></td>
       </tr>
       <tr>
         <th></th>
@@ -146,12 +146,12 @@ else
 	$cur_page = (int)$_GET['page'] ?: 1;
 	$fl['sitemap'] = isset($_GET['fl']['sitemap']);
 	$fl['sort'] = $_GET['fl']['sort'];
-	$fl['disease'] = $_GET['fl']['disease'];
+	$fl['diseases'] = $_GET['fl']['diseases'];
 	$fl['search'] = stripslashes($_GET['fl']['search']);
 
 	$where = '';
-	if($fl['disease']){
-		$where .= "\r\nAND CONCAT(',',ids_disease,',') LIKE '%,{$fl['disease']},%'";
+	if($fl['diseases']){
+		$where .= "\r\nAND CONCAT(',',ids_diseases,',') LIKE '%,{$fl['diseases']},%'";
 	}
 	if($fl['search'] != ''){
 		$sf = array('name','link','preview','text','title','keywords','description');
@@ -211,7 +211,7 @@ else
     <div class="fbody<?//=$show_filters?' active':''?>">
       <div class="form-group">
         <label>Спр-к болезней</label>
-				<?=dll("SELECT * FROM {$prx}disease ORDER BY name",'onChange="changeURI({\'fl[disease]\':this.value});return false;"',$fl['disease'],array('null'=>'-- все --'))?>
+				<?=dll("SELECT * FROM {$prx}diseases ORDER BY name",'onChange="changeURI({\'fl[diseases]\':this.value});return false;"',$fl['diseases'],array('null'=>'-- все --'))?>
       </div>
       <div class="form-group search">
         <label>Контекстный поиск</label><br>
