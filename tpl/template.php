@@ -51,7 +51,7 @@
 
   <script src="/js/jquery.cookie.js"></script>
 
-  <link href="/css/style.css?v=20180825" rel="stylesheet" type="text/css" />
+  <link href="/css/style.css?v=20181101" rel="stylesheet" type="text/css" />
 
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -70,43 +70,54 @@
   <ol class="indicator"></ol>
 </div>
 
-<header<?=$index?' class="index"':''?>>
-  <div class="head">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="hb1 col-xs-3 col-sm-3 col-md-3">
-          <div class="head-phone"><span><?=set('phone')?></span></div>
-          <div class="head-address"><?=set('address')?></div>
-        </div>
-        <div class="hb2 col-xs-3 col-sm-3 col-md-3">
-          <div class="head-wtime"><i class="far fa-clock"></i><?=set('wtime')?></div>
-          <button type="button" class="btn btn-primary" onclick="scrollingTo($('#bron'), 0, 700);">Расписание сеансов <i class="fas fa-arrow-down"></i></button>
-        </div>
-        <div class="hb3 col-xs-3 col-sm-3 col-md-3">
-          <button type="button" class="btn btn-warning">Записаться на сеанс</button>
-          <div class="callme"><i class="fas fa-phone"></i><a href="" class="abtn">Перезвоните мне</a></div>
-        </div>
-        <div class="hb4 col-xs-3 col-sm-3 col-md-3">
-          <div class="soc">
-            <div class="h">Оставайтесь с нами:</div>
-            <div class="lnk">
-              <a href="#"><i class="fab fa-vk"></i></a>
-              <a href="#"><i class="fab fa-odnoklassniki"></i></a>
-              <a href="#"><i class="fab fa-instagram"></i></a>
-              <a href="#"><i class="fab fa-facebook-f"></i></a>
-              <a href="#"><i class="fab fa-youtube"></i></a>
+<header>
+  <section class="fill-bg section-bottom-10">
+    <div class="head">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="hb1 col-xs-3 col-sm-3 col-md-3">
+            <div class="head-phone"><span><?=set('phone')?></span></div>
+            <div class="head-address"><?=set('address')?></div>
+          </div>
+          <div class="hb2 col-xs-3 col-sm-3 col-md-3">
+            <div class="head-wtime"><i class="far fa-clock"></i><?=set('wtime')?></div>
+            <button type="button" class="btn btn-primary" onclick="scrollingTo($('#bron'), 0, 700);">Расписание сеансов <i class="fas fa-arrow-down"></i></button>
+          </div>
+          <div class="hb3 col-xs-3 col-sm-3 col-md-3">
+            <button type="button" class="btn btn-warning">Записаться на сеанс</button>
+            <div class="callme"><i class="fas fa-phone"></i><a href="" class="abtn">Перезвоните мне</a></div>
+          </div>
+          <div class="hb4 col-xs-3 col-sm-3 col-md-3">
+            <div class="soc">
+              <div class="h">Оставайтесь с нами:</div>
+              <div class="lnk">
+                <a href="#"><i class="fab fa-vk"></i></a>
+                <a href="#"><i class="fab fa-odnoklassniki"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    <div class="container-fluid">
+      <a id="logo" class="pull-left" href="/" title="на главную"><img src="/img/logo.png"></a>
+      <?=main()?>
+      <div class="clearfix"></div>
+    </div>
+  </section>
+  <? if($index){?>
   <div class="container-fluid">
-    <a id="logo" class="pull-left" href="/" title="на главную"><img src="/img/logo.png"></a>
-    <?=main()?>
-    <div class="clearfix"></div>
-    <?=headerSlider()?>
+    <h1 class="section-34">Добро пожаловать в соляную пещеру<br>в «Заведенском»</h1>
   </div>
+  <section id="header-bg"></section>
+  <section class="section-34 fill-bg">
+    <div class="container-fluid">
+	  <?=headerSlider()?>
+  </section>
+  <?}?>
 </header>
 
 <div class="content">
