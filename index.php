@@ -70,55 +70,61 @@ $index = true;
 
 // --------------------- Блок Промо
 ?>
-<script src="/js/device.min.js"></script>
-<script src="/js/jquery.mb.YTPlayer.js"></script>
+<link href="/js/jquery-background-video/jquery.background-video.css" rel="stylesheet">
+<script src="/js/jquery-background-video/jquery.background-video.js"></script>
 <script>
-  $(function () {
-    if (!device.tablet() && !device.mobile()) {
-      $(".player").mb_YTPlayer();
-    } else {
-      $('#ipromo').addClass('bgimg');
-    }
-  })
+  $(document).ready(function(){
+    $('.polzasoli-bg').bgVideo({fadeIn: 2000, showPausePlay: false, pauseAfter: 0});
+  });
 </script>
 
 <div id="ipromo">
-  <div id="in-ipromo">
-  <a id="bgndVideo" class="player" data-property="{videoURL:'https://www.youtube.com/watch?v=0YpNOZg-siI',containment:'#ipromo',autoPlay:true, mute:true, showControls:false, opacity:1}"></a>
-  <div class="container-fluid">
-    <h3>В нашей пещере полезно, комфортно<br>и очень весело находится всей семье!</h3>
-    <div class="ipromo-list">
-      <div class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3" style="letter-spacing:-0.5pt">
-          <span><i></i></span>Просторная и полезная соляная пещера со стерильной атмосферой
+
+  <div class="jquery-background-video-wrapper">
+
+    <video class="polzasoli-bg jquery-background-video" loop autoplay muted poster="/img/polzasoli-bg.jpg">
+      <source src="/img/polzasoli-bg.mp4" type="video/mp4">
+      <source src="/img/polzasoli-bg.webm" type="video/webm">
+      <source src="/img/polzasoli-bg.ogv" type="video/ogg">
+    </video>
+  
+    <div id="in-ipromo">
+      <div class="container-fluid">
+        <h3>В нашей пещере полезно, комфортно<br>и очень весело находится всей семье!</h3>
+        <div class="ipromo-list">
+          <div class="row">
+            <div class="col-xs-3 col-sm-3 col-md-3" style="letter-spacing:-0.5pt">
+              <span><i></i></span>Просторная и полезная соляная пещера со стерильной атмосферой
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Уютная зона ожидания с книгами и детским уголком
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Бесплатный и быстрый<br>интернет
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Все удобные<br>способы<br>оплаты
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Удобная раздевалка и система хранения личных вещей
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Комфортное для вас время посещения сеансов
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Всегда вежливый и понимающий персонал
+            </div>
+            <div class="col-xs-3 col-sm-3 col-md-3">
+              <span><i></i></span>Большой выбор полезных товаров и подарков
+            </div>
+          </div>
         </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Уютная зона ожидания с книгами и детским уголком
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Бесплатный и быстрый<br>интернет
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Все удобные<br>способы<br>оплаты
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Удобная раздевалка и система хранения личных вещей
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Комфортное для вас время посещения сеансов
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Всегда вежливый и понимающий персонал
-        </div>
-        <div class="col-xs-3 col-sm-3 col-md-3">
-          <span><i></i></span>Большой выбор полезных товаров и подарков
-        </div>
+        <button class="btn btn-warning" onclick="scrollingTo($('#bron'),0,500);">Выбрать время и записаться на сеанс<i class="fas fa-arrow-down"></i></button>
       </div>
     </div>
-    <button class="btn btn-warning" onclick="scrollingTo($('#bron'),0,500);">Выбрать время и записаться на сеанс<i class="fas fa-arrow-down"></i></button>
-  </div>
+
   </div>
 </div>
 <?

@@ -477,7 +477,7 @@ function ActiveFilters()
 {
 	global $filters;
 
-	if(!sizeof($_GET['fl']))
+	if(!sizeof((array)$_GET['fl']))
 	  return;
 
 	$mas = array();
