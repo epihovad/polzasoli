@@ -401,7 +401,26 @@ function bmain(){
 function diseases(){
   global $prx;
 
+  $r = sql("SELECT * FROM {$prx}diseases WHERE status = 1 ORDER BY name");
+	if(!$cnt = mysqli_num_rows($r)) return;
 
+	?>
+  <div id="diseases-footer" class="section-24">
+    <div class="container-fluid">
+      <h3 class="text-center">Заболевания, при лечении которых помогают курсы галотерапии:</h3>
+      <ul><?
+      while($arr = mysqli_fetch_assoc($r)){
+        $disabled = !$arr['text'];
+        ?>
+        <li>
+          <a href="/diseases/<?=$arr['link']?>.htm"<?=$disabled?' class="disabled" onclick="return false"':''?>><?=$arr['name']?></a>
+        </li>
+        <?
+      }
+      ?></ul>
+    </div>
+  </div>
+  <?
 }
 
 // СТРОКА НАВИГАЦИИ

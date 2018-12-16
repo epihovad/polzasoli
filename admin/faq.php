@@ -70,6 +70,7 @@ elseif(isset($_GET['red']))
         <th>Вопрос</th>
         <td><?=input('text', 'question', $row['question'])?></td>
       </tr>
+      <tr>
         <th></th>
         <th>Ответ</th>
         <td><?=showCK('answer',$row['answer'], 'basic')?></td>

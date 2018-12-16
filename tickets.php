@@ -124,7 +124,11 @@ else {
     #tickets .tickets-type a.active { background-color:#fbf9e2; color:#000; padding-right:35px;}
     #tickets .tickets-type a.active::after { content: "\f00d"; font-weight: 900; font-family: "Font Awesome 5 Free"; position:absolute; right:10px; color:#939393;}
     #tickets .tickets-type a.active:hover:after { color:#000;}
+    #tickets .tickets-who { padding-top:15px;}
+    #tickets .tickets-diseases { padding-top:15px;}
+    #tickets select { font-size:14px; line-height:1;}
   </style>
+
   <div class="container-fluid" style="padding-bottom:40px">
     <?=navigate()?>
     <h1><?=$h1?></h1>

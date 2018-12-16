@@ -99,6 +99,66 @@ if(isset($_GET['action'])){
 
 			?><script>top.jQuery(document).jAlert('show','alert','<?=$message?>',function(){top.location.href='/cart/?show=bron&number=<?=$number?>'});</script><?
 			break;
+		// ------------------- Форма «Расчитайте примерную стоимость»
+    case 'what_cost':
+
+			// проверка имени клиента
+			if(!$name){
+				jAlert('Пожалуйста, укажите Ваше имя');
+			}
+			// проверим кол-во гостей
+			if(!$cnt = $cnt_child7 + $cnt_child16 + $cnt_grown + $cnt_pensioner){
+				jAlert('Пожалуйста, укажите количество гостей');
+			}
+			// проверка телефона
+			$phone = substr(preg_replace("/\D/",'',$phone), -10);
+			if(strlen($phone) != 10){
+				jAlert('Некорректный номер телефона');
+			}
+
+			$mailto = array();
+
+			ob_start();
+			?><b>Имя</b>: <?=$name?><br><?
+      ?><b>Телефон</b>: +7<?=$phone?><br><?
+      ?><b>Гости</b>:<br><?
+			?>- Дети (до 7 лет): <?=$cnt_child7?:'-'?><br><?
+      ?>- Дети (до 16 лет): <?=$cnt_child16?:'-'?><br><?
+      ?>- Взрослые: <?=$cnt_grown?:'-'?><br><?
+      ?>- Пенсионеры: <?=$cnt_pensioner?:'-'?><?
+			$mailto['text'] = ob_get_clean();
+
+			$set = "type = 'Расчитайте стоимость абонемента',
+			        name = '{$name}',
+			        email = '{$email}',
+			        phone = '{$phone}',
+			        text = '" . clean($mailto['text']) . "'";
+
+			if(!$id = update('msg', $set)){
+				$alert = 'Во время сохранения данных произошла ошибка.<br>Администрация сайта приносит Вам свои извинения.<br>Мы уже знаем об этой проблеме и работаем над её устранением.';
+				$mailto['theme'] = "«Расчитайте стоимость абонемента» - ошибка при сохранении данных";
+				// журнал
+				update('log', "type = 'ошибка при сохранении данных в форме «Расчитайте стоимость абонемента»', notes = '".clean($set)."'");
+			} else {
+				$alert = 'Уважаемый(ая) '.$name.'!<br>Ваше сообщение успешно отправлено.<br>Мы обязательно с Вами свяжемся.';
+				$mailto['theme'] = '«Расчитайте стоимость абонемента»';
+				// журнал
+				update('log', "type = 'новое сообщение «Расчитайте стоимость абонемента»', link = 'msg.php?red={$id}', notes = '" . clean($mailto['text']) . "'");
+			}
+
+			// мылим админу
+			//mailTo(array(set('admin_mail')), $mailto['theme'], $mailto['text']);
+
+			?>
+      <script>
+        var $frm = top.jQuery('#what_cost');
+        $frm.find("input[type=text]").val('');
+        $frm.find("input.input-number").val('0');
+        top.jQuery(document).jAlert('show','alert','<?=cleanJS($alert)?>',function(){top.jQuery.arcticmodal('close')});
+      </script>
+      <?
+
+      break;
 		// ------------------- Форма «Перезвоните мне»
 		case 'callme':
 

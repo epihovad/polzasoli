@@ -16,8 +16,7 @@
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <link href="/css/fonts/fontawesome/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet" type="text/css" />
-  <?/*<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">*/?>
+  <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" rel="stylesheet" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
   <link rel="stylesheet" href="/js/ui/jquery-ui.css" type="text/css">
   <script src="/js/ui/jquery-ui.min.js" type="text/javascript"></script>
@@ -27,7 +26,7 @@
   <link rel="stylesheet" href="/js/arcticmodal/jquery.arcticmodal-0.3.css">
   <link rel="stylesheet" href="/js/arcticmodal/themes/simple.css">
 
-  <script src="/js/jquery.scrollUp.js"></script>
+  <script src="/js/scroll-startstop.events.jquery.js"></script>
   <script src="/js/js-url-master/url.min.js"></script>
 
   <script type="text/javascript" src="/js/utils.js"></script>

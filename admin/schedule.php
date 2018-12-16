@@ -31,7 +31,6 @@ function SeanseRow($row = array(), $i = 1){
 				?></select>
     </td>
     <td><input class="form-control input-xs" name="discount[]" value="<?=$row['discount']?>"></td>
-    <td></td>
     <td>
       <button type="button" class="btn btn-danger btn-xs" alt="удалить" title="удалить" onclick="DelRowTime($(this))">
         <i class="far fa-trash-alt"></i>
@@ -122,6 +121,8 @@ if(MyCheckDate($day, 'Ymd')){
 } else {
 	$day = date('Ymd');
 }
+
+$ref_day = getRow("SELECT * FROM {$prx}day WHERE pkday = '{$day}'");
 
 ob_start();
 
@@ -216,6 +217,7 @@ ob_start();
 <div id="chDay" class="panel-white">
   <label>Выберите дату</label>
   <input class="form-control input-xs datepicker" value="<?=date('d.m.Y', strtotime($day))?>">
+  - <b><?=$ref_day['iday'] . ' ' . $ref_day['cmonth_ru'] . ', ' . $ref_day['сday_of_week_ru']?></b>
   <div class="clearfix"></div>
 </div>
 
@@ -234,7 +236,6 @@ ob_start();
       <th>Время сеанса, ч.</th>
       <th>Время сеанса, мин.</th>
       <th>Скидка, %</th>
-      <th>Информация</th>
       <th></th>
     </tr>
     </thead>

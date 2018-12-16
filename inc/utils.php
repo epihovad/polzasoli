@@ -108,6 +108,9 @@ function GetFreeSeanse($iday_start = null, $interval_days = 6){
 }
 
 function MyCheckDate($date, $format = 'd.m.Y'){
+  
+  if(!$date) return;
+
 	switch ($format){
 		default:
 			$d = substr($date,0,2);

@@ -509,6 +509,47 @@ function remove_filters()
 	}
 }
 
+function FiltersWhere($filtersArr = []){
+
+  global $fl;
+
+  $where = '';
+
+	foreach ($filtersArr as $type => $field){
+		if(!$fl[$type])
+		  break;
+
+    $w = '';
+    $vals = explode(',', $fl[$type]);
+    foreach ($vals as $val){
+      if($val && $val !== 'null'){
+        $w .= ($w ? ' OR' : '') . "\r\n{$field} = '" . clean($val) . "'";
+      }
+    }
+    if($w){
+      $where .= "\r\nAND ({$w}\r\n)";
+    }
+	}
+
+	return $where;
+}
+
+function FiltersSearch($filtersArr = []) {
+
+	global $fl;
+
+	$where = '';
+	if($fl['search'] != ''){
+		$w = '';
+		foreach ($filtersArr as $field){
+			$w .= ($w ? ' OR' : '') . "\r\n`{$field}` LIKE '%{$fl['search']}%'";
+		}
+		$where .= "\r\n AND ({$w}\r\n)";
+	}
+
+	return $where;
+}
+
 function change_user_info($info,$user)
 {
 	preg_match_all("|ФИО</b>: ([^<]*)|i",$info,$mas);

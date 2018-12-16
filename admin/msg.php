@@ -1,7 +1,10 @@
 <?
 require('inc/common.php');
 
-$rubric = 'Обратная связь';
+$h1 = 'Сообщения';
+$h = 'Общий список';
+$title .= ' :: ' . $h1;
+$navigate = '<span></span>' . $h;
 $tbl = 'msg';
 
 // ------------------- СОХРАНЕНИЕ ------------------------
@@ -16,21 +19,21 @@ if(isset($_GET['action']))
 			if(!$id) exit;
 			$notes = clean($_POST['notes']);
 			if(!$id = update($tbl,"notes=".($notes?"'{$notes}'":"NULL"),$id))
-				errorAlert('Во время сохранения данных произошла ошибка.');
+				jAlert('Во время сохранения данных произошла ошибка.');
 
 			?><script>top.location.href = '<?=sgp($HTTP_REFERER, 'id', $id, 1)?>';</script><?
 			break;
-		// ----------------- удаление одной записи
+		// ----------------- удаление
 		case 'del':
-			update($tbl,'',$id);
+			remove_object($id);
 			?><script>top.location.href = top.url()</script><?
-		break;
+			break;
 		// ----------------- удаление нескольких записей
 		case 'multidel':
-			foreach($_POST['check_del_'] as $id=>$v)
-				update($tbl,'',$id);
+			foreach($_POST['del'] as $id=>$v)
+				remove_object($id);
 			?><script>top.location.href = top.url()</script><?
-		break;
+			break;
 	}
 	exit;
 }
@@ -39,185 +42,176 @@ elseif(isset($_GET['red']))
 {
 	if(!$id = (int)$_GET['red']) { header("Location: {$script}"); exit; }
 	if(!$row = gtv($tbl,'*',$id)) { header("Location: {$script}"); exit; }
-	
-	$rubric .= ' &raquo; Просмотр';
-	$page_title .= ' :: '.$rubric;
-			
+
+	$title .= ' :: ' . ($row['email']?:$row['name']) . ' (редактирование)';
+	$h = ($row['email']?:$row['name']) . ' <small>(редактирование)</small>';
+	$navigate = '<span></span><a href="' . $script . '">' . $h1 . '</a><span></span>' . ($row['email']?:$row['name']);
+
 	ob_start();
-	?>  
+	?>
   <form action="?action=save&id=<?=$id?>" method="post" target="ajax">
     <input type="hidden" name="HTTP_REFERER" value="<?=$_SERVER['HTTP_REFERER']?>">
-    <table width="100%" border="0" cellspacing="0" cellpadding="5" class="tab_red">
+    <table class="table-edit">
       <tr>
-        <th class="tab_red_th"></th>
-        <th>Дата</th>
-        <td style="font-size:12px"><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
-      </tr>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th>Тип</th>
-        <td style="font-size:12px"><?=$row['type']?></td>
-      </tr>
-      <? if($row['type'] == 'Оптовики'){?>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th>Организация</th>
-        <td style="font-size:12px"><?=$row['firma']?></td>
-      </tr>
-      <?}?>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th><?=$row['type'] == 'Оптовики' ? 'Контактное лицо' : 'Имя'?></th>
-        <td style="font-size:12px"><?=$row['name']?></td>
-      </tr>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th>E-mail</th>
-        <td style="font-size:12px"><?=$row['email']?></td>
-      </tr>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th>Телефон</th>
-        <td style="font-size:12px"><?=$row['phone']?'+7'.$row['phone']:''?></td>
-      </tr>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th>Сообщение</th>
-        <td style="font-size:12px"><?=nl2br($row['text'])?></td>
-      </tr>
-      <tr>
-        <th class="tab_red_th"></th>
-        <th>Примечание</th>
-        <td><?=show_pole('textarea','notes',$row['notes'])?></td>
-      </tr>
-      <tr>
-        <th class="tab_red_th"></th>
         <th></th>
-        <td align="center">
-          <input type="submit" value="Сохранить" class="but1" onclick="loader(true)" />&nbsp;
-          <input type="button" value="Отмена" class="but1" onclick="location.href='<?=$script?>'" />
-        </td>
+        <th>Дата</th>
+        <td><?=date('d.m.Y H:i',strtotime($row['date']))?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Тип</th>
+        <td><?=$row['type']?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Имя</th>
+        <td><?=$row['name']?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Телефон</th>
+        <td>+7<?=$row['phone']?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Email</th>
+        <td><?=$row['email']?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Сообщение</th>
+        <td><?=nl2br($row['text'])?></td>
+      </tr>
+      <tr>
+        <th></th>
+        <th>Примечание</th>
+        <td><?=input('textarea','note',$row['note'])?></td>
       </tr>
     </table>
+    <div class="frm-btns">
+      <input type="submit" value="<?=($id ? 'Сохранить' : 'Добавить')?>" class="btn btn-success btn-sm" onclick="loader(true)" />&nbsp;
+      <input type="button" value="Отмена" class="btn btn-default btn-sm" onclick="location.href='<?=$script?>'" />
+    </div>
   </form>
   <?
-  $content = ob_get_clean();
+	$content = arr($h, ob_get_clean());
 }
 // -----------------ПРОСМОТР-------------------
 else
 {
-	$cur_page = $_SESSION['ss']['page'] ? $_SESSION['ss']['page'] : 1;
-	$f_msg = stripslashes($_SESSION['ss']['msg']);
-	$f_context = stripslashes($_SESSION['ss']['context']);
-	
+	$cur_page = (int)$_GET['page'] ?: 1;
+	$fl['sort'] = $_GET['fl']['sort'];
+	$fl['type'] = $_GET['fl']['type'];
+	$fl['search'] = stripslashes($_GET['fl']['search']);
+
+	$filters['type'] = "выбор сообщений по Типу";
+
 	$where = '';
-	if($f_msg) $where .= " AND type = '{$f_msg}'";
-	if($f_context) $where .= " AND (firma LIKE '%{$f_context}%' OR
-	                                name LIKE '%{$f_context}%' OR
-																	email LIKE '%{$f_context}%' OR
-																	phone LIKE '%{$f_context}%' OR
-																	text LIKE '%{$f_context}%' OR
-																	notes LIKE '%{$f_context}%')";
-										
-	$page_title .= ' :: '.$rubric; 
-	$rubric .= ' &raquo; Общий список'; 
-	
-	$razdel = array("Удалить"=>"javascript:multidel(document.red_frm,'check_del_');");
-	$subcontent = show_subcontent($razdel);
-	
+	$where .= FiltersWhere(['type' => 'type']);
+	$where .= FiltersSearch(['name','phone','email','text','notes']);
+
 	$query = "SELECT * FROM {$prx}{$tbl} WHERE 1{$where}";
-	
-	$count_obj = getField(str_replace('*','COUNT(*)',$query)); // кол-во объектов в базе
+
+	$r = sql($query);
+	$count_obj = @mysqli_num_rows($r); // кол-во объектов в базе
 	$count_obj_on_page = 30; // кол-во объектов на странице
-	$kol_str = ceil($count_obj/$count_obj_on_page); // количество страниц
+	$count_page = ceil($count_obj/$count_obj_on_page); // количество страниц
+
+	// проверяем текущую сортировку и формируем соответствующий запрос
+	if($fl['sort']){
+		foreach ($fl['sort'] as $f => $t){
+			$query .= "\r\nORDER BY {$f} {$t}";
+			break;
+		}
+	} else {
+		$query .= "\r\nORDER BY id DESC";
+	}
+
+	$query .= "\r\nLIMIT " . ($count_obj_on_page * $cur_page - $count_obj_on_page) . ',' . $count_obj_on_page;
 
 	ob_start();
-	// проверяем текущую сортировку
-	// и формируем соответствующий запрос	
-	if($_SESSION['ss']['sort']) 
-	{
-		$sort = explode(':',$_SESSION['ss']['sort']);
-		$cur_pole = $sort[0];
-		$cur_sort = $sort[1];
 
-		$query .= " ORDER BY {$cur_pole}".($cur_sort=='up'?' DESC':' ASC');
-	}
-	else
-		$query .= ' ORDER BY `date` DESC';
-	$query .= ' LIMIT '.($count_obj_on_page*$cur_page-$count_obj_on_page).",".$count_obj_on_page;
-	//-----------------------------
-	//echo $query;
-
+	show_listview_btns('Удалить');
 	ActiveFilters();
-	show_navigate_pages($kol_str,$cur_page,$script);
-
 	?>
-	<table class="filter_tab" style="margin:5px 0 0 0;">
-		<tr>
-			<td align="left">Тип</td>
-			<td colspan="2"><?=dllEnum($tbl,'type','name="msg" onChange="RegSessionSort(REQUEST_URI,\'msg=\'+this.value);return false;"',$f_msg?$f_msg:'-- все --',array('remove'=>'-- все --'))?></tr>
-		<tr>
-			<td>контекстный поиск</td>
-			<td><input type="text" id="searchTxt" value="<?=htmlspecialchars($f_context)?>" style="width:200px;"></td>
-			<td><a id="searchBtn" href="" class="link">найти</a></td>
-		</tr>
-	</table>
 
+	<div class="clearfix"></div>
+
+  <div id="filters" class="panel-white">
+    <h4 class="heading">Фильтры
+      <a href="#">
+        <i class="fas fa-eye" title="показать фильтры">
+        </i><i class="fas fa-eye-slash" title="скрыть фильтры"></i>
+      </a>
+    </h4>
+    <div class="fbody">
+      <div class="item">
+        <label>Тип сообщений</label>
+        <div><?=dll("SELECT distinct type, type FROM {$prx}{$tbl} ORDER BY 1",'name="fl[type]"',$fl['type'],['null' => '-- неважно --'])?></div>
+      </div>
+      <div class="item search">
+        <label>Контекстный поиск</label>
+        <div><?=input('text', 'fl[search]', $fl['search'])?></div>
+      </div>
+      <button class="btn btn-success" onclick="setFilters()"><i class="fas fa-search"></i>Поиск</button>
+    </div>
+  </div>
+
+	<?=pagination($count_page, $cur_page, true, 'padding:0 0 10px;')?>
   <form id="ftl" method="post" target="ajax">
-  <input type="hidden" id="cur_id" value="<?=@$_GET['id']?@(int)$_GET['id']:""?>" />
-  <table width="100%" border="1" cellspacing="0" cellpadding="0" class="tab1">
-    <tr>
-      <th width="1%"><input type="checkbox" name="check_del" id="check_del" /></th>
-      <th width="1%">№</th>
-			<th nowrap>Тип</th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Дата','date')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Организация','firma')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Имя','name')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'E-mail','email')?></th>
-      <th nowrap><?=ShowSortPole($script,$cur_pole,$cur_sort,'Телефон','phone')?></th>
-      <th width="30%">Сообщение</th>
-			<th width="30%">Примечание</th>
-      <th style="padding:0 30px;"></th>
-    </tr>
-    <?
-	$res = sql($query);
-	if(@mysqli_num_rows($res))
-	{
-		$i=1;
-		while($row = mysqli_fetch_assoc($res))
-		{
-			?>
-			<tr id="row<?=$row['id']?>">
-				<th><input type="checkbox" name="check_del_[<?=$row['id']?>]" id="check_del_<?=$row['id']?>" /></th>
-        <th><?=$i++?></th>
-				<td nowrap align="center"><?=$row['type']?></td>
-        <td nowrap style="font-size:11px; text-align:center;"><?=date('d.m.Y',strtotime($row['date']))?><br><?=date('H:i',strtotime($row['date']))?></td>
-        <td nowrap align="center" class="sp"><?=$row['firma']?></td>
-        <td nowrap align="center" class="sp"><?=$row['name']?></td>
-        <td nowrap align="center" class="sp"><?=$row['email']?></td>
-        <td nowrap align="center" class="sp"><?=$row['phone']?'+7'.$row['phone']:''?></td>
-        <td class="sp"><?=nl2br($row['text'])?></td>
-				<td class="sp"><?=nl2br($row['notes'])?></td>
-				<td nowrap align="center"><?=btn_edit($row['id'])?></td>
-			</tr>
+    <table class="table-list">
+      <thead>
+      <tr>
+        <th nowrap style="text-align:center"><input type="checkbox" name="del" /></th>
+        <th>№</th>
+        <th><?=SortColumn('Дата','date')?></th>
+        <th><?=SortColumn('Тип','type')?></th>
+        <th width="15%"><?=SortColumn('Название','name')?></th>
+        <th width="15%"><?=SortColumn('Телефон','phone')?></th>
+        <th width="15%"><?=SortColumn('Email','email')?></th>
+        <th width="40%"><?=SortColumn('Сообщение','text')?></th>
+        <th style="padding:0 30px;"></th>
+      </tr>
+      </thead>
+      <tbody>
 			<?
-		}	
-	}
-	else
-	{
-		?>
-		<tr>
-			<td colspan="10" align="center">
-			по вашему запросу ничего не найдено. <?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно вы установили неверные фильтры')?>
-			</td>
-		</tr>
-		<?
-	}
-	?>
-	</table>
-	</form>
+			$res = sql($query);
+			if(mysqli_num_rows($res)){
+				$i=1;
+				while($row = mysqli_fetch_assoc($res)){
+					$id = $row['id'];
+					?>
+          <tr id="item-<?=$row['id']?>">
+            <th><input type="checkbox" name="del[<?=$id?>]"></th>
+            <th nowrap><?=$i++?></th>
+            <td nowrap style="text-align:center"><?=date('d.m.Y', strtotime($row['date']))?><br><small><?=date('H:i', strtotime($row['date']))?></small></td>
+            <td nowrap><?=$row['type']?></small></td>
+            <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['name']?></a></td>
+            <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['phone']?></a></td>
+            <td class="sp" nowrap><a href="?red=<?=$id?>"><?=$row['email']?></a></td>
+            <td class="sp"><?=nl2br($row['text'])?></td>
+            <th nowrap><?=btn_edit($id)?></th>
+          </tr>
+					<?
+				}
+			} else {
+				?>
+        <tr class="nofind">
+          <td colspan="10">
+            <div class="bg-warning">
+              по вашему запросу ничего не найдено.
+							<?=help('нет ни одной записи отвечающей критериям вашего запроса,<br>возможно Вы установили неверные фильтры')?>
+            </div>
+          </td>
+        </tr>
+				<?
+			}
+			?>
+      </tbody>
+    </table>
+  </form>
+	<?=pagination($count_page, $cur_page, true, 'padding:10px 0 0;')?>
 	<?
-	$content = $subcontent.ob_get_clean();
+	$content = arr($h, ob_get_clean());
 }
-
-require("tpl/tpl.php");
+require('tpl/template.php');

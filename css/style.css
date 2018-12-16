@@ -284,11 +284,6 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #ifaq .ifaq-a {
 	display:none; text-align:left; padding:10px 10px 10px 60px; margin-top:5px; background-color:#f0fae6;
 	font-size:18px; color:#000;
-	-webkit-transition: all 0.3s ease;
-	-moz-transition: all 0.3s ease;
-	-o-transition: all 0.3s ease;
-	-ms-transition: all 0.3s ease;
-	transition: all 0.3s ease;
 }
 #ifaq .ifaq-a.active { display:block;}
 #ifaq .ifaq-a h4 { margin-top:0; color:#699305; font-size:20px; font-weight:700;}
@@ -316,6 +311,15 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 #bmain .soc a:hover { background-color:#fff15b;}
 #bmain .soc a:last-child { margin:0;}
 #bmain .soc i { color:#2e99b1; padding-top:7px; font-size:26px; line-height:1;}
+
+#diseases-footer { background:#0b868e; color:#fff;}
+#diseases-footer h3 { margin:0 0 27px; padding:0;}
+#diseases-footer a { color:#fff; text-decoration:underline; line-height:10px;}
+#diseases-footer a:hover, #diseases-footer a.blocked { text-decoration:none;}
+#diseases-footer ul { margin:0; padding:0; list-style:none; -moz-columns: 50px 4; -webkit-columns: 50px 4; columns: 50px 4; height: auto;}
+#diseases-footer ul li { padding:7px 25px 0; }
+#diseases-footer a { display:inline-block; line-height:18px;}
+#diseases-footer a.disabled { color:#a7dbde; text-decoration:none; cursor:default;}
 
 .frm-popup { width:376px; padding:15px 0 15px 0; text-align:left;}
 .frm-popup h4 { font-size:30px; font-weight:700; margin:10px 0 30px; }
@@ -348,6 +352,39 @@ footer { /*position:absolute; height:60px; bottom:0; min-width:1000px;*/ min-wid
 
 #frm-callme .checkbox label { color:#939393;}
 #frm-callme textarea { min-height:50px; max-height:300px; resize:vertical;}
+
+#nav-up, #nav-down {
+	font-size: 24px;
+	line-height: 46px;
+	color: #FFF;
+	text-align: center;
+	width: 50px;
+	height: 50px;
+	background: #104F7E;
+	border-radius: 50%;
+	position: fixed;
+	bottom: 15px;
+	overflow: hidden;
+	text-decoration: none;
+	z-index: 20;
+	transition: .3s all ease;
+	opacity:0.3;
+}
+#nav-up { right: 70px;}
+#nav-down { right: 15px;}
+#nav-up::before {
+	content: "\f106";
+	font-weight: 900;
+}
+#nav-down::before {
+	content: "\f107";
+	font-weight: 900;
+}
+#nav-up:hover, #nav-down:hover {
+	color:#ffffff;
+	text-decoration:none;
+	opacity:1;
+}
 
 .col-xs-5,
 .col-sm-5,

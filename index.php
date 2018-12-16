@@ -212,24 +212,24 @@ bron();
 
     <h3>Расчитайте примерную стоимость<br>подходящего вам абонемента</h3>
 
-    <form action="/inc/actions.php" method="post" target="ajax">
-      <input type="text" name="fio" class="form-control" placeholder="Ваше Имя">
+    <form id="what_cost" action="/inc/actions.php?action=what_cost" method="post" target="ajax">
+      <input type="text" name="name" class="form-control" placeholder="Ваше Имя">
 
       <div class="row sguest">
         <div class="col-xs-6 col-sm-6 col-md-6">
           <label>Дети (до 7 лет)</label>
-          <div class="ch"><?=chQuant('ch7', 0, 0)?></div>
+          <div class="ch"><?=chQuant('cnt_child7', 0, 0)?></div>
           <span class="sign">/чел.</span>
           <label>Взрослые</label>
-          <div class="ch"><?=chQuant('grown', 0, 0)?></div>
+          <div class="ch"><?=chQuant('cnt_grown', 0, 0)?></div>
           <span class="sign">/чел.</span>
         </div>
         <div class="col-xs-6 col-sm-6 col-md-6">
           <label>Дети (до 16 лет)</label>
-          <div class="ch"><?=chQuant('ch16', 0, 0)?></div>
+          <div class="ch"><?=chQuant('cnt_child16', 0, 0)?></div>
           <span class="sign">/чел.</span>
           <label>Пенсионеры</label>
-            <div class="ch"><?=chQuant('pensioner', 0, 0)?></div>
+            <div class="ch"><?=chQuant('cnt_pensioner', 0, 0)?></div>
           <span class="sign">/чел.</span>
         </div>
       </div>
